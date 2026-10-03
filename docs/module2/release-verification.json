@@ -1,0 +1,10 @@
+{
+  "canonical_commit": "8beef6d0bfc9d8d5fa46567aa750395ab06ace13",
+  "committed_source_manifest": "passed",
+  "extracted_source_only_bundle": "passed",
+  "bundle": "/private/tmp/fieldwork-module2-source.tar.gz",
+  "deployed": false,
+  "live_oauth_changed": false,
+  "outreach_sent": 0,
+  "pause_preserved": true
+}
