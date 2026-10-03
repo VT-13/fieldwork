@@ -1,0 +1,30 @@
+{
+  "workspace": {
+    "startup": "ok",
+    "title": "Fieldwork \u2014 Internship workspace",
+    "api_auth_401": true,
+    "cross_origin_mutation_403": true,
+    "navigation": "six views visited",
+    "page_errors": [],
+    "mobile_dimensions": {
+      "viewport": 390,
+      "document": 390
+    },
+    "external_requests": "blocked; remote fonts unavailable in this test",
+    "scope": "smoke and screenshots, not full E2E or WCAG audit"
+  },
+  "runtime": {
+    "startup": "ok",
+    "title": "Fieldwork \u2014 Internship workspace",
+    "api_auth_401": true,
+    "cross_origin_mutation_403": true,
+    "navigation": "six views visited",
+    "page_errors": [],
+    "mobile_dimensions": {
+      "viewport": 390,
+      "document": 390
+    },
+    "external_requests": "blocked; remote fonts unavailable in this test",
+    "scope": "smoke and screenshots, not full E2E or WCAG audit"
+  }
+}

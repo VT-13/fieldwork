@@ -1,0 +1,295 @@
+{
+  "date": "2026-10-03",
+  "temporary_root": "/var/folders/9s/w0n67fhn557gd3bp17pkk9q80000gn/T/fieldwork-phase0-gtpqrqwp",
+  "safety": "No live env/database copied; response polling off; fake HOME; no sending worker started.",
+  "workspace": {
+    "backend": {
+      "dependency_check": {
+        "command": [
+          "/Users/vihaantirumala/.local/share/fieldwork/.venv/bin/python",
+          "-m",
+          "pip",
+          "check"
+        ],
+        "cwd": "/var/folders/9s/w0n67fhn557gd3bp17pkk9q80000gn/T/fieldwork-phase0-gtpqrqwp/workspace/backend",
+        "exit_code": 0,
+        "seconds": 0.63,
+        "log": "workspace-pip-check.log"
+      },
+      "install_resolution": {
+        "command": [
+          "/Users/vihaantirumala/.local/share/fieldwork/.venv/bin/python",
+          "-m",
+          "pip",
+          "install",
+          "--dry-run",
+          "--no-index",
+          "-r",
+          "requirements.lock.txt"
+        ],
+        "cwd": "/var/folders/9s/w0n67fhn557gd3bp17pkk9q80000gn/T/fieldwork-phase0-gtpqrqwp/workspace/backend",
+        "exit_code": 0,
+        "seconds": 0.66,
+        "log": "workspace-install-resolution.log"
+      },
+      "tests": {
+        "command": [
+          "/Users/vihaantirumala/.local/share/fieldwork/.venv/bin/python",
+          "-m",
+          "pytest",
+          "-q",
+          "-ra"
+        ],
+        "cwd": "/var/folders/9s/w0n67fhn557gd3bp17pkk9q80000gn/T/fieldwork-phase0-gtpqrqwp/workspace/backend",
+        "exit_code": 1,
+        "seconds": 4.39,
+        "log": "workspace-pytest.log"
+      },
+      "migration": {
+        "command": [
+          "/Users/vihaantirumala/.local/share/fieldwork/.venv/bin/python",
+          "-m",
+          "alembic",
+          "upgrade",
+          "head"
+        ],
+        "cwd": "/var/folders/9s/w0n67fhn557gd3bp17pkk9q80000gn/T/fieldwork-phase0-gtpqrqwp/workspace/backend",
+        "exit_code": 0,
+        "seconds": 1.37,
+        "log": "workspace-migration.log"
+      },
+      "python_compile": {
+        "command": [
+          "/Users/vihaantirumala/.local/share/fieldwork/.venv/bin/python",
+          "-m",
+          "compileall",
+          "-q",
+          "app",
+          "scripts"
+        ],
+        "cwd": "/var/folders/9s/w0n67fhn557gd3bp17pkk9q80000gn/T/fieldwork-phase0-gtpqrqwp/workspace/backend",
+        "exit_code": 0,
+        "seconds": 0.04,
+        "log": "workspace-compile.log"
+      },
+      "tests_corrected": {
+        "command": [
+          "/Users/vihaantirumala/.local/share/fieldwork/.venv/bin/python",
+          "-m",
+          "pytest",
+          "-q",
+          "-ra"
+        ],
+        "cwd": "/var/folders/9s/w0n67fhn557gd3bp17pkk9q80000gn/T/fieldwork-phase0-gtpqrqwp/workspace/backend",
+        "exit_code": 0,
+        "seconds": 2.26,
+        "log": "workspace-pytest-corrected.log"
+      }
+    },
+    "frontend": {
+      "install": {
+        "command": [
+          "npm",
+          "ci",
+          "--ignore-scripts",
+          "--no-audit",
+          "--no-fund"
+        ],
+        "cwd": "/var/folders/9s/w0n67fhn557gd3bp17pkk9q80000gn/T/fieldwork-phase0-gtpqrqwp/workspace/frontend",
+        "exit_code": 0,
+        "seconds": 25.99,
+        "log": "workspace-npm-ci.log"
+      },
+      "lint": {
+        "command": [
+          "npm",
+          "run",
+          "lint"
+        ],
+        "cwd": "/var/folders/9s/w0n67fhn557gd3bp17pkk9q80000gn/T/fieldwork-phase0-gtpqrqwp/workspace/frontend",
+        "exit_code": 1,
+        "seconds": 0.56,
+        "log": "workspace-lint.log"
+      },
+      "typecheck": {
+        "command": [
+          "npm",
+          "run",
+          "typecheck"
+        ],
+        "cwd": "/var/folders/9s/w0n67fhn557gd3bp17pkk9q80000gn/T/fieldwork-phase0-gtpqrqwp/workspace/frontend",
+        "exit_code": 0,
+        "seconds": 2.05,
+        "log": "workspace-typecheck.log"
+      },
+      "build": {
+        "command": [
+          "npm",
+          "run",
+          "build"
+        ],
+        "cwd": "/var/folders/9s/w0n67fhn557gd3bp17pkk9q80000gn/T/fieldwork-phase0-gtpqrqwp/workspace/frontend",
+        "exit_code": 0,
+        "seconds": 14.29,
+        "log": "workspace-build.log"
+      },
+      "dependency_audit": {
+        "command": [
+          "npm",
+          "audit",
+          "--omit=dev",
+          "--json"
+        ],
+        "cwd": "/var/folders/9s/w0n67fhn557gd3bp17pkk9q80000gn/T/fieldwork-phase0-gtpqrqwp/workspace/frontend",
+        "exit_code": 1,
+        "seconds": 1.25,
+        "log": "workspace-npm-audit.log"
+      }
+    }
+  },
+  "runtime": {
+    "backend": {
+      "dependency_check": {
+        "command": [
+          "/Users/vihaantirumala/.local/share/fieldwork/.venv/bin/python",
+          "-m",
+          "pip",
+          "check"
+        ],
+        "cwd": "/var/folders/9s/w0n67fhn557gd3bp17pkk9q80000gn/T/fieldwork-phase0-gtpqrqwp/runtime/backend",
+        "exit_code": 0,
+        "seconds": 0.6,
+        "log": "runtime-pip-check.log"
+      },
+      "install_resolution": {
+        "command": [
+          "/Users/vihaantirumala/.local/share/fieldwork/.venv/bin/python",
+          "-m",
+          "pip",
+          "install",
+          "--dry-run",
+          "--no-index",
+          "-r",
+          "requirements.lock.txt"
+        ],
+        "cwd": "/var/folders/9s/w0n67fhn557gd3bp17pkk9q80000gn/T/fieldwork-phase0-gtpqrqwp/runtime/backend",
+        "exit_code": 0,
+        "seconds": 0.66,
+        "log": "runtime-install-resolution.log"
+      },
+      "tests": {
+        "command": [
+          "/Users/vihaantirumala/.local/share/fieldwork/.venv/bin/python",
+          "-m",
+          "pytest",
+          "-q",
+          "-ra"
+        ],
+        "cwd": "/var/folders/9s/w0n67fhn557gd3bp17pkk9q80000gn/T/fieldwork-phase0-gtpqrqwp/runtime/backend",
+        "exit_code": 1,
+        "seconds": 4.98,
+        "log": "runtime-pytest.log"
+      },
+      "migration": {
+        "command": [
+          "/Users/vihaantirumala/.local/share/fieldwork/.venv/bin/python",
+          "-m",
+          "alembic",
+          "upgrade",
+          "head"
+        ],
+        "cwd": "/var/folders/9s/w0n67fhn557gd3bp17pkk9q80000gn/T/fieldwork-phase0-gtpqrqwp/runtime/backend",
+        "exit_code": 0,
+        "seconds": 0.78,
+        "log": "runtime-migration.log"
+      },
+      "python_compile": {
+        "command": [
+          "/Users/vihaantirumala/.local/share/fieldwork/.venv/bin/python",
+          "-m",
+          "compileall",
+          "-q",
+          "app",
+          "scripts"
+        ],
+        "cwd": "/var/folders/9s/w0n67fhn557gd3bp17pkk9q80000gn/T/fieldwork-phase0-gtpqrqwp/runtime/backend",
+        "exit_code": 0,
+        "seconds": 0.04,
+        "log": "runtime-compile.log"
+      },
+      "tests_corrected": {
+        "command": [
+          "/Users/vihaantirumala/.local/share/fieldwork/.venv/bin/python",
+          "-m",
+          "pytest",
+          "-q",
+          "-ra"
+        ],
+        "cwd": "/var/folders/9s/w0n67fhn557gd3bp17pkk9q80000gn/T/fieldwork-phase0-gtpqrqwp/runtime/backend",
+        "exit_code": 0,
+        "seconds": 2.53,
+        "log": "runtime-pytest-corrected.log"
+      }
+    },
+    "frontend": {
+      "install": {
+        "command": [
+          "npm",
+          "ci",
+          "--ignore-scripts",
+          "--no-audit",
+          "--no-fund"
+        ],
+        "cwd": "/var/folders/9s/w0n67fhn557gd3bp17pkk9q80000gn/T/fieldwork-phase0-gtpqrqwp/runtime/frontend",
+        "exit_code": 0,
+        "seconds": 22.44,
+        "log": "runtime-npm-ci.log"
+      },
+      "lint": {
+        "command": [
+          "npm",
+          "run",
+          "lint"
+        ],
+        "cwd": "/var/folders/9s/w0n67fhn557gd3bp17pkk9q80000gn/T/fieldwork-phase0-gtpqrqwp/runtime/frontend",
+        "exit_code": 1,
+        "seconds": 0.68,
+        "log": "runtime-lint.log"
+      },
+      "typecheck": {
+        "command": [
+          "npm",
+          "run",
+          "typecheck"
+        ],
+        "cwd": "/var/folders/9s/w0n67fhn557gd3bp17pkk9q80000gn/T/fieldwork-phase0-gtpqrqwp/runtime/frontend",
+        "exit_code": 0,
+        "seconds": 3.66,
+        "log": "runtime-typecheck.log"
+      },
+      "build": {
+        "command": [
+          "npm",
+          "run",
+          "build"
+        ],
+        "cwd": "/var/folders/9s/w0n67fhn557gd3bp17pkk9q80000gn/T/fieldwork-phase0-gtpqrqwp/runtime/frontend",
+        "exit_code": 0,
+        "seconds": 13.6,
+        "log": "runtime-build.log"
+      },
+      "dependency_audit": {
+        "command": [
+          "npm",
+          "audit",
+          "--omit=dev",
+          "--json"
+        ],
+        "cwd": "/var/folders/9s/w0n67fhn557gd3bp17pkk9q80000gn/T/fieldwork-phase0-gtpqrqwp/runtime/frontend",
+        "exit_code": 1,
+        "seconds": 2.15,
+        "log": "runtime-npm-audit.log"
+      }
+    }
+  }
+}

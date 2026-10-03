@@ -1,0 +1,17 @@
+{
+  "expected": "blocked while unresolved unknown delivery exists",
+  "result": {
+    "command": [
+      "/Users/vihaantirumala/.local/share/fieldwork/.venv/bin/python",
+      "-m",
+      "pytest",
+      "-q",
+      "tests/test_phase0_guard_probe.py"
+    ],
+    "cwd": "/var/folders/9s/w0n67fhn557gd3bp17pkk9q80000gn/T/fieldwork-phase0-gtpqrqwp/runtime/backend",
+    "exit_code": 1,
+    "seconds": 0.72,
+    "log": "runtime-global-uncertainty-probe.log"
+  },
+  "classification": "reproduced guard gap if DID NOT RAISE"
+}

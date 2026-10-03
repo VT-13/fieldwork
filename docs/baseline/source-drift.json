@@ -1,0 +1,168 @@
+{
+  "workspace": "/Users/vihaantirumala/Documents/Codex/2026-09-21/wh/outputs/internship-platform",
+  "runtime": "/Users/vihaantirumala/.local/share/fieldwork",
+  "changes": [
+    {
+      "path": "backend/app/mail.py",
+      "status": "different",
+      "workspace_sha256": "76729abcd669cf22ceca40833a99676f5de33522ceb7a7962610e68b043ca31f",
+      "runtime_sha256": "a7b39b7344472b26ddffdb7d9c4d68b96b263300348a20cd4f4e593921bb3702"
+    },
+    {
+      "path": "backend/app/worker.py",
+      "status": "different",
+      "workspace_sha256": "4e884f9ad68c984c888993d33399ce04cac3bd176754e937e633f1588376bca0",
+      "runtime_sha256": "5be327ea6dfbf4a4d1c18003dc0f00eebfd9737a391a179fd348cd0a57cffb5e"
+    },
+    {
+      "path": "backend/app/responses.py",
+      "status": "runtime_only",
+      "workspace_sha256": null,
+      "runtime_sha256": "67fbf434b3e84450cc5edbe26c7170f120d4a6b90b8f6abc991ed0dfdefc652d"
+    },
+    {
+      "path": "backend/app/config.py",
+      "status": "different",
+      "workspace_sha256": "e4e95d14a4de1d0188df692f7d51abaa267910409dbf7b3fdb558bca15fe9072",
+      "runtime_sha256": "1167756ea56fd4b6540354dfb613c9d1f553c98828a71e50f4d4240933ab7c71"
+    },
+    {
+      "path": "backend/app/scheduled_send.py",
+      "status": "runtime_only",
+      "workspace_sha256": null,
+      "runtime_sha256": "1f08958fecd71d391a68ae7f3036d69e219578fcb9a28b0d66426ed85c6779e9"
+    },
+    {
+      "path": "backend/app/core.py",
+      "status": "different",
+      "workspace_sha256": "100ea7e16d0c65c99a022acb1596563953f2cc819d499da35cbe5fc69ee14d7a",
+      "runtime_sha256": "65688211b459169796c0b195c67496ddacbf88ffe269a179ef3dcb2961e104e2"
+    },
+    {
+      "path": "backend/app/campaign.py",
+      "status": "runtime_only",
+      "workspace_sha256": null,
+      "runtime_sha256": "998df92cf32e3b4851fb859d49c5404e6762083a8f94a0c23aa16d3bbdf0c477"
+    },
+    {
+      "path": "backend/app/self_test.py",
+      "status": "runtime_only",
+      "workspace_sha256": null,
+      "runtime_sha256": "c9d265d6a0dcc9f462b75ded38c980a7d9c484886f7ce444b22f990dfc2dbaee"
+    },
+    {
+      "path": "backend/app/main.py",
+      "status": "different",
+      "workspace_sha256": "03a888a4676c3fea8134be1edb931ef6d7674bc88f62d1f80b0b9c781e186396",
+      "runtime_sha256": "79dba18e580e41b95081f781b9d5027e8d841305b6de9fca10ac17baa4774d21"
+    },
+    {
+      "path": "backend/tests/conftest.py",
+      "status": "different",
+      "workspace_sha256": "3e59384e778331f439ad513bc2e90b6626852b6528f0c8e1ec35c78c0d29ae77",
+      "runtime_sha256": "f641654fc3b1db6fe722cb7d4c4418629af39f4cf7b5807a32b887509dd6481c"
+    },
+    {
+      "path": "backend/tests/test_scheduled.py",
+      "status": "runtime_only",
+      "workspace_sha256": null,
+      "runtime_sha256": "a4c13dcfeb1dceb1bdaf466ea9a3e6b521c691dca546d49bfc3c3b867f6eb11e"
+    },
+    {
+      "path": "backend/tests/test_self_test.py",
+      "status": "runtime_only",
+      "workspace_sha256": null,
+      "runtime_sha256": "3cd3baa375d2ac3ae7216503b86b3b5e6de1a0b4439314807d203371635c681d"
+    },
+    {
+      "path": "backend/tests/test_workflow.py",
+      "status": "different",
+      "workspace_sha256": "80252264cc4a7e9d3ccdcef1f6718155e358011f74d6a94f450ec359e01fd950",
+      "runtime_sha256": "feb58e9321389023b332b23df561a3a812789c2dac0b8cea4c640418c7f1819f"
+    },
+    {
+      "path": "backend/tests/test_worker.py",
+      "status": "different",
+      "workspace_sha256": "d66d1d4ecafda3cb5007ea5955d9e08c5717fe44b0ff7a1ea57f6510f1bca941",
+      "runtime_sha256": "4aa317960a0acf8adfe6f20a9746452b086cf0210e6e63fe9161759628fbe3e2"
+    },
+    {
+      "path": "backend/tests/test_responses.py",
+      "status": "runtime_only",
+      "workspace_sha256": null,
+      "runtime_sha256": "28b28bbca98b818786c1ea071777767b78179d98a3447e7c7ce437761fe85d91"
+    },
+    {
+      "path": "backend/tests/test_campaign.py",
+      "status": "runtime_only",
+      "workspace_sha256": null,
+      "runtime_sha256": "570af76729505d95ae9a4e85841f26b9fbdb3aa12ca3e83bd579f963f5a9d754"
+    },
+    {
+      "path": "backend/scripts/oauth_setup.py",
+      "status": "different",
+      "workspace_sha256": "a5ef25887c324fdb40182ec844be09784de1c649720ed0e986e01787f78238a8",
+      "runtime_sha256": "56be177cc2bafa1c69b465faed8c7d2026c56bc3267adb1b57ee7e5df1e8e056"
+    },
+    {
+      "path": "frontend/app/Campaign.tsx",
+      "status": "runtime_only",
+      "workspace_sha256": null,
+      "runtime_sha256": "8a374363752c0d8bc4ebc66b1bd2d4fd7c68cf25cbe5d6d1c7bf258f1f3d88e9"
+    },
+    {
+      "path": "frontend/app/ResponseInbox.tsx",
+      "status": "runtime_only",
+      "workspace_sha256": null,
+      "runtime_sha256": "3c064e8b8c7da461ae0ae0ad264847b4e6956d4deeed9eb861ce20282ab4d772"
+    },
+    {
+      "path": "frontend/app/ReviewDesk.tsx",
+      "status": "different",
+      "workspace_sha256": "787c32c988fe2aba79d344079052762b4e3c4f6eb07793b38c081638404cbc6f",
+      "runtime_sha256": "5dc63ab810d300a8b61dab1390d73b5dfe3606fa16f3f8dffd59bcdbfdd8cff7"
+    },
+    {
+      "path": "frontend/app/page.tsx",
+      "status": "different",
+      "workspace_sha256": "749b0a49640396eb4882a02e3da3a102e6a18d5ad45729b60e7625b6211b8cb0",
+      "runtime_sha256": "cc1d75c315845f626c1b5bc744aa93634f473ad6c1664beb4a98f9e0877d0f6b"
+    },
+    {
+      "path": "desktop/local.vihaan.fieldwork.api.plist",
+      "status": "runtime_only",
+      "workspace_sha256": null,
+      "runtime_sha256": "0236a2dc018840be3e2bbcb0121f626a7d50055c4f614ae63b9c30d6f93506a4"
+    },
+    {
+      "path": "desktop/local.vihaan.fieldwork.web.plist",
+      "status": "runtime_only",
+      "workspace_sha256": null,
+      "runtime_sha256": "4fd033ca34868e99393b560f9945889bf4ce136b2edf0e3414035d8e95af777f"
+    },
+    {
+      "path": "desktop/README.md",
+      "status": "runtime_only",
+      "workspace_sha256": null,
+      "runtime_sha256": "de94f7a18c550887b049f4efb4828cc4dc22a88573c11d7b04c7546129aab7fb"
+    },
+    {
+      "path": "desktop/Fieldwork.swift",
+      "status": "runtime_only",
+      "workspace_sha256": null,
+      "runtime_sha256": "b78bbaadd50ea9e27641551c1f64eb710b466abfffbd0cdfd0ae99d300dd1853"
+    },
+    {
+      "path": "README.md",
+      "status": "different",
+      "workspace_sha256": "b2e0dcedf876c0bba6c3e7587081d9d0a6dec6b556a57ff1fbaf28d5ac2073e6",
+      "runtime_sha256": "711fa3351fb5312fef759c5280de763df0f2a4f72e03d8d2f23a792f8efce378"
+    },
+    {
+      "path": "start-personal.sh",
+      "status": "runtime_only",
+      "workspace_sha256": null,
+      "runtime_sha256": "29834a5a15506da0f5bf073c18e3e749b0acc1ccb69fb15acc75681ea1749be8"
+    }
+  ]
+}

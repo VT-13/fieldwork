@@ -1,0 +1,25 @@
+▲ Next.js 16.3.5
+- Local:         http://127.0.0.1:13010
+- Network:       http://127.0.0.1:13010
+✓ Ready in 232ms
+✓ Running next.config.ts took 168ms
+⚠ "next start" does not work with "output: standalone" configuration. Use "node .next/standalone/server.js" instead.
+INFO:     Started server process [67623]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:18010 (Press CTRL+C to quit)
+INFO:     127.0.0.1:51985 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51995 - "GET /desk HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51996 - "GET /companies HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51998 - "GET /jobs HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51997 - "GET /outreach HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51999 - "GET /settings HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52000 - "GET /metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51995 - "GET /profile HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51995 - "GET /profile HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52002 - "GET /companies HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:51995 - "GET /desk HTTP/1.1" 200 OK
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [67623]

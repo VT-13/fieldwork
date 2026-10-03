@@ -1,0 +1,29 @@
+{
+  "policy_hashes": {
+    "manual_batch": "943b4f8867c52f043263ce9e0260f343224277e9768edc6cc7193ec322dc5b0e",
+    "manual_batch_progress": "e94006e8133c828341d9c2621cc48e995fa58a2ef72478cde3ced3edca12be6c",
+    "outreach_policy": "2f7de2ac15daffb53395bb7699f64996f4c70edebb09e135de508eeaa5dc628b"
+  },
+  "recurring_enabled": false,
+  "counts": {
+    "outreach": 46,
+    "events": 6,
+    "suppressions": 2,
+    "companies": 46,
+    "contacts": 46
+  },
+  "record_hashes": {
+    "outreach": "7ce066dcede4a630aa726255d4235495cade132123b728c9b4dc6aa8c9cc4050",
+    "suppressions": "c2f61cecd9f0e87f4e8df633b7110fc2718966a220d1839ee2333e9223bb4dbd",
+    "profiles": "a6f37db5399f49270fe24a0870634a0af92d569fc8a7f6cd380920ea82a88d4e"
+  },
+  "receipt_hashes": {
+    "data/scheduled-receipts.jsonl": "efe2a38738288923a2b9ad19316f292c2f762c38b9fae2b1a9172151e9f2b682",
+    "data/historical-batch/receipts.json": "e0494a4565502e0adf4f08d62092213870ee530fa878f83f2a8c01cb1cec267a"
+  },
+  "credential_stat": {
+    "size": 516,
+    "mtime_ns": 1791005334130748400,
+    "mode": "0o600"
+  }
+}

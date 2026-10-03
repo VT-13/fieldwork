@@ -1,0 +1,8 @@
+npm error Missing script: "lint"
+npm error
+npm error Did you mean this?
+npm error   npm link # Symlink a package folder
+npm error
+npm error To see a list of scripts, run:
+npm error   npm run
+npm error A complete log of this run can be found in: /var/folders/9s/w0n67fhn557gd3bp17pkk9q80000gn/T/fieldwork-phase0-gtpqrqwp/runtime/home/.npm/_logs/2026-10-03T19_05_34_083Z-debug-0.log

@@ -1,0 +1,75 @@
+[
+  {
+    "package": "cryptography",
+    "version": "46.0.7",
+    "advisories": [
+      {
+        "id": "PYSEC-2026-3554",
+        "aliases": [
+          "GHSA-m2h6-j472-rp4c",
+          "CVE-2026-69248"
+        ],
+        "fix_versions": [
+          "49.0.0"
+        ]
+      },
+      {
+        "id": "PYSEC-2026-3552",
+        "aliases": [
+          "GHSA-g6cj-pr64-35w5",
+          "CVE-2026-69247"
+        ],
+        "fix_versions": [
+          "50.0.0"
+        ]
+      },
+      {
+        "id": "PYSEC-2026-3553",
+        "aliases": [
+          "GHSA-jwv3-5hgf-82ww",
+          "CVE-2026-69249"
+        ],
+        "fix_versions": [
+          "49.0.0"
+        ]
+      },
+      {
+        "id": "PYSEC-2026-3552",
+        "aliases": [
+          "GHSA-g6cj-pr64-35w5",
+          "CVE-2026-69247"
+        ],
+        "fix_versions": [
+          "50.0.0"
+        ]
+      },
+      {
+        "id": "PYSEC-2026-3553",
+        "aliases": [
+          "GHSA-jwv3-5hgf-82ww",
+          "CVE-2026-69249"
+        ],
+        "fix_versions": [
+          "49.0.0"
+        ]
+      },
+      {
+        "id": "PYSEC-2026-3554",
+        "aliases": [
+          "GHSA-m2h6-j472-rp4c",
+          "CVE-2026-69248"
+        ],
+        "fix_versions": [
+          "49.0.0"
+        ]
+      },
+      {
+        "id": "GHSA-537c-gmf6-5ccf",
+        "aliases": [],
+        "fix_versions": [
+          "48.0.1"
+        ]
+      }
+    ]
+  }
+]

@@ -1,0 +1,19 @@
+F                                                                        [100%]
+=================================== FAILURES ===================================
+____________ test_global_uncertain_delivery_should_hold_new_attempt ____________
+
+db = <sqlalchemy.orm.session.Session object at 0x10cba2a50>
+scheduled = (<app.models.Company object at 0x10cba30e0>, <app.models.Contact object at 0x10cba3b60>, <app.models.Outreach object at 0x10cba2cf0>)
+
+    def test_global_uncertain_delivery_should_hold_new_attempt(db,scheduled):
+        company,contact,row=scheduled
+        db.add(Outreach(company_id=company.id,contact_id=contact.id,sequence=2,status="unknown",attempts=1,sent_at=AT-timedelta(hours=1)))
+        db.commit()
+>       with pytest.raises(Blocked,match="uncertain|unknown|reconcile"):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE Blocked
+
+tests/test_phase0_guard_probe.py:12: Failed
+=========================== short test summary info ============================
+FAILED tests/test_phase0_guard_probe.py::test_global_uncertain_delivery_should_hold_new_attempt - Failed: DID NOT RAISE Blocked
+1 failed in 0.10s
