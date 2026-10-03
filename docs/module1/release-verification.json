@@ -1,0 +1,10 @@
+{
+  "canonical_commit": "082b5f2057c9ab301f52d01b6226eaa54a5de7d8",
+  "source_integrity": "passed",
+  "source_only_bundle": "/private/tmp/fieldwork-module1-source.tar.gz",
+  "extracted_bundle_verification": "passed",
+  "deployed": false,
+  "production_migrated": false,
+  "real_emails_sent": 0,
+  "preservation": "before/after policy, records, receipts, counts and credential metadata identical"
+}
