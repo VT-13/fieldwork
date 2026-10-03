@@ -4,8 +4,6 @@
 <dict>
 	<key>EnvironmentVariables</key>
 	<dict>
-		<key>ALLOW_LOCAL_NO_AUTH</key>
-		<string>true</string>
 		<key>APP_ORIGIN</key>
 		<string>http://localhost:3000</string>
 		<key>DAILY_SEND_LIMIT</key>

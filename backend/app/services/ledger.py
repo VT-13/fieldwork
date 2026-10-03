@@ -52,7 +52,7 @@ def claim(db, key, kind, provider, authorize, *, outreach_id=None, entity_id='',
         policy=authorize()
     except Blocked as exc:
         # Reason is a bounded application error code/message, never a provider exception.
-        attempt.status='blocked';attempt.reason=str(exc)[:160];attempt.finished_at=now()
+        attempt.status='blocked';attempt.reason=__import__('app.redaction',fromlist=['redact']).redact(str(exc))[:160];attempt.finished_at=now()
         if op.status=='failed':
             transition(db,op,'running',domain='operation',reason='retry_evaluation')
         transition(db,op,'blocked',domain='operation',reason='policy_denied')

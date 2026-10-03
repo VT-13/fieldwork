@@ -7,9 +7,13 @@ from app import models
 from app.config import settings
 
 @pytest.fixture
-def db():
+def db(monkeypatch):
     engine=create_engine("sqlite://",connect_args={"check_same_thread":False},poolclass=StaticPool)
     Base.metadata.create_all(engine)
+    import app.ingress as ingress
+    import app.gmail_oauth as oauth
+    monkeypatch.setattr(ingress,'Session',sessionmaker(engine,expire_on_commit=False))
+    monkeypatch.setattr(oauth,'Session',sessionmaker(engine,expire_on_commit=False))
     with sessionmaker(engine,expire_on_commit=False)() as session:
         yield session
     engine.dispose()
@@ -20,10 +24,14 @@ def clean_settings(monkeypatch):
     # Unit tests must never inherit the personal mailbox or paid provider credentials.
     for key in ["OAUTH_CLIENT_ID", "OAUTH_CLIENT_SECRET", "OAUTH_REFRESH_TOKEN", "SENDER_EMAIL", "OPENAI_API_KEY", "TAVILY_API_KEY", "FIRECRAWL_API_KEY", "GOOGLE_MAPS_API_KEY", "APOLLO_API_KEY", "HUNTER_API_KEY"]:
         monkeypatch.setenv(key, "")
+    monkeypatch.setenv("API_KEY","local-development-key-change-me")
     monkeypatch.setenv("ENVIRONMENT","development")
     monkeypatch.setenv("DRY_RUN","true")
     monkeypatch.setenv("RESPONSE_POLL_ENABLED","false")
     monkeypatch.setenv("MANUAL_MODE","false")
+    monkeypatch.setenv("OPERATOR_PASSWORD_HASH","")
+    monkeypatch.setenv("CREDENTIAL_KEYS","")
+    monkeypatch.setenv("ALLOW_LEGACY_OAUTH","false")
     yield
     settings.cache_clear()
 

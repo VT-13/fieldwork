@@ -13,6 +13,7 @@ class MailboxProvider:
     async def connect(self):
         if not getattr(self.mailbox,'token',''):
             await self.mailbox.connect()
+        self.sender=getattr(self.mailbox,'cfg',settings()).sender_email
 
     async def check_conversation(self,db,row,contact,original):
         from ..mail import sync_mailbox
@@ -31,6 +32,9 @@ class MailboxProvider:
             thread=await self.mailbox.call('GET',BASE+'threads/'+original.thread_id,params={'format':'metadata'})
             if any('SENT' not in m.get('labelIds',[]) for m in thread.get('messages',[])):
                 raise Blocked('Incoming response in original thread; stopped')
+
+    def authorize(self,db):
+        if hasattr(self.mailbox,'ensure_authorized'):self.mailbox.ensure_authorized(db)
 
     async def deliver(self,db,row,contact,original):
         pid,tid=await self.mailbox.send(db,row,contact,original)

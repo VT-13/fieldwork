@@ -1,0 +1,56 @@
+{
+  "temporary_root": "/var/folders/9s/w0n67fhn557gd3bp17pkk9q80000gn/T/fieldwork-module1-0sefzj2k",
+  "checks": {
+    "frontend-install": {
+      "command": [
+        "npm",
+        "ci",
+        "--ignore-scripts"
+      ],
+      "exit_code": 0,
+      "seconds": 3.71
+    },
+    "frontend-typecheck": {
+      "command": [
+        "npm",
+        "run",
+        "typecheck"
+      ],
+      "exit_code": 0,
+      "seconds": 2.16
+    },
+    "frontend-build": {
+      "command": [
+        "npm",
+        "run",
+        "build"
+      ],
+      "exit_code": 0,
+      "seconds": 8.51
+    },
+    "migration-browser": {
+      "command": [
+        "/private/tmp/fieldwork-module2-venv/bin/python",
+        "-m",
+        "alembic",
+        "upgrade",
+        "head"
+      ],
+      "exit_code": 0,
+      "seconds": 0.58
+    }
+  },
+  "browser": {
+    "result": "passed",
+    "coverage": [
+      "anonymous private API rejected",
+      "forged cookie rejected",
+      "sign-in creates server session",
+      "same-origin policy enforced",
+      "disconnected Gmail shown",
+      "logout invalidates copied cookie"
+    ],
+    "real_provider_calls": 0,
+    "real_emails_sent": 0
+  }
+}

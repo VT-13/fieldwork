@@ -1,0 +1,13 @@
+{
+  "command": [
+    "/private/tmp/fieldwork-module2-venv/bin/python",
+    "-m",
+    "pytest",
+    "-q",
+    "-ra",
+    "tests/test_security.py",
+    "tests/test_architecture.py"
+  ],
+  "exit_code": 0,
+  "seconds": 3.37
+}

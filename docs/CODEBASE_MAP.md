@@ -57,3 +57,7 @@ Main risks: source drift; three sending paths; local locks and hard-coded HOME p
 ## Module 1 canonical additions
 
 Canonical source now includes the runtime campaign, responses, self-test, scheduled helper, desktop shell and UI. backend/app/services/{policy,ledger,delivery,email_provider,contracts,intelligence,receipt_import}.py own authorization, attempts, provider boundaries and historical evidence import; domain/states.py owns transitions. migration_v2.py and alembic/versions/002_operations.py implement additive migration. tests/test_architecture.py and test_migration_v2.py cover contracts. scripts/source_manifest.py verifies/packages committed source; scripts/module1_check.py runs isolated checks. Installed runtime is deliberately unchanged.
+
+## Module 2 security additions
+
+backend/app/{auth,credentials,gmail_oauth,ingress,privacy,redaction,url_safety}.py implement operator identity, encrypted OAuth, ingress controls, data lifecycle and safe provider boundaries. alembic/versions/003_security.py adds frozen security tables; existing ledger stays authoritative. scripts/{security_setup,rotate_credentials,backup_database,post_restore_safety}.py are explicit offline operations. frontend/app/login and AccountControls add functional sign-in/Gmail/logout controls without redesign. scripts/module2_check.py and module2_browser.py run sanitized checks; tests/test_security.py and test_postgres_security.py cover security/concurrency/restore.

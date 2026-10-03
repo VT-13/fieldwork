@@ -4,9 +4,19 @@ from pydantic import Field, model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 class Settings(BaseSettings):
-    model_config = SettingsConfigDict(env_file=".env", extra="ignore")
-    database_url: str = "sqlite:///./local.db"
-    api_key: str = "local-development-key-change-me"
+    model_config = SettingsConfigDict(env_file=".env", extra="ignore", hide_input_in_errors=True)
+    database_url: str = Field("sqlite:///./local.db", repr=False)
+    api_key: str = Field("", repr=False)
+    operator_password_hash: str = Field("", repr=False)
+    credential_keys: str = Field("", repr=False)
+    app_origin: str = "http://localhost:3000"
+    trusted_hosts: list[str] = ["localhost", "127.0.0.1", "testserver"]
+    response_preview_retention_days: int = Field(30, ge=1, le=90)
+    session_hours: int = Field(12, ge=1, le=24)
+    max_request_bytes: int = Field(100_000, ge=10_000, le=500_000)
+    oauth_redirect_uri: str = "http://localhost:3000/api/integrations/gmail/callback"
+    gmail_drafts_enabled: bool = False
+    allow_legacy_oauth: bool = False
     environment: str = "development"
     dry_run: bool = True
     manual_mode: bool = True
@@ -29,26 +39,51 @@ class Settings(BaseSettings):
     research_seconds: int = Field(120, ge=20, le=300)
     max_llm_calls: int = Field(7, ge=3, le=10)
     search_cooldown_days: int = 14
-    openai_api_key: str = ""
+    openai_api_key: str = Field("", repr=False)
     cheap_model: str = "gpt-4.1-mini"
     writing_model: str = "gpt-4.1"
     review_model: str = "gpt-4.1"
-    tavily_api_key: str = ""
-    firecrawl_api_key: str = ""
-    google_maps_api_key: str = ""
-    apollo_api_key: str = ""
-    hunter_api_key: str = ""
+    tavily_api_key: str = Field("", repr=False)
+    firecrawl_api_key: str = Field("", repr=False)
+    google_maps_api_key: str = Field("", repr=False)
+    apollo_api_key: str = Field("", repr=False)
+    hunter_api_key: str = Field("", repr=False)
     mail_provider: Literal["gmail", "outlook"] = "gmail"
     sender_email: str = ""
     oauth_client_id: str = ""
-    oauth_client_secret: str = ""
-    oauth_refresh_token: str = ""
+    oauth_client_secret: str = Field("", repr=False)
+    oauth_refresh_token: str = Field("", repr=False)
     microsoft_tenant: str = "common"
     @model_validator(mode="after")
     def production(self):
+        from pathlib import Path
+        env=Path('.env')
+        if env.exists() and (env.is_symlink() or env.stat().st_mode&0o077):
+            raise ValueError('Private .env must be a regular owner-only file (chmod 600)')
+        from urllib.parse import urlsplit
+        origin=urlsplit(self.app_origin)
+        if origin.scheme not in ('http','https') or origin.path not in ('','/') or origin.query or origin.fragment or origin.username or origin.password:
+            raise ValueError('APP_ORIGIN must be an exact HTTP(S) origin')
+        if self.operator_password_hash or self.credential_keys:
+            if len(self.api_key)<32 or self.api_key.startswith(('local-','replace-with-')):
+                raise ValueError('Operator/OAuth setup requires a strong separate API_KEY even in local development')
         if self.environment == "production":
-            if len(self.api_key) < 32 or self.api_key.startswith("local-"):
+            if self.mail_provider!='gmail':raise ValueError('Production release supports Gmail only')
+            if len(self.api_key) < 32 or self.api_key.startswith(("local-","replace-with-")):
                 raise ValueError("Production requires a random API_KEY of at least 32 characters")
+            from urllib.parse import urlsplit
+            from cryptography.fernet import Fernet
+            if not self.credential_keys:raise ValueError("Production requires CREDENTIAL_KEYS")
+            for key in self.credential_keys.split(","):Fernet(key.strip().encode())
+            if not self.operator_password_hash.startswith("scrypt$"):
+                raise ValueError("Production requires OPERATOR_PASSWORD_HASH")
+            if urlsplit(self.app_origin).scheme != 'https':
+                raise ValueError("Production requires HTTPS APP_ORIGIN")
+            if any('*' in h for h in self.trusted_hosts) or 'testserver' in self.trusted_hosts:
+                raise ValueError("Set explicit production TRUSTED_HOSTS")
+            if not self.data_directory or not Path(self.data_directory).is_absolute():raise ValueError('Production requires an absolute private DATA_DIRECTORY')
+            if self.allow_legacy_oauth or self.oauth_refresh_token:
+                raise ValueError("Production requires encrypted OAuth storage, not legacy tokens")
             if not self.database_url.startswith("postgresql"):
                 raise ValueError("Production requires PostgreSQL")
         return self

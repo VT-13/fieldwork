@@ -52,3 +52,7 @@
 ## Module 1: personal-first modular monolith
 
 One local primary operator/profile/Gmail account is the first release boundary. Public/shared SaaS, billing and tenant isolation are out of scope. Keep existing entities and add provider seams, database-serialized policy/attempt claims and explicit transitions. Future ownership/account keys must be added before shared access. See ../ARCHITECTURE.md and MIGRATION_PLAN.md. No deployment or campaign resume is authorized.
+
+## Module 2: personal operator sessions and encrypted OAuth
+
+Preserve the single operator boundary: hashed revocable server sessions for browsers and a separate CLI bearer key. Browser proxy forwards cookies, never a backend bearer secret. Store Google tokens/verifiers encrypted with an externally managed keyring. Connect requires session-bound PKCE/state and canonical Gmail identity; disconnect fences later sends and keeps receipts. Database-serialized ingress buckets reuse the existing lock. Explicit privacy content erasure retains delivery/suppression history. PostgreSQL validation is now local disposable evidence, not just CI intent.

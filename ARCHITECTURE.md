@@ -1,6 +1,6 @@
 # Fieldwork — personal-first architecture
 
-Module 1 establishes canonical source, not a deployed release. One operator, one student profile, one connected Gmail account, and one private local installation are supported. No public signup, shared-account deployment, tenant isolation, billing, or unattended agent-based authorization is supported. PostgreSQL remains a target verified by CI, not by this local run.
+Module 1 establishes canonical source, not a deployed release. One operator, one student profile, one connected Gmail account, and one private local installation are supported. No public signup, shared-account deployment, tenant isolation, billing, or unattended agent-based authorization is supported. Module 2 verifies migrations and concurrency on disposable PostgreSQL; production PostgreSQL17/container/TLS rollout remains gated.
 
 ## Modular monolith and ownership
 
@@ -62,3 +62,7 @@ Missing campaign policy fails closed. Worker DRY_RUN/MANUAL_MODE remain addition
 ## Release and expansion
 
 The canonical Git source is checked by `scripts/source_manifest.py`; CI detects changed, missing, or added source. Source-only bundles require a committed matching manifest. Installed drift is detectable with the same verifier. Deployment must follow `docs/MIGRATION_PLAN.md`; it is not automated or performed here. Multi-user expansion requires operator ownership keys, account-scoped policies/uniqueness, real authentication and authorization tests before any shared deployment. Existing provider contracts and explicit entity references allow this later without pretending today's singleton is tenant-safe.
+
+## Module 2 security boundary
+
+auth.py owns operator sessions/authorization; gmail_oauth.py and credentials.py own encrypted integration lifecycle. Integration.generation fences stale connections after disconnect/profile identity changes. ingress.py bounds requests and shares database rate buckets. privacy.py owns content deletion/export and hourly minimization. Schema003 is additive; no existing operator/profile/prospect/receipt row is reassigned. Next forwards authenticated cookies rather than holding browser-facing bearer authority. See SECURITY.md and docs/BACKUP_RESTORE.md. No source changes were deployed.

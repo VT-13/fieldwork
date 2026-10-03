@@ -10,10 +10,17 @@ from .core import Blocked, reserve, cached, cache_put, public_url, distance
 from .models import Usage, now
 
 async def request(method, url, **kwargs):
+    from .redaction import install_logging
+    install_logging()
+    allowed={'places.googleapis.com','api.tavily.com','api.apollo.io','api.firecrawl.dev','api.hunter.io'}
+    from urllib.parse import urlsplit
+    parsed=urlsplit(url)
+    if parsed.scheme!='https' or parsed.netloc not in allowed:
+        raise Blocked('Unsupported provider endpoint')
     # One billed attempt per reservation. Explicit job retry shares the budget.
     async with httpx.AsyncClient(timeout=18, follow_redirects=False) as client:
         response = await client.request(method, url, **kwargs)
-    response.raise_for_status()
+    if response.status_code>=300:raise Blocked("Provider request failed; inspect integration configuration")
     return response.json()
 
 
@@ -65,7 +72,8 @@ async def discover(db, spec):
     return result[:spec["limit"]]
 
 async def scrape(db, company, url):
-    public_url(url)
+    from .url_safety import research_url
+    await asyncio.to_thread(research_url,url)
     old = cached(db, "page:"+url)
     if old is not None:
         return old["text"]
@@ -73,6 +81,8 @@ async def scrape(db, company, url):
     reserve(db, "firecrawl", s.scrape_reserve_usd, company.id)
     data = await request("POST", "https://api.firecrawl.dev/v2/scrape", headers={"Authorization":"Bearer "+require(s.firecrawl_api_key,"FIRECRAWL_API_KEY")},
         json={"url":url, "formats":["markdown"], "onlyMainContent":True, "timeout":15000})
+    final_url=data.get('data',{}).get('metadata',{}).get('sourceURL',url)
+    if final_url!=url:await asyncio.to_thread(research_url,final_url)
     text = data.get("data", {}).get("markdown", "")[:16000]
     if not text:
         raise Blocked("No usable page content returned")
@@ -105,6 +115,8 @@ async def verify(db, contact):
     return contact.validation
 
 async def llm(db, company_id, schema, instruction, data, purpose="extract"):
+    from .redaction import install_logging
+    install_logging()
     s = settings()
     require(s.openai_api_key,"OPENAI_API_KEY")
     calls = db.scalar(select(func.count()).select_from(Usage).where(Usage.company_id==company_id,Usage.service.like("llm:%"),Usage.created_at >= now()-timedelta(hours=24)))

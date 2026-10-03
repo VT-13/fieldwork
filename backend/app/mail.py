@@ -13,36 +13,85 @@ class Mailbox:
     def __init__(self):
         self.cfg = settings()
         self.token = ""
+        self.generation = None
+        self.managed = False
 
     async def connect(self):
         s = self.cfg
+        if s.mail_provider=='gmail':
+            from .gmail_oauth import access
+            self.token,address,self.generation=await access()
+            self.cfg=s.model_copy(update={'sender_email':address});self.managed=True
+            return
+        if not s.allow_legacy_oauth or s.environment=='production':raise Blocked('Legacy mailbox authorization is disabled')
         if not all([s.oauth_client_id,s.oauth_refresh_token,s.sender_email]):
             raise Blocked("Mailbox OAuth credentials and SENDER_EMAIL are required")
         url = "https://oauth2.googleapis.com/token" if s.mail_provider=="gmail" else f"https://login.microsoftonline.com/{s.microsoft_tenant}/oauth2/v2.0/token"
         async with httpx.AsyncClient(timeout=20) as client:
             r = await client.post(url,data={"grant_type":"refresh_token","client_id":s.oauth_client_id,"client_secret":s.oauth_client_secret,"refresh_token":s.oauth_refresh_token})
-        r.raise_for_status()
+        if r.status_code>=400:raise Blocked("Mailbox refresh failed; reconnect")
         self.token = r.json()["access_token"]
         # Rotated Microsoft refresh tokens may be returned. Persist only in external secret storage;
         # the original remains valid under Microsoft's normal rotation policy until revoked.
         who = await self.call("GET","https://gmail.googleapis.com/gmail/v1/users/me/profile" if s.mail_provider=="gmail" else "https://graph.microsoft.com/v1.0/me?$select=mail,userPrincipalName")
         address = who.get("emailAddress") or who.get("mail") or who.get("userPrincipalName")
-        if address.lower()!=s.sender_email.lower():
+        if not address or address.lower()!=s.sender_email.lower():
             raise Blocked("OAuth mailbox identity does not match SENDER_EMAIL")
+
+    def ensure_authorized(self,db=None):
+        if self.managed:
+            from .gmail_oauth import require_connection
+            if db is not None:require_connection(db,self.generation)
+            else:
+                from .db import Session
+                with Session() as current:require_connection(current,self.generation)
+        elif not self.cfg.allow_legacy_oauth:raise Blocked('Mailbox authorization unavailable')
 
     async def call(self, method, url, **kwargs):
         from .services.ledger import active_delivery
         if method.upper()=="POST" and (url.endswith("/messages/send") or url.endswith("/sendMail")) and not active_delivery.get():
             raise Blocked("Delivery requires a policy-authorized ledger reservation")
+        if self.cfg.mail_provider=='gmail':
+            from urllib.parse import urlsplit
+            p=urlsplit(url)
+            if p.scheme!='https' or p.netloc!='gmail.googleapis.com' or not p.path.startswith('/gmail/v1/users/me/'):
+                raise Blocked('Unsupported Gmail endpoint')
+            import re
+            path=p.path.removeprefix('/gmail/v1/users/me/')
+            verb=method.upper()
+            read=verb=='GET' and re.fullmatch(r'(profile|messages|messages/[A-Za-z0-9_-]+|threads/[A-Za-z0-9_-]+)',path)
+            sending=verb=='POST' and path=='messages/send'
+            drafting=(verb=='POST' and path=='drafts') or (verb=='PUT' and re.fullmatch(r'drafts/[A-Za-z0-9_-]+',path))
+            if not (read or sending or drafting):raise Blocked('Unsupported Gmail operation; draft sends and raw mutations are prohibited')
+            if sending or drafting:
+                if not active_delivery.get():raise Blocked('Delivery requires a policy-authorized ledger reservation')
+                from .db import Session
+                from .models import ActionAttempt,Operation
+                with Session() as current:
+                    attempt=current.get(ActionAttempt,active_delivery.get())
+                    op=current.get(Operation,attempt.operation_id) if attempt else None
+                    allowed=('company_send','self_test') if sending else ('mailbox_draft',)
+                    if not attempt or not attempt.authorized or attempt.status!='running' or not op or op.kind not in allowed:
+                        raise Blocked('Provider mutation requires a matching durable authorized operation')
+                    if drafting:
+                        from .gmail_oauth import require_connection,COMPOSE
+                        if COMPOSE not in require_connection(current,self.generation).scopes:raise Blocked('Reconnect with explicit Gmail draft permission')
+            self.ensure_authorized()
         async with httpx.AsyncClient(timeout=25,follow_redirects=False) as client:
             r = await client.request(method,url,headers={"Authorization":"Bearer "+self.token,**kwargs.pop("headers",{})},**kwargs)
-        r.raise_for_status()
+        if r.status_code in (401,403):
+            if self.managed:
+                from .gmail_oauth import invalidate
+                invalidate('provider_rejected')
+            raise Blocked('Mailbox access rejected; reconnect')
+        if r.status_code>=400:raise Blocked('Mailbox provider request failed')
         return r.json() if r.content else {}
 
     async def send(self, db, row, contact, original):
         from .services.ledger import active_delivery
         if not active_delivery.get():
             raise Blocked("Delivery requires a policy-authorized ledger reservation")
+        self.ensure_authorized(db)
         s = self.cfg
         msg = EmailMessage()
         msg["From"] = s.sender_email
@@ -119,7 +168,7 @@ async def sync_mailbox(db, mailbox=None):
     for m in messages:
         h = m["headers"]
         sender = parseaddr(h.get("from",""))[1].lower()
-        if sender == settings().sender_email.lower():
+        if sender == getattr(mailbox,'cfg',settings()).sender_email.lower():
             for row in sent:
                 if row.message_id and h.get("message-id")==row.message_id and m.get("sent_verified") is True:
                     from .services.ledger import reconcile_sent

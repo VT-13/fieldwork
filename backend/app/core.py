@@ -27,7 +27,7 @@ def public_url(url):
     if "." not in host or host.endswith((".local", ".internal", ".localhost", ".test")):
         raise Blocked("Nonpublic hostname")
     try:
-        if not ipaddress.ip_address(host).is_global:
+        if not ipaddress.ip_address(host).is_global or ipaddress.ip_address(host).is_multicast:
             raise Blocked("Nonpublic IP address")
     except ValueError:
         pass

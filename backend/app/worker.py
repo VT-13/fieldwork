@@ -151,7 +151,7 @@ async def tick():
                     job=db.get(Job,job.id)
                     transition(db,job,"blocked" if isinstance(exc,Blocked) else "failed",domain="job",reason="execution_failed")
                     # Never persist exception URLs, request headers, or API keys.
-                    job.error=str(exc)[:500] if isinstance(exc,Blocked) else type(exc).__name__+": integration/job failure; inspect configuration or provider console"
+                    job.error=__import__('app.redaction',fromlist=['redact']).redact(str(exc))[:500] if isinstance(exc,Blocked) else type(exc).__name__+": integration/job failure; inspect configuration or provider console"
                     if job.kind in {"research","pipeline","generate"}:
                         company=db.get(Company,job.payload.get("id"))
                         if company and company.stage not in STOP_STAGES:
@@ -183,7 +183,7 @@ async def tick():
                         await send_one(db,row)
                         break
                     except Blocked as exc:
-                        row.review={**row.review,"send_block_reason":str(exc)}
+                        row.review={**row.review,"send_block_reason":__import__('app.redaction',fromlist=['redact']).redact(str(exc))}
                         db.commit()
             for initial in db.scalars(select(Outreach).where(Outreach.sequence==0,Outreach.status=="sent")):
                 company=db.get(Company,initial.company_id)

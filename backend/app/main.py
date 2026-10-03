@@ -2,10 +2,10 @@ import hashlib
 import json
 import secrets
 from datetime import timedelta
-from typing import Annotated
+from typing import Annotated, Literal
 from fastapi import FastAPI, Depends, Header, HTTPException, BackgroundTasks
 from fastapi.responses import JSONResponse
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from sqlalchemy import select, func, text
 from sqlalchemy.orm import Session as DBSession
 from .config import settings
@@ -22,23 +22,30 @@ from . import responses
 @asynccontextmanager
 async def lifespan(app):
     task=asyncio.create_task(responses.loop()) if settings().response_poll_enabled else None
+    from .privacy import retention_loop
+    maintenance=asyncio.create_task(retention_loop())
     yield
+    maintenance.cancel()
+    with suppress(asyncio.CancelledError):await maintenance
     if task:
         task.cancel()
         with suppress(asyncio.CancelledError): await task
 
-app=FastAPI(lifespan=lifespan,title="Fieldwork — Internship Outreach",version="0.1.0")
+app=FastAPI(docs_url=None,redoc_url=None,openapi_url=None,lifespan=lifespan,title="Fieldwork — Internship Outreach",version="0.1.0")
 
-def authorize(authorization: Annotated[str | None, Header()]=None):
-    expected="Bearer "+settings().api_key
-    if not authorization or not secrets.compare_digest(authorization,expected):
-        raise HTTPException(401,"Authentication required")
+from .auth import authorize
+from .ingress import Ingress
+from starlette.middleware.trustedhost import TrustedHostMiddleware
+app.add_middleware(Ingress)
+app.add_middleware(TrustedHostMiddleware,allowed_hosts=settings().trusted_hosts, www_redirect=False)
+from .redaction import redact,install_logging
+install_logging()
 DB=Annotated[DBSession,Depends(session)]
 Auth=Depends(authorize)
 
 @app.exception_handler(Blocked)
 async def blocked(_,exc):
-    return JSONResponse(status_code=409,content={"detail":str(exc)})
+    return JSONResponse(status_code=409,content={"detail":redact(str(exc))})
 
 def get(db,model,id):
     row=db.get(model,id)
@@ -65,7 +72,13 @@ def update_profile(body:ProfileInput,db:DB):
         raise HTTPException(422,"Name and email required for a verified profile")
     if len(json.dumps(body.model_dump()))>40000:
         raise HTTPException(422,"Profile exceeds 40 KB")
+    from .services.ledger import lock
+    lock(db)
     db.merge(Profile(id=1,data=body.model_dump(),updated_at=now()))
+    from .models import Integration
+    connected=db.get(Integration,'gmail')
+    if connected and connected.status=='connected' and connected.email.lower()!=body.email.strip().lower():
+        gmail_oauth.change(db,connected,'identity_mismatch','profile_identity_changed',clear=True)
     # Profile changes invalidate pending approvals so old claims cannot silently send.
     for row in db.scalars(select(Outreach).where(Outreach.status.in_(["draft","approved"]))):
         from .domain.states import transition
@@ -218,7 +231,7 @@ def config(db:DB):
         "max_pages":s.max_pages,"research_seconds":s.research_seconds,"mail_provider":s.mail_provider,
         "automation":state.value if state else {"enabled":False},
         "integrations":{name:bool(getattr(s,name+"_api_key")) for name in ["openai","tavily","firecrawl","google_maps","apollo","hunter"]},
-        "mail_connected":bool(s.oauth_refresh_token and s.sender_email),"demo_allowed":s.environment!="production"}
+        "mail_connected":gmail_oauth.status(db)["connected"],"demo_allowed":s.environment!="production"}
 
 @app.get("/metrics",dependencies=[Auth])
 def metrics(db:DB):
@@ -316,3 +329,67 @@ def response_handle(id:str,body:ResponseHandled,db:DB):
 async def send_self_test(id:str,db:DB):
     from .self_test import send
     return await send(db,id)
+
+
+from fastapi import Request
+from fastapi.exceptions import RequestValidationError
+@app.exception_handler(RequestValidationError)
+async def invalid_request(_,exc):
+    return JSONResponse(status_code=422,content={'detail':[{'loc':list(e['loc']),'type':e['type'],'msg':'Invalid value'} for e in exc.errors()]})
+
+@app.exception_handler(Exception)
+async def internal_failure(_,exc):
+    return JSONResponse(status_code=500,content={'detail':'Internal operation failed; inspect service health'})
+
+from .auth import browser_operator,origin_check,create_session,set_cookie,COOKIE
+from .models import OperatorSession
+class LoginInput(BaseModel):
+    password: str = Field(min_length=1,max_length=1024)
+
+@app.post('/auth/login')
+def login(body:LoginInput,request:Request,db:DB):
+    origin_check(request)
+    # Rotate an existing browser session when signing in again.
+    from .auth import digest
+    old=db.get(OperatorSession,digest(request.cookies.get(COOKIE,'')))
+    if old:old.revoked_at=now()
+    token=create_session(db,body.password)
+    result=JSONResponse({'operator':'personal'});set_cookie(result,token);return result
+
+@app.get('/auth/session',dependencies=[Auth])
+def auth_session():return {'operator':'personal'}
+
+@app.post('/auth/logout')
+def logout(db:DB,operator:Annotated[object,Depends(browser_operator)]):
+    db.get(OperatorSession,operator.session_hash).revoked_at=now();db.commit()
+    result=JSONResponse({'logged_out':True});result.delete_cookie(COOKIE,path='/');return result
+
+from . import gmail_oauth
+@app.get('/integrations/gmail',dependencies=[Auth])
+def gmail_status(db:DB):return gmail_oauth.status(db)
+
+@app.post('/integrations/gmail/connect')
+def gmail_connect(db:DB,operator:Annotated[object,Depends(browser_operator)]):return gmail_oauth.start(db,operator)
+
+@app.get('/integrations/gmail/callback')
+async def gmail_callback(db:DB,operator:Annotated[object,Depends(browser_operator)],state:str='',code:str='',error:str=''):
+    return await gmail_oauth.callback(db,operator,state,code,error)
+
+class DisconnectInput(BaseModel):
+    revoke: bool=True
+@app.post('/integrations/gmail/disconnect',dependencies=[Auth])
+async def gmail_disconnect(body:DisconnectInput,db:DB):return await gmail_oauth.disconnect(db,body.revoke)
+
+from . import privacy
+@app.get('/privacy/export',dependencies=[Auth])
+def privacy_export(db:DB):return privacy.export(db)
+
+class DeleteInput(BaseModel):
+    scope: Literal['resume','generated','personal']
+    confirmation: str
+@app.post('/privacy/delete',dependencies=[Auth])
+async def privacy_delete(body:DeleteInput,db:DB):
+    # Validate deletion before credential invalidation; deleting personal content also disconnects Gmail.
+    result=privacy.remove(db,body.scope,body.confirmation)
+    if body.scope=='personal':await gmail_oauth.disconnect(db,revoke=True)
+    return result

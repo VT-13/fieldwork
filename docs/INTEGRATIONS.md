@@ -1,3 +1,5 @@
+> Historical MVP instructions. Current security/OAuth setup is in [SETUP.md](SETUP.md) and [../SECURITY.md](../SECURITY.md); release ordering is in [MIGRATION_PLAN.md](MIGRATION_PLAN.md). Basic authentication, browser bearer forwarding and plaintext Gmail bootstrap described below are retired in canonical source. No deployment is authorized by this document.
+
 # Integration coverage
 
 | Source | Implemented route | Requirements / scope |

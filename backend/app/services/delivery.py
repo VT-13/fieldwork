@@ -41,6 +41,7 @@ async def send_company(db,id,*,mode='scheduled',provider=None):
         row=db.get(Outreach,id)
         company,contact,profile,original=policy.company(db,row,now(),mode)
         if provider.sender.lower()!=profile.data.get('email','').lower():raise Blocked('Sender/profile mismatch')
+        if hasattr(provider,'authorize'):provider.authorize(db)
         if content_fingerprint(db,row,contact,profile)!=fingerprint:raise Blocked('Message or evidence changed during preflight; review again')
         return {**policy.snapshot(db,mode),'content_hash':fingerprint}
     def reserve(attempt):

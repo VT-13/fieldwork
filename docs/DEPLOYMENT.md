@@ -1,3 +1,5 @@
+> Historical MVP instructions. Current security/OAuth setup is in [SETUP.md](SETUP.md) and [../SECURITY.md](../SECURITY.md); release ordering is in [MIGRATION_PLAN.md](MIGRATION_PLAN.md). Basic authentication, browser bearer forwarding and plaintext Gmail bootstrap described below are retired in canonical source. No deployment is authorized by this document.
+
 # Deployment guide
 
 The repository is ready to configure for deployment, but no hosted resources or mail credentials are provisioned. Use one PostgreSQL database, one API service, one persistent worker, and one Next.js service. A browser-only static export cannot run this system.

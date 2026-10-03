@@ -1,0 +1,63 @@
+{
+  "temporary_root": "/var/folders/9s/w0n67fhn557gd3bp17pkk9q80000gn/T/fieldwork-module1-rpur9xvu",
+  "checks": {
+    "security": {
+      "command": [
+        "/private/tmp/fieldwork-module2-venv/bin/python",
+        "-m",
+        "pytest",
+        "-q",
+        "-ra",
+        "tests/test_security.py",
+        "tests/test_postgres_security.py"
+      ],
+      "exit_code": 0,
+      "seconds": 4.59
+    },
+    "pytest": {
+      "command": [
+        "/private/tmp/fieldwork-module2-venv/bin/python",
+        "-m",
+        "pytest",
+        "-q",
+        "-ra"
+      ],
+      "exit_code": 0,
+      "seconds": 6.01
+    },
+    "migration": {
+      "command": [
+        "/private/tmp/fieldwork-module2-venv/bin/python",
+        "-m",
+        "alembic",
+        "upgrade",
+        "head"
+      ],
+      "exit_code": 0,
+      "seconds": 0.57
+    },
+    "pip-check": {
+      "command": [
+        "/private/tmp/fieldwork-module2-venv/bin/python",
+        "-m",
+        "pip",
+        "check"
+      ],
+      "exit_code": 0,
+      "seconds": 0.32
+    },
+    "lint": {
+      "command": [
+        "/private/tmp/fieldwork-module2-venv/bin/python",
+        "-m",
+        "ruff",
+        "check",
+        "app",
+        "scripts",
+        "tests"
+      ],
+      "exit_code": 0,
+      "seconds": 0.09
+    }
+  }
+}

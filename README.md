@@ -1,3 +1,5 @@
+> Module 2 account/security setup supersedes legacy authentication/token examples below. Read [SECURITY.md](SECURITY.md) and [docs/SETUP.md](docs/SETUP.md). Canonical source has not been deployed; recurring outreach remains paused.
+
 > Canonical Module 1 source: see [architecture](ARCHITECTURE.md), [reconciliation](docs/module1/RECONCILIATION.md), and [migration plan](docs/MIGRATION_PLAN.md). No Module 1 changes have been deployed; recurring outreach remains paused. Older deployment examples below are not authorization to start workers.
 
 # Fieldwork

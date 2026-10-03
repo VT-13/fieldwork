@@ -20,3 +20,7 @@ Phase 1 is ready to begin engineering, **not ready for deployment**. Its first t
 ## Module 1 handoff
 
 Architecture and reconciliation implementation completed in canonical source, without live deployment. Module 2 should consume ARCHITECTURE.md provider/policy/ledger contracts and docs/MIGRATION_PLAN.md. FW-005/006 remain product work; PostgreSQL/container/security release gates remain. Do not begin Module 2 without the user request.
+
+## Module 2 handoff
+
+Personal operator authentication, encrypted Gmail lifecycle, ingress/rate controls, privacy and PostgreSQL semantics are implemented and tested in canonical source. No deployment/live OAuth/outreach occurred. Module3 must preserve these API/provider/policy contracts; no frontend bearer fallback or unauthenticated local shortcut may return. Follow SECURITY.md, DATA_LIFECYCLE.md and MIGRATION_PLAN.md; this handoff does not start Module3.

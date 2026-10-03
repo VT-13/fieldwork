@@ -1,0 +1,21 @@
+# Private backup and restore
+
+Back up the database (profiles, facts, messages, pause/scoped campaigns, jobs, suppression, ledger and integration ciphertext), immutable historical receipt files, the source release/manifest and migration version. Back up the external encryption keyring and application secrets separately, access-controlled and encrypted. Without the matching keyring OAuth ciphertext cannot be recovered. Do not put plaintext secrets into a database dump or use token screenshots as backups. Enable disk encryption and protect backup directories; script outputs are created exclusively with mode 0600.
+
+## Consistent backup
+
+Stop outbound workers and hold outreach paused before maintenance. Set FIELDWORK_BACKUP_DATABASE_URL explicitly through secure environment configuration; the script does not infer the live database. From backend, use `python scripts/backup_database.py backup --file /private/path/fieldwork.dump`. PostgreSQL uses pg_dump custom format, no owner/ACL, with a password passed through the child environment rather than a CLI URL. Match the dump tool major to the server. SQLite uses the backup API on a read-only source connection, preserving WAL consistency. The destination must not already exist. Record the printed digest and keep a schema/source revision note with it. Historical receipt files are copied unchanged with private permissions and separately hashed. Never use a raw active SQLite/WAL file copy as the only backup.
+
+## Restore ordering
+
+1. Isolate the restoration destination. Stop all APIs/workers/automations. Restore into an empty disposable database first; inspect the source revision and verify backup/receipt hashes.
+2. Restore PostgreSQL with `python scripts/backup_database.py restore --file /private/path/fieldwork.dump --confirm-empty-restore-target`, with FIELDWORK_BACKUP_DATABASE_URL pointing to the explicit destination. The script fails on errors and uses a transaction. Restore SQLite by opening/verifying the saved backup in an isolated target, then atomically replacing the stopped installation's database together with its compatible source.
+3. Configure the correct separately stored encryption keyring; do not start processes yet. Restored credentials and sessions may predate revocation/deletion. Run `python scripts/post_restore_safety.py --apply` against the explicit restored database to disable campaigns/automation, clear local integration tokens, revoke browser sessions and invalidate OAuth grants. It preserves receipt IDs and uncertain attempts. Reconnect Gmail deliberately afterward.
+4. Migrate only forward with the source release compatible with the backup. Reapply any privacy deletions made after the backup; old snapshots can resurrect erased personal content. Verify old/new table counts, policy enabled=false, suppression entries, exact provider IDs, unknown/running holds and job payload/status. Read-only app checks come before any operator-approved resume.
+5. Retain historical receipts. Do not replay a job, provider callback, batch driver or missed schedule merely because it appears in a backup. Never reset uncertain attempts to pending. After new external actions have occurred, prefer forward repair; rolling back evidence can duplicate communication.
+
+Keep daily encrypted backups for a short documented rotation (recommended 30 days for this personal installation), prune older copies securely according to storage/media capabilities, and verify at least one restore periodically. Secure erasure on SSDs is not guaranteed by unlinking a file; encrypted disk/key destruction and backup expiration are part of deletion. Profile/database content remains encrypted at the storage layer, not by Fernet field encryption.
+
+## Verification performed
+
+Module 2 used pg_dump/pg_restore against disposable PostgreSQL. The restored database retained paused outreach policy, durable jobs, ledger attempts and provider receipt IDs. A full consistent backup was also checked for a digest and mode 0600. No live database backup, restore, migration, key change or send was run. Test binaries/tooling live only in private temporary directories and were shut down after checks; CI/production should use maintained patched PostgreSQL tools.

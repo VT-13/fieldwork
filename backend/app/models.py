@@ -170,3 +170,45 @@ class ExecutionLock(Base):
     __tablename__ = 'execution_lock'
     id: Mapped[int] = mapped_column(primary_key=True)
     version: Mapped[int] = mapped_column(default=0)
+
+
+# Private personal-operator security state; never returned by generic API serializers.
+class OperatorSession(Base):
+    __tablename__ = 'operator_sessions'
+    token_hash: Mapped[str] = mapped_column(String(64), primary_key=True)
+    operator_id: Mapped[str] = mapped_column(String(40), default='personal')
+    auth_version: Mapped[str] = mapped_column(String(64))
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=now)
+    expires_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), index=True)
+    revoked_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    __table_args__ = (CheckConstraint("operator_id = 'personal'", name='session_personal_operator'),)
+
+class Integration(Base):
+    __tablename__ = 'integrations'
+    id: Mapped[str] = mapped_column(String(40), primary_key=True, default='gmail')
+    operator_id: Mapped[str] = mapped_column(String(40), default='personal')
+    email: Mapped[str] = mapped_column(String(320), default='')
+    status: Mapped[str] = mapped_column(String(40), default='disconnected')
+    generation: Mapped[int] = mapped_column(default=0)
+    encrypted_tokens: Mapped[str] = mapped_column(Text, default='')
+    scopes: Mapped[list] = mapped_column(JSON, default=list)
+    updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=now)
+    __table_args__ = (CheckConstraint("operator_id = 'personal'", name='integration_personal_operator'),
+        CheckConstraint("status in ('connected','disconnected','reconnect_required','identity_mismatch')",name='integration_status'))
+
+class OAuthGrant(Base):
+    __tablename__ = 'oauth_grants'
+    state_hash: Mapped[str] = mapped_column(String(64), primary_key=True)
+    session_hash: Mapped[str] = mapped_column(ForeignKey('operator_sessions.token_hash'))
+    verifier_ciphertext: Mapped[str] = mapped_column(Text)
+    expected_email: Mapped[str] = mapped_column(String(320))
+    generation: Mapped[int]
+    requested_scopes: Mapped[list] = mapped_column(JSON)
+    expires_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), index=True)
+    consumed_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+
+class RateBucket(Base):
+    __tablename__ = 'rate_buckets'
+    key: Mapped[str] = mapped_column(String(64), primary_key=True)
+    window_start: Mapped[datetime] = mapped_column(DateTime(timezone=True))
+    count: Mapped[int] = mapped_column(default=0)

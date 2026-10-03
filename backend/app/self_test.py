@@ -17,6 +17,7 @@ async def send(db,id,box=None):
     box=box or Mailbox();await box.connect()
     if box.cfg.mail_provider!='gmail':raise Blocked('Self-tests require Gmail in this release')
     def authorize():
+        if hasattr(box,'ensure_authorized'):box.ensure_authorized(db)
         if desk.get_packet(db,id).value['draft_hash']!=fingerprint:raise Blocked('Draft changed; save current version')
         return policy.own_mailbox(db,desk.mailbox_address(db),box.cfg.sender_email,'self_test')
     def reserve(attempt):

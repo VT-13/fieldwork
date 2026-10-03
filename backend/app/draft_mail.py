@@ -12,8 +12,6 @@ async def save_mailbox_draft(db,id,draft_hash,mailbox=None):
     if row.value['draft_hash']!=draft_hash:
         raise Blocked('Draft changed after queueing; save the current version instead')
     address=mailbox_address(db)
-    if address.lower()!=settings().sender_email.lower():
-        raise Blocked('Connect the mailbox that matches your profile email before saving a draft')
     previous=row.value.get('mailbox_draft') or {}
     if previous.get('status') in {'saving','unknown'}:
         raise Blocked('Previous draft save is uncertain. Check Drafts before retrying; no duplicate created')
@@ -22,6 +20,7 @@ async def save_mailbox_draft(db,id,draft_hash,mailbox=None):
     box=mailbox or Mailbox()
     if not box.token:
         await box.connect()
+    if address.lower()!=getattr(box,'cfg',settings()).sender_email.lower():raise Blocked('Connect the mailbox that matches your profile email before saving a draft')
     db.refresh(row)
     if row.value['draft_hash']!=draft_hash:
         raise Blocked('Draft changed while connecting; save the current version instead')
@@ -31,8 +30,9 @@ async def save_mailbox_draft(db,id,draft_hash,mailbox=None):
             raise Blocked('The saved Outlook message is no longer a draft; it will not be modified')
     from .services import ledger,policy
     def authorize():
+        if hasattr(box,'ensure_authorized'):box.ensure_authorized(db)
         if get_packet(db,id).value['draft_hash']!=draft_hash:raise Blocked('Draft changed after queueing')
-        return policy.own_mailbox(db,mailbox_address(db),settings().sender_email,'mailbox_draft')
+        return policy.own_mailbox(db,mailbox_address(db),getattr(box,'cfg',settings()).sender_email,'mailbox_draft')
     def reserve(attempt):
         row.value={**row.value,'mailbox_draft':{**previous,'status':'saving','draft_hash':draft_hash,'to':address}}
     attempt,replay=ledger.claim(db,'mailbox-draft:'+id+':'+draft_hash,'mailbox_draft',settings().mail_provider,authorize,entity_id=id,reserve=reserve)
@@ -44,7 +44,8 @@ async def save_mailbox_draft(db,id,draft_hash,mailbox=None):
             path='https://gmail.googleapis.com/gmail/v1/users/me/drafts'
             if old_id:
                 path+='/'+quote(old_id,safe='');payload['id']=old_id
-            result=await box.call('PUT' if old_id else 'POST',path,json=payload)
+            with ledger.permit(attempt):
+                result=await box.call('PUT' if old_id else 'POST',path,json=payload)
         else:
             path='https://graph.microsoft.com/v1.0/me/messages'+('/'+quote(old_id,safe='') if old_id else '')
             label='FICTIONAL PRACTICE — not a researched opportunity.\n\n' if row.value.get('fictional') else ''
