@@ -48,3 +48,7 @@
 **Reason:** A build passing is not a security, PostgreSQL, or E2E pass.
 **Alternatives:** Silent dependency upgrades during baseline or assuming old docs are current.
 **Consequences:** Baseline artifacts remain durable; Phase 1 can start, but production release remains blocked by audit gates. Docker/PostgreSQL capability setup belongs to the phase that uses it.
+
+## Module 1: personal-first modular monolith
+
+One local primary operator/profile/Gmail account is the first release boundary. Public/shared SaaS, billing and tenant isolation are out of scope. Keep existing entities and add provider seams, database-serialized policy/attempt claims and explicit transitions. Future ownership/account keys must be added before shared access. See ../ARCHITECTURE.md and MIGRATION_PLAN.md. No deployment or campaign resume is authorized.

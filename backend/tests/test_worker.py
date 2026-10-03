@@ -58,3 +58,12 @@ async def test_crash_marks_sending_unknown_without_resend(db,ready,monkeypatch):
     db.add(j);db.commit()
     await worker.tick()
     assert j.status=='interrupted' and ready[2].status=='unknown'
+
+async def test_company_no_followup_policy_survives_automation_enable(db,ready,monkeypatch):
+    patch_worker(db,monkeypatch)
+    company,_,initial=ready
+    company.research={'followups':False}
+    company.stage='contacted';initial.status='sent';initial.sent_at=now()-timedelta(days=40)
+    db.add(State(key='automation',value={'enabled':True}));db.commit()
+    await worker.tick()
+    assert not db.scalar(select(Job).where(Job.kind=='generate'))

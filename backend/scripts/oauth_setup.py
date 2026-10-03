@@ -10,35 +10,15 @@ import secrets
 import webbrowser
 from http.server import HTTPServer, BaseHTTPRequestHandler
 from urllib.parse import urlencode, urlparse, parse_qs
-import json
-import shlex
-import ssl
-from types import SimpleNamespace
-from urllib.request import Request, urlopen
-from urllib.error import HTTPError
+import httpx
+from app.config import settings
 
 parser=argparse.ArgumentParser()
 parser.add_argument('--no-browser', action='store_true', help='Print the consent URL without launching a browser')
 args=parser.parse_args()
-values={}
-if Path('.env').exists():
-    for line in Path('.env').read_text().splitlines():
-        if '=' in line and not line.lstrip().startswith('#'):
-            key,value=line.split('=',1)
-            parts=shlex.split(value, comments=True)
-            values[key.strip()]=' '.join(parts)
-values.update(os.environ)
-s=SimpleNamespace(**{key:values.get(key.upper(),default) for key,default in {
-    'oauth_client_id':'','oauth_client_secret':'','mail_provider':'gmail','microsoft_tenant':'common'
-}.items()}, manual_mode=values.get('MANUAL_MODE','true').lower() in {'true','1','yes'})
+s=settings()
 if not s.oauth_client_id:
     raise SystemExit("Set OAUTH_CLIENT_ID (and OAUTH_CLIENT_SECRET for a confidential web client)")
-# Prefer an explicitly configured CA bundle; macOS system trust fixes Python.org
-# installations without a populated default certificate bundle. Never disable TLS.
-ca_file=os.environ.get("SSL_CERT_FILE")
-if not ca_file and Path('/etc/ssl/cert.pem').is_file():
-    ca_file='/etc/ssl/cert.pem'
-tls_context=ssl.create_default_context(cafile=ca_file)
 state=secrets.token_urlsafe(32)
 verifier=secrets.token_urlsafe(64)
 challenge=base64.urlsafe_b64encode(hashlib.sha256(verifier.encode()).digest()).decode().rstrip("=")
@@ -70,13 +50,9 @@ server.handle_request()
 server.server_close()
 if not result.get("code"): raise SystemExit("Authorization not received; retry bootstrap")
 endpoint="https://oauth2.googleapis.com/token" if google else f"https://login.microsoftonline.com/{s.microsoft_tenant}/oauth2/v2.0/token"
-payload={"client_id":s.oauth_client_id,"client_secret":s.oauth_client_secret,"code":result["code"],"redirect_uri":redirect,"grant_type":"authorization_code","code_verifier":verifier}
-try:
-    with urlopen(Request(endpoint,data=urlencode(payload).encode(),headers={"Content-Type":"application/x-www-form-urlencoded"}),timeout=30,context=tls_context) as response:
-        token=json.load(response).get("refresh_token")
-except HTTPError as exc:
-    raise SystemExit(f"Token exchange failed (HTTP {exc.code}); check app registration and redirect URI")
-
+r=httpx.post(endpoint,data={"client_id":s.oauth_client_id,"client_secret":s.oauth_client_secret,"code":result["code"],"redirect_uri":redirect,"grant_type":"authorization_code","code_verifier":verifier},timeout=30)
+if r.status_code!=200: raise SystemExit(f"Token exchange failed (HTTP {r.status_code}); check app registration and redirect URI")
+token=r.json().get("refresh_token")
 if not token: raise SystemExit("No refresh token returned; repeat with offline consent")
 path=Path('.env')
 lines=path.read_text().splitlines() if path.exists() else []

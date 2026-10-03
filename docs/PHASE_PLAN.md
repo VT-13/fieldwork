@@ -16,3 +16,7 @@ Phase 0 complete after baseline evidence and skill validation are recorded. **Do
 Use `AGENTS.md`, `.codex/skills/fieldwork-architecture/SKILL.md`, `docs/CODEBASE_MAP.md`, `docs/DECISIONS.md`, `BUG_AUDIT.md`, `docs/BASELINE.md`, and `docs/baseline/source-drift.json`. Read only relevant source/tests after that. Do not repeat the full audit or run historical campaign drivers.
 
 Phase 1 is ready to begin engineering, **not ready for deployment**. Its first task is reconciling workspace/runtime drift. Baseline failures and skips are preserved as release gates, not hidden. The active user's recurring outreach pause remains authoritative.
+
+## Module 1 handoff
+
+Architecture and reconciliation implementation completed in canonical source, without live deployment. Module 2 should consume ARCHITECTURE.md provider/policy/ledger contracts and docs/MIGRATION_PLAN.md. FW-005/006 remain product work; PostgreSQL/container/security release gates remain. Do not begin Module 2 without the user request.

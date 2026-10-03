@@ -1,6 +1,6 @@
 from datetime import datetime, timezone
 from uuid import uuid4
-from sqlalchemy import String, Text, DateTime, JSON, ForeignKey, UniqueConstraint, Index
+from sqlalchemy import String, Text, DateTime, JSON, ForeignKey, UniqueConstraint, Index, CheckConstraint
 from sqlalchemy.orm import Mapped, mapped_column
 from .db import Base
 
@@ -124,3 +124,49 @@ class State(Base):
     value: Mapped[dict] = mapped_column(JSON, default=dict)
 
 Index("outreach_due", Outreach.status, Outreach.due_at)
+
+# Operations contain identifiers and policy metadata, never message bodies or tokens.
+class Operation(Base):
+    __tablename__ = 'operations'
+    __table_args__ = (CheckConstraint("status in ('pending','running','succeeded','failed','unknown','blocked','skipped')",name='operation_status'),)
+    id: Mapped[str] = mapped_column(String(36), primary_key=True, default=uid)
+    idempotency_key: Mapped[str] = mapped_column(String(255), unique=True)
+    kind: Mapped[str] = mapped_column(String(60), index=True)
+    entity_id: Mapped[str] = mapped_column(String(100), default='')
+    outreach_id: Mapped[str | None] = mapped_column(ForeignKey('outreach.id'), index=True)
+    job_id: Mapped[str | None] = mapped_column(ForeignKey('jobs.id'))
+    provider: Mapped[str] = mapped_column(String(40), default='local')
+    status: Mapped[str] = mapped_column(String(20), default='pending', index=True)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=now)
+
+class ActionAttempt(Base):
+    __tablename__ = 'action_attempts'
+    __table_args__ = (UniqueConstraint('operation_id','number'),
+        CheckConstraint("status in ('running','succeeded','failed','unknown','blocked','skipped')",name='attempt_status'),)
+    id: Mapped[str] = mapped_column(String(36), primary_key=True, default=uid)
+    operation_id: Mapped[str] = mapped_column(ForeignKey('operations.id'), index=True)
+    number: Mapped[int]
+    retry_of: Mapped[str | None] = mapped_column(ForeignKey('action_attempts.id'))
+    status: Mapped[str] = mapped_column(String(20), index=True)
+    authorized: Mapped[bool] = mapped_column(default=False)
+    network_units: Mapped[int] = mapped_column(default=0)
+    policy: Mapped[dict] = mapped_column(JSON, default=dict)
+    reason: Mapped[str] = mapped_column(String(160), default='')
+    receipt: Mapped[dict] = mapped_column(JSON, default=dict)
+    started_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=now, index=True)
+    finished_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+
+class DomainTransition(Base):
+    __tablename__ = 'domain_transitions'
+    id: Mapped[str] = mapped_column(String(36), primary_key=True, default=uid)
+    domain: Mapped[str] = mapped_column(String(40))
+    entity_id: Mapped[str] = mapped_column(String(100), index=True)
+    from_state: Mapped[str] = mapped_column(String(40))
+    to_state: Mapped[str] = mapped_column(String(40))
+    reason: Mapped[str] = mapped_column(String(120), default='')
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=now)
+
+class ExecutionLock(Base):
+    __tablename__ = 'execution_lock'
+    id: Mapped[int] = mapped_column(primary_key=True)
+    version: Mapped[int] = mapped_column(default=0)

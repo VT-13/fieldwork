@@ -1,3 +1,5 @@
+> Historical MVP description. The authoritative Module 1 design is [../ARCHITECTURE.md](../ARCHITECTURE.md); deployment requires [MIGRATION_PLAN.md](MIGRATION_PLAN.md).
+
 # Architecture
 
 ```mermaid

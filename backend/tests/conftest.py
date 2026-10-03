@@ -17,15 +17,19 @@ def db():
 @pytest.fixture(autouse=True)
 def clean_settings(monkeypatch):
     settings.cache_clear()
+    # Unit tests must never inherit the personal mailbox or paid provider credentials.
+    for key in ["OAUTH_CLIENT_ID", "OAUTH_CLIENT_SECRET", "OAUTH_REFRESH_TOKEN", "SENDER_EMAIL", "OPENAI_API_KEY", "TAVILY_API_KEY", "FIRECRAWL_API_KEY", "GOOGLE_MAPS_API_KEY", "APOLLO_API_KEY", "HUNTER_API_KEY"]:
+        monkeypatch.setenv(key, "")
     monkeypatch.setenv("ENVIRONMENT","development")
     monkeypatch.setenv("DRY_RUN","true")
+    monkeypatch.setenv("RESPONSE_POLL_ENABLED","false")
     monkeypatch.setenv("MANUAL_MODE","false")
     yield
     settings.cache_clear()
 
 @pytest.fixture
 def ready(db):
-    from app.models import Company,Contact,Profile,Outreach,now
+    from app.models import Company,Contact,Profile,Outreach,Evidence,State,now
     from app.schemas import ProfileInput
     p=ProfileInput(name="Student Example",email="student@example.com",verified=True)
     db.add(Profile(id=1,data=p.model_dump()))
@@ -35,5 +39,10 @@ def ready(db):
     db.add(contact);db.flush()
     from app.core import profile_fingerprint
     row=Outreach(company_id=c.id,contact_id=contact.id,subject="Robotics project idea",body="Example draft",status="approved",review={"passed":True,"personalization_score":91,"profile_hash":profile_fingerprint(p.model_dump())})
+    c.research={'city':'Rocklin'};contact.source='https://example.com/contact'
+    evidence=Evidence(company_id=c.id,url=c.website,quote='An example service',fact='An example service',category='service')
+    db.add(evidence);db.flush();row.evidence_ids=[evidence.id]
+    row.review={**row.review,'grounded':True,'claims_supported':True,'non_generic':True,'names_correct':True,'non_spammy':True}
+    db.add(State(key='outreach_policy',value={'enabled':True,'max_followups_per_company':1}))
     db.add(row);db.commit()
     return c,contact,row

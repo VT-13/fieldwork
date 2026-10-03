@@ -3,12 +3,15 @@ import re
 from datetime import timedelta
 from sqlalchemy import select
 from . import providers
+from .services.contracts import IntelligenceProvider
+from .services.intelligence import ConfiguredIntelligence
 from .models import Company, Contact, Evidence, Outreach, Profile, now
 from .schemas import ResearchResult, DraftResult, ReviewResult, ProfileInput
 from .config import settings
 from .core import Blocked, score_company, public_url, aware, STOP_STAGES, profile_fingerprint
 
-async def research(db, company):
+async def research(db, company, *, gateway: IntelligenceProvider | None=None):
+    gateway = gateway or ConfiguredIntelligence()
     if company.demo:
         raise Blocked("Demo companies never use live research")
     if company.researched_at and aware(company.researched_at)>now()-timedelta(days=14):
@@ -18,7 +21,7 @@ async def research(db, company):
     async with asyncio.timeout(cfg.research_seconds):
         # Discover a contact once; a missing Hunter key does not block research-only use.
         if cfg.hunter_api_key and not db.scalar(select(Contact).where(Contact.company_id==company.id)):
-            for c in (await providers.hunter_contacts(db,company))[:3]:
+            for c in (await gateway.contacts(db,company))[:3]:
                 if not db.scalar(select(Contact).where(Contact.email==c["value"].lower())):
                     db.add(Contact(company_id=company.id,email=c["value"].lower(),name=" ".join(filter(None,[c.get("first_name"),c.get("last_name")])),title=c.get("position") or "",source="Hunter"))
             db.commit()
@@ -28,7 +31,7 @@ async def research(db, company):
         extracted = None
         for i,url in enumerate(urls):
             try:
-                content = await providers.scrape(db,company,url)
+                content = await gateway.scrape(db,company,url)
             except (providers.httpx.HTTPStatusError, Blocked):
                 if i == 0:
                     raise
@@ -36,7 +39,7 @@ async def research(db, company):
             pages.append({"url":url,"text":content[:9000]})
             # Extract after homepage and once more after priority pages; never after every page.
             if i == 0 or i == len(urls)-1 or (i == 3):
-                extracted = await providers.llm(db,company.id,ResearchResult,
+                extracted = await gateway.llm(db,company.id,ResearchResult,
                     "Extract company facts with exact short quotes from the supplied pages. Each fact needs its exact page URL. Use unknown/empty values for absent information. size must be 1-10, 11-50, 51-200, 201+, or unknown. Do not infer student friendliness or internship history from generic careers content. Limit to 6 high-value facts.",
                     {"company":company.name,"pages":pages})
                 valid = [f for f in extracted.facts if any(p["url"]==f.url and f.quote.strip() and f.quote in p["text"] for p in pages)]
@@ -57,7 +60,8 @@ async def research(db, company):
         score_company(company,bool(contact), (profile.data if profile else ProfileInput().model_dump())["interests"])
         db.commit()
 
-async def generate(db, company, sequence=0, replace=False):
+async def generate(db, company, sequence=0, replace=False, *, gateway: IntelligenceProvider | None=None):
+    gateway = gateway or ConfiguredIntelligence()
     if company.stage in STOP_STAGES:
         raise Blocked("Conversation stopped; no further outreach")
     existing = db.scalar(select(Outreach).where(Outreach.company_id==company.id,Outreach.sequence==sequence))
@@ -94,8 +98,8 @@ async def generate(db, company, sequence=0, replace=False):
     instruction += " Match the student's writing samples and voice notes if present. Be curious, direct and a little informal; use natural contractions. Ask one genuine company-specific question where useful. Avoid corporate praise, inflated adjectives, rehearsed enthusiasm and stock openings. Do not invent a personal anecdote, add fake typos, or optimize to fool a detector. A modest, concrete proposal is enough."
     last = None
     for attempt in range(2):
-        draft = await providers.llm(db,company.id,DraftResult,instruction,payload,"generate")
-        report = await providers.llm(db,company.id,ReviewResult,
+        draft = await gateway.llm(db,company.id,DraftResult,instruction,payload,"generate")
+        report = await gateway.llm(db,company.id,ReviewResult,
             "Independently check this email against the supplied evidence and student profile. Score personalization 0-100. Reject generic praise, unsupported company statements, wrong recipient names, exaggerated student claims, spam tone and follow-ups that add no new value. For initial outreach adds_new_value=true. All factual claims must be supported; an evidence ID alone is not proof. Return specific issues.",
             {**payload,"draft":draft.model_dump()},"review")
         issues = list(report.issues)

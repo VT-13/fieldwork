@@ -1,0 +1,18 @@
+{
+  "directory": "isolated Module 1 frontend snapshot",
+  "commands": [
+    {
+      "command": "npm ci --ignore-scripts",
+      "exit_code": 0
+    },
+    {
+      "command": "npm run typecheck",
+      "exit_code": 0
+    },
+    {
+      "command": "npm run build",
+      "exit_code": 0
+    }
+  ],
+  "notes": "Existing critical dependency advisory reported by npm; tracked as FW-010. No dependency changes or live frontend writes."
+}

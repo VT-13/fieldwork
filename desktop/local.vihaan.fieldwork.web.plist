@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>EnvironmentVariables</key>
+	<dict>
+		<key>ALLOW_LOCAL_NO_AUTH</key>
+		<string>true</string>
+		<key>APP_ORIGIN</key>
+		<string>http://localhost:3000</string>
+		<key>DAILY_SEND_LIMIT</key>
+		<string>25</string>
+		<key>DATABASE_URL</key>
+		<string>sqlite:////Users/vihaantirumala/.local/share/fieldwork/data/fieldwork.sqlite</string>
+		<key>LIVE_BATCH_DIRECTORY</key>
+		<string>/Users/vihaantirumala/.local/share/fieldwork/data/historical-batch</string>
+		<key>NODE_ENV</key>
+		<string>production</string>
+		<key>PATH</key>
+		<string>/Users/vihaantirumala/.nvm/versions/node/v24.18.0/bin:/usr/bin:/bin:/usr/sbin:/sbin</string>
+		<key>RESPONSE_POLL_ENABLED</key>
+		<string>true</string>
+		<key>SSL_CERT_FILE</key>
+		<string>/etc/ssl/cert.pem</string>
+	</dict>
+	<key>KeepAlive</key>
+	<true/>
+	<key>Label</key>
+	<string>local.vihaan.fieldwork.web</string>
+	<key>ProgramArguments</key>
+	<array>
+		<string>/Users/vihaantirumala/.nvm/versions/node/v24.18.0/bin/node</string>
+		<string>/Users/vihaantirumala/.local/share/fieldwork/frontend/node_modules/next/dist/bin/next</string>
+		<string>start</string>
+		<string>--hostname</string>
+		<string>127.0.0.1</string>
+		<string>--port</string>
+		<string>3000</string>
+	</array>
+	<key>RunAtLoad</key>
+	<true/>
+	<key>StandardErrorPath</key>
+	<string>/Users/vihaantirumala/.local/share/fieldwork/logs/web-service.log</string>
+	<key>StandardOutPath</key>
+	<string>/Users/vihaantirumala/.local/share/fieldwork/logs/web-service.log</string>
+	<key>ThrottleInterval</key>
+	<integer>10</integer>
+	<key>WorkingDirectory</key>
+	<string>/Users/vihaantirumala/.local/share/fieldwork/frontend</string>
+</dict>
+</plist>

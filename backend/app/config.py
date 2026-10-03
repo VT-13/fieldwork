@@ -10,6 +10,8 @@ class Settings(BaseSettings):
     environment: str = "development"
     dry_run: bool = True
     manual_mode: bool = True
+    response_poll_enabled: bool = False
+    data_directory: str = ""
     auto_approve: bool = False
     daily_send_limit: int = Field(25, ge=1, le=30)
     send_interval_seconds: int = Field(120, ge=60)

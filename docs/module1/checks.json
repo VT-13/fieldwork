@@ -1,0 +1,27 @@
+{
+  "temporary_root": "/var/folders/9s/w0n67fhn557gd3bp17pkk9q80000gn/T/fieldwork-module1-v5d2vu6p",
+  "checks": {
+    "pytest": {
+      "command": [
+        "/Users/vihaantirumala/.local/share/fieldwork/.venv/bin/python",
+        "-m",
+        "pytest",
+        "-q",
+        "-ra"
+      ],
+      "exit_code": 0,
+      "seconds": 2.79
+    },
+    "migration": {
+      "command": [
+        "/Users/vihaantirumala/.local/share/fieldwork/.venv/bin/python",
+        "-m",
+        "alembic",
+        "upgrade",
+        "head"
+      ],
+      "exit_code": 0,
+      "seconds": 0.45
+    }
+  }
+}

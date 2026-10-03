@@ -40,7 +40,9 @@ def distance(lat, lng, lat2, lng2):
     return 3958.8*2*math.asin(min(1, math.sqrt(x)))
 
 def reserve(db, service, amount, company_id=None):
-    # Called only by the database-leased worker; reservations include failures.
+    # Reservations include failures; policy also protects direct provider callers.
+    from .services.policy import background
+    background(db,"paid_provider")
     cfg = settings()
     if cfg.manual_mode:
         raise Blocked("Personal manual mode: paid API calls are disabled. Use the review desk.")
@@ -82,7 +84,7 @@ def score_company(company, has_contact, interests):
     company.score = min(100, sum(factors.values()))
     return company.score
 
-STOP_STAGES = {"replied", "positive", "negative", "bounce", "opt_out", "interview", "offer", "closed"}
+STOP_STAGES = {"auto_reply", "replied", "positive", "negative", "bounce", "opt_out", "interview", "offer", "closed"}
 
 def record_event(db, company, kind, source_id, detail=""):
     if db.scalar(select(Event).where(Event.source_id == source_id)):
@@ -93,7 +95,8 @@ def record_event(db, company, kind, source_id, detail=""):
         if company.stage not in {"offer", "interview"} or kind in {"offer", "bounce", "opt_out", "closed"}:
             company.stage = "replied" if kind == "reply" else kind
         for row in db.scalars(select(Outreach).where(Outreach.company_id == company.id, Outreach.status.in_(["draft", "approved", "rejected"]))):
-            row.status = "cancelled"
+            from .domain.states import transition
+            transition(db,row,"cancelled",reason="conversation_stopped")
     if kind in {"bounce", "opt_out", "negative"}:
         for c in db.scalars(select(Contact).where(Contact.company_id == company.id)):
             db.merge(Suppression(email=c.email.lower(), reason=kind))

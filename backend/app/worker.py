@@ -6,9 +6,13 @@ from datetime import timedelta
 from sqlalchemy import select, text
 from .db import Session, engine
 from .models import Company, Contact, Job, Outreach, State, now
+from .domain.states import transition
+from .services import ledger, policy
 from .config import settings
 from .core import Blocked, public_url, aware, STOP_STAGES
-from .providers import discover, verify
+from .providers import verify
+from .services.intelligence import ConfiguredProspects
+discover=ConfiguredProspects().discover
 from .pipeline import research, generate
 from .mail import send_one, sync_mailbox
 
@@ -47,7 +51,8 @@ def enqueue(db,kind,payload,key):
     db.commit()
     return job
 
-async def execute(db,job):
+async def _execute(db,job):
+    policy.background(db,job.kind)
     p=job.payload
     if settings().manual_mode and job.kind in {"discover","research","pipeline","generate","regenerate","verify","send"}:
         raise Blocked("Manual mode: use the personal review desk; paid calls and live sends are disabled")
@@ -98,6 +103,23 @@ async def execute(db,job):
         return {"draft_id":row.id,"status":row.status}
     return {"stage":company.stage}
 
+async def execute(db,job):
+    if not job.id:  # Unsaved callers can validate, but cannot create a durable job execution.
+        return await _execute(db,job)
+    def authorize():
+        if settings().manual_mode and job.kind in {"discover","research","pipeline","generate","regenerate","verify","send"}:
+            raise Blocked("Manual mode: paid calls and live sends are disabled")
+        return policy.background(db,job.kind)
+    attempt,replay=ledger.claim(db,'job:'+job.id,'job:'+job.kind,'local',authorize,entity_id=job.id,job_id=job.id,retry=True)
+    if replay:return attempt.receipt
+    try:
+        result=await _execute(db,job)
+    except Exception as exc:
+        db.rollback();ledger.finish(db,attempt,'failed',reason='job_blocked' if isinstance(exc,Blocked) else 'job_failed')
+        raise
+    ledger.finish(db,attempt,'succeeded',receipt=result or {})
+    return result
+
 async def tick():
     with leadership() as acquired:
         if not acquired:
@@ -105,24 +127,29 @@ async def tick():
         with Session() as db:
             # Crash recovery never blindly replays a potentially external mutation.
             for job in db.scalars(select(Job).where(Job.status=="running")):
-                job.status="interrupted"
+                transition(db,job,"interrupted",domain="job",reason="worker_interrupted")
+                op=ledger.operation(db,"job:"+job.id)
+                if op and op.status=="running":
+                    attempt=ledger.latest(db,op)
+                    ledger.finish(db,attempt,"unknown",reason="worker_interrupted")
                 job.error="Worker interrupted. Inspect results before explicitly retrying."
                 job.finished_at=now()
             for row in db.scalars(select(Outreach).where(Outreach.status=="sending")):
-                row.status="unknown"
+                op=ledger.operation(db,"send:"+row.id)
+                if not op or op.provider=="legacy":transition(db,row,"unknown",reason="legacy_crash_recovery")
             db.commit()
             job=db.scalar(select(Job).where(Job.status=="queued").order_by(Job.created_at).limit(1))
             if job:
-                job.status="running"
+                transition(db,job,"running",domain="job",reason="worker_claim")
                 job.started_at=now()
                 db.commit()
                 try:
                     job.result=await execute(db,job)
-                    job.status="done"
+                    transition(db,job,"done",domain="job",reason="completed")
                 except Exception as exc:
                     db.rollback()
                     job=db.get(Job,job.id)
-                    job.status="blocked" if isinstance(exc,Blocked) else "failed"
+                    transition(db,job,"blocked" if isinstance(exc,Blocked) else "failed",domain="job",reason="execution_failed")
                     # Never persist exception URLs, request headers, or API keys.
                     job.error=str(exc)[:500] if isinstance(exc,Blocked) else type(exc).__name__+": integration/job failure; inspect configuration or provider console"
                     if job.kind in {"research","pipeline","generate"}:
@@ -160,9 +187,11 @@ async def tick():
                         db.commit()
             for initial in db.scalars(select(Outreach).where(Outreach.sequence==0,Outreach.status=="sent")):
                 company=db.get(Company,initial.company_id)
-                if company.stage in STOP_STAGES or not initial.sent_at:
+                if company.research.get("followups") is False or company.stage in STOP_STAGES or not initial.sent_at:
                     continue
-                for seq,days in enumerate([7,14,30],1):
+                policy_row=db.get(State,"outreach_policy")
+                if not policy_row or not policy_row.value.get("enabled") or policy_row.value.get("max_followups_per_company")!=1:continue
+                for seq,days in [(1,7)]:
                     due=aware(initial.sent_at)+timedelta(days=days)
                     previous=db.scalar(select(Outreach).where(Outreach.company_id==company.id,Outreach.sequence==seq-1))
                     existing=db.scalar(select(Outreach).where(Outreach.company_id==company.id,Outreach.sequence==seq))

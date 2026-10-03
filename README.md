@@ -1,3 +1,5 @@
+> Canonical Module 1 source: see [architecture](ARCHITECTURE.md), [reconciliation](docs/module1/RECONCILIATION.md), and [migration plan](docs/MIGRATION_PLAN.md). No Module 1 changes have been deployed; recurring outreach remains paused. Older deployment examples below are not authorization to start workers.
+
 # Fieldwork
 
 **Phase 0 audit (October 3, 2026):** Start with [CODEBASE_MAP](docs/CODEBASE_MAP.md), [BASELINE](docs/BASELINE.md), [BUG_AUDIT](BUG_AUDIT.md), and [PHASE_PLAN](docs/PHASE_PLAN.md). This workspace differs from the newer installed Mac app; reconcile the recorded source drift before deployment. Older workflow/deployment descriptions below are historical and do not supersede the active CRM policy. Six project skills and repository instructions now live in `.codex/skills/` and `AGENTS.md`. Phase 1 has not begun.
@@ -94,3 +96,9 @@ internship-platform/
 ```
 
 See [architecture](docs/ARCHITECTURE.md), [setup and environment variables](docs/SETUP.md), [deployment](docs/DEPLOYMENT.md), [testing](docs/TESTING.md), and [example workflow](docs/EXAMPLE_WORKFLOW.md).
+
+## Personal Gmail response inbox
+
+Set `RESPONSE_POLL_ENABLED=true` in backend/.env to check outreach responses every five minutes while the API is running. The personal installation has this enabled. Gmail send/read-only OAuth access is sufficient. The tracker reads known outreach threads and searches for unthreaded contact replies and delivery failures; it does not change Gmail labels or read status. Human replies appear under Replies needing attention, with company, preview, direct Gmail link, and a reversible Mark handled control. Automatic replies, opt-outs, and bounces are shown separately and stop outreach. Use Check now for an immediate check. Last successful check and connection failures are displayed. This monitors the connected account only, and needs the Mac awake and backend running.
+
+For scheduled runs use `SSL_CERT_FILE=/etc/ssl/cert.pem ../.venv/bin/python -m app.responses` from backend and confirm status ok. Tests in backend/tests/test_responses.py cover reply matching, deduplication, automatic acknowledgments, bounce evidence, quoted text, and safe previews.

@@ -53,3 +53,7 @@ See `BASELINE.md` and `baseline/results.json`: workspace 48 tests pass, runtime 
 `compose.yaml`: PostgreSQL, migration, API, legacy worker and web. Dockerfiles are non-root and include context ignores, but images were not built in this environment. `Makefile` wraps Docker/tests/build. Railway/Render/Vercel guidance exists; no deployment was executed. Docker, PostgreSQL CLI, gh and hosted deployment CLIs are unavailable here. GitHub tools are available, but this project has no remote.
 
 Main risks: source drift; three sending paths; local locks and hard-coded HOME paths; inconsistent policy/state machines; no tenant authorization; plaintext OAuth storage for a personal app; rate-limit/retention gaps; missing frontend lint/E2E; outdated dependency advisories and stale deployment docs. See `../BUG_AUDIT.md` for evidence and priorities.
+
+## Module 1 canonical additions
+
+Canonical source now includes the runtime campaign, responses, self-test, scheduled helper, desktop shell and UI. backend/app/services/{policy,ledger,delivery,email_provider,contracts,intelligence,receipt_import}.py own authorization, attempts, provider boundaries and historical evidence import; domain/states.py owns transitions. migration_v2.py and alembic/versions/002_operations.py implement additive migration. tests/test_architecture.py and test_migration_v2.py cover contracts. scripts/source_manifest.py verifies/packages committed source; scripts/module1_check.py runs isolated checks. Installed runtime is deliberately unchanged.

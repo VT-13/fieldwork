@@ -3,7 +3,7 @@ import json
 import secrets
 from datetime import timedelta
 from typing import Annotated
-from fastapi import FastAPI, Depends, Header, HTTPException
+from fastapi import FastAPI, Depends, Header, HTTPException, BackgroundTasks
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 from sqlalchemy import select, func, text
@@ -16,7 +16,18 @@ from .core import Blocked, public_url, record_event, day_start, score_company, p
 from .pipeline import learning
 from .worker import enqueue
 
-app=FastAPI(title="Fieldwork — Internship Outreach",version="0.1.0")
+import asyncio
+from contextlib import asynccontextmanager, suppress
+from . import responses
+@asynccontextmanager
+async def lifespan(app):
+    task=asyncio.create_task(responses.loop()) if settings().response_poll_enabled else None
+    yield
+    if task:
+        task.cancel()
+        with suppress(asyncio.CancelledError): await task
+
+app=FastAPI(lifespan=lifespan,title="Fieldwork — Internship Outreach",version="0.1.0")
 
 def authorize(authorization: Annotated[str | None, Header()]=None):
     expected="Bearer "+settings().api_key
@@ -57,7 +68,8 @@ def update_profile(body:ProfileInput,db:DB):
     db.merge(Profile(id=1,data=body.model_dump(),updated_at=now()))
     # Profile changes invalidate pending approvals so old claims cannot silently send.
     for row in db.scalars(select(Outreach).where(Outreach.status.in_(["draft","approved"]))):
-        row.status="rejected"
+        from .domain.states import transition
+        transition(db,row,"rejected",reason="profile_changed")
         row.review={**row.review,"passed":False,"issues":["Profile changed. Regenerate and review this draft."]}
     db.commit()
     return body
@@ -148,7 +160,8 @@ def approve(id:str,db:DB):
     profile=get(db,Profile,1)
     if row.review.get("profile_hash")!=profile_fingerprint(profile.data):
         raise Blocked("Profile changed; regenerate the draft")
-    row.status="approved"
+    from .domain.states import transition
+    transition(db,row,"approved",reason="operator_approved")
     db.commit()
     return asdict(row)
 
@@ -181,7 +194,8 @@ def retry_job(id:str,db:DB):
     job=get(db,Job,id)
     if job.kind=="send" or job.status not in {"failed","blocked","interrupted"}:
         raise Blocked("Only failed non-send jobs may be explicitly retried")
-    job.status="queued"
+    from .domain.states import transition
+    transition(db,job,"queued",domain="job",reason="operator_retry")
     job.error=""
     db.commit()
     return asdict(job)
@@ -261,3 +275,44 @@ def desk_eml(id:str,db:DB):
 def desk_mailbox(id:str,db:DB):
     packet=desk.get_packet(db,id).value
     return asdict(enqueue(db,"mailbox_draft",{"id":id,"draft_hash":packet["draft_hash"]},"mailbox-draft:"+id+":"+packet["draft_hash"]))
+
+from . import campaign
+@app.get('/campaign', dependencies=[Auth])
+def campaign_status():
+    return campaign.status()
+
+@app.post('/campaign/stop', dependencies=[Auth])
+def campaign_stop():
+    return campaign.stop()
+
+class PolicySwitch(BaseModel):
+    enabled: bool
+
+@app.put('/outreach-policy', dependencies=[Auth])
+def switch_outreach_policy(body:PolicySwitch,db:DB):
+    from .services.policy import set_paused
+    return set_paused(db,body.enabled)
+
+@app.get('/responses',dependencies=[Auth])
+def response_list(db:DB):
+    return responses.listing(db)
+
+@app.post('/responses/sync',dependencies=[Auth],status_code=202)
+async def response_sync(background:BackgroundTasks):
+    background.add_task(responses.sync)
+    return {'status':'queued'}
+
+class ResponseHandled(BaseModel):
+    handled: bool
+
+@app.put('/responses/{id}',dependencies=[Auth])
+def response_handle(id:str,body:ResponseHandled,db:DB):
+    row=get(db,State,'response:'+id)
+    row.value={**row.value,'handled':body.handled}
+    db.commit()
+    return row.value
+
+@app.post('/desk/{id}/self-test',dependencies=[Auth])
+async def send_self_test(id:str,db:DB):
+    from .self_test import send
+    return await send(db,id)

@@ -29,9 +29,14 @@ async def save_mailbox_draft(db,id,draft_hash,mailbox=None):
         current=await box.call('GET','https://graph.microsoft.com/v1.0/me/messages/'+quote(previous['provider_id'],safe='')+'?$select=isDraft')
         if not current.get('isDraft'):
             raise Blocked('The saved Outlook message is no longer a draft; it will not be modified')
-    # Persist intent before the external write. There is no automatic create retry.
-    row.value={**row.value,'mailbox_draft':{**previous,'status':'saving','draft_hash':draft_hash,'to':address}}
-    db.commit()
+    from .services import ledger,policy
+    def authorize():
+        if get_packet(db,id).value['draft_hash']!=draft_hash:raise Blocked('Draft changed after queueing')
+        return policy.own_mailbox(db,mailbox_address(db),settings().sender_email,'mailbox_draft')
+    def reserve(attempt):
+        row.value={**row.value,'mailbox_draft':{**previous,'status':'saving','draft_hash':draft_hash,'to':address}}
+    attempt,replay=ledger.claim(db,'mailbox-draft:'+id+':'+draft_hash,'mailbox_draft',settings().mail_provider,authorize,entity_id=id,reserve=reserve)
+    if replay:return {**attempt.receipt,'status':'saved','to':address}
     try:
         old_id=previous.get('provider_id')
         if settings().mail_provider=='gmail':
@@ -48,9 +53,11 @@ async def save_mailbox_draft(db,id,draft_hash,mailbox=None):
                 'toRecipients':[{'emailAddress':{'address':address}}]})
         saved={'status':'saved','provider_id':result['id'],'draft_hash':draft_hash,'to':address,'at':now().isoformat(),'provider':settings().mail_provider}
         db.refresh(row)
-        row.value={**row.value,'mailbox_draft':saved};db.commit()
+        row.value={**row.value,'mailbox_draft':saved}
+        ledger.finish(db,attempt,'succeeded',receipt={k:v for k,v in saved.items() if k!='to'},reason='draft_saved')
         return saved
     except Exception:
         db.refresh(row)
-        row.value={**row.value,'mailbox_draft':{**row.value['mailbox_draft'],'status':'unknown'}};db.commit()
+        row.value={**row.value,'mailbox_draft':{**row.value['mailbox_draft'],'status':'unknown'}}
+        ledger.finish(db,attempt,'unknown',reason='draft_save_uncertain')
         raise Blocked('Mailbox draft save failed or is uncertain. Check provider permissions and Drafts; no message was sent by this operation')

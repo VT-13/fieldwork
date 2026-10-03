@@ -51,6 +51,7 @@ class FakeMailbox:
     token="valid"
     def __init__(self,error=None,messages=None): self.error=error;self.sent=0;self.items=messages or []
     async def messages(self,since): return self.items
+    async def call(self,method,url,**kwargs):return {"messages":[],"labelIds":["SENT"]}
     async def send(self,db,row,contact,original):
         self.sent+=1
         if self.error: raise self.error
@@ -84,18 +85,18 @@ async def test_quota_counts_uncertain_attempts(db,ready,live,monkeypatch):
     monkeypatch.setenv("DAILY_SEND_LIMIT","1")
     other=Outreach(company_id=ready[0].id,contact_id=ready[1].id,sequence=1,status="unknown",sent_at=now(),attempts=1)
     db.add(other);db.commit()
-    with pytest.raises(Blocked,match="Daily sending"): await mail.send_one(db,ready[2],FakeMailbox())
+    with pytest.raises(Blocked,match="Daily total"): await mail.send_one(db,ready[2],FakeMailbox())
 
 async def test_stale_or_catchall_validation_blocks(db,ready,live):
     ready[1].validated_at=now()-timedelta(days=8)
-    with pytest.raises(Blocked,match="fresh"): await mail.send_one(db,ready[2],FakeMailbox())
+    with pytest.raises(Blocked,match="[Ff]resh"): await mail.send_one(db,ready[2],FakeMailbox())
     ready[1].validated_at=now();ready[1].validation="risky"
     with pytest.raises(Blocked,match="validation"): await mail.send_one(db,ready[2],FakeMailbox())
 
 async def test_reply_detected_immediately_before_followup(db,ready,live):
     c,contact,first=ready
     first.status="sent";first.sent_at=now()-timedelta(days=7);first.thread_id="thread";first.message_id="<initial@example.com>"
-    follow=Outreach(company_id=c.id,contact_id=contact.id,sequence=1,status="approved",review={"passed":True,"personalization_score":90,"profile_hash":profile_fingerprint(db.get(Profile,1).data)})
+    follow=Outreach(company_id=c.id,contact_id=contact.id,sequence=1,status="approved",subject="Follow-up",body="A new idea",evidence_ids=first.evidence_ids,review={**first.review,"adds_new_value":True})
     db.add(follow);db.commit()
     box=FakeMailbox(messages=[{"id":"reply1","thread":"thread","headers":{"from":contact.email,"subject":"Re: project"},"body":"Sure, let's talk"}])
     with pytest.raises(Blocked,match="stopped"): await mail.send_one(db,follow,box)
@@ -104,7 +105,7 @@ async def test_reply_detected_immediately_before_followup(db,ready,live):
 async def test_unknown_send_reconciles_from_sent_mail(db,ready,live):
     row=ready[2];row.status="unknown";row.message_id="<test@example.com>";row.sent_at=now()
     db.commit()
-    box=FakeMailbox(messages=[{"id":"confirmed","thread":"thread1","headers":{"from":"student@example.com","message-id":row.message_id},"body":row.body}])
+    box=FakeMailbox(messages=[{"id":"confirmed","thread":"thread1","headers":{"from":"student@example.com","message-id":row.message_id},"body":row.body,"sent_verified":True}])
     await mail.sync_mailbox(db,box)
     assert row.status=="sent" and row.provider_id=="confirmed"
 
@@ -158,3 +159,20 @@ async def test_quality_score_must_be_strictly_above_80(db,ready,live):
 async def test_demo_cannot_send_even_if_manually_approved(db,ready,live):
     ready[0].demo=True
     with pytest.raises(Blocked,match="Demo"): await mail.send_one(db,ready[2],FakeMailbox())
+
+async def test_no_followup_policy_blocks_explicit_send(db,ready,live):
+    company,contact,first=ready
+    company.research={'followups':False}
+    follow=Outreach(company_id=company.id,contact_id=contact.id,sequence=1,status='approved')
+    db.add(follow);db.commit();box=FakeMailbox()
+    with pytest.raises(Blocked,match='Follow-ups are disabled'):
+        await mail.send_one(db,follow,box)
+    assert box.sent==0
+
+async def test_auto_response_stops_followups_but_is_not_human_reply(db,ready,live):
+    from app.models import Event
+    row=ready[2];row.status='sent';row.thread_id='thread';db.commit()
+    box=FakeMailbox(messages=[{'id':'auto1','thread':'thread','headers':{'from':ready[1].email,'auto-submitted':'auto-replied','subject':'Thanks'},'body':'We received your email'}])
+    await mail.sync_mailbox(db,box)
+    event=db.scalar(select(Event).where(Event.source_id=='gmail:auto1'))
+    assert event.kind=='auto_reply' and ready[0].stage=='auto_reply'
