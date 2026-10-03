@@ -24,3 +24,7 @@ Architecture and reconciliation implementation completed in canonical source, wi
 ## Module 2 handoff
 
 Personal operator authentication, encrypted Gmail lifecycle, ingress/rate controls, privacy and PostgreSQL semantics are implemented and tested in canonical source. No deployment/live OAuth/outreach occurred. Module3 must preserve these API/provider/policy contracts; no frontend bearer fallback or unauthenticated local shortcut may return. Follow SECURITY.md, DATA_LIFECYCLE.md and MIGRATION_PLAN.md; this handoff does not start Module3.
+
+## Module 3 handoff
+
+The final field-notebook design system, four flagship surfaces and consistent secondary views are implemented and browser-tested in canonical source. Shared Pydantic/generated TypeScript+runtime contracts, deduplicated resources and comprehensive frontend lint/browser CI resolve FW-009. See `docs/module3/README.md`, `critique.md` and verification artifacts. The installed runtime and pause remain preserved. Module 4 is ready to consume the stable prospect/evidence/review patterns, but has not started and requires the user's prompt.

@@ -1,0 +1,7 @@
+.next/
+node_modules/
+lib/contracts.ts
+lib/contracts.schema.json
+tests/fixture.json
+test-results/
+playwright-report/

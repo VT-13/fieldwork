@@ -34,7 +34,7 @@ def login(client):
 def test_sessions_require_server_auth_expire_and_logout(db,secure):
     with TestClient(app) as client:
         assert client.get('/profile').status_code==401
-        assert client.get('/outreach/other-id').status_code==404  # no such public route
+        assert client.get('/outreach/other-id').status_code==405  # PATCH-only path exposes no GET data
         bad=client.post('/auth/login',headers={'Origin':settings().app_origin},json={'password':'wrong'})
         assert bad.status_code==401
         result=login(client);assert result.status_code==200

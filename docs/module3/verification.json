@@ -1,0 +1,80 @@
+{
+  "module": 3,
+  "status": "complete",
+  "frontend": {
+    "lint": {
+      "passed": true,
+      "log": "lint.log"
+    },
+    "typecheck": {
+      "passed": true,
+      "log": "typecheck.log"
+    },
+    "format-check": {
+      "passed": true,
+      "log": "format-check.log"
+    },
+    "build": {
+      "passed": true,
+      "log": "build.log"
+    }
+  },
+  "browser": {
+    "passed": 12,
+    "failed": 0,
+    "engine": "Chromium via Playwright",
+    "viewports": [
+      [
+        1728,
+        1117
+      ],
+      [
+        1280,
+        900
+      ],
+      [
+        768,
+        1024
+      ],
+      [
+        390,
+        844
+      ]
+    ],
+    "flagship_viewport_combinations": 16,
+    "wcag_rule_sets": [
+      "wcag2a",
+      "wcag2aa",
+      "wcag21a",
+      "wcag21aa"
+    ],
+    "page_exceptions_in_successful_capture_flows": 0,
+    "document_horizontal_overflow": false,
+    "fixtures_only": true,
+    "safari_verified": false
+  },
+  "backend": {
+    "passed": 133,
+    "skipped": 0,
+    "warnings": 2,
+    "postgresql_exercised": true
+  },
+  "preservation": {
+    "installed_source_unchanged": true,
+    "recurring_policy_unchanged": true,
+    "recurring_enabled": false,
+    "historical_counts_unchanged": true,
+    "counts": {
+      "companies": 46,
+      "outreach": 46,
+      "events": 6
+    },
+    "real_provider_calls": 0,
+    "real_emails_sent": 0,
+    "deployed": false
+  },
+  "production_node_vulnerabilities": 0,
+  "dev_tool_advisory": "One upstream braces advisory reported through five dev-only lint packages; see BUG_AUDIT.md.",
+  "module4_started": false,
+  "module4_readiness": "ready for its separately authorized prompt"
+}

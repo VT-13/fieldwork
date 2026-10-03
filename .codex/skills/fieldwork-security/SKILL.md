@@ -3,7 +3,7 @@ name: fieldwork-security
 description: Audit or change Fieldwork authentication, authorization, OAuth, credentials, externally supplied content, logging, privacy, or deployment security.
 ---
 
-Use `BUG_AUDIT.md` to distinguish confirmed defects from unverified exposure. Current single-user bearer/Basic auth is not tenant isolation. Require ownership checks and fail-closed authorization before any shared deployment; a loopback hostname is not authentication.
+Use `BUG_AUDIT.md` to distinguish confirmed defects from unverified exposure. Current private operator sessions and separate CLI bearer access are personal installation boundaries, not tenant isolation. Require ownership checks and fail-closed authorization before any shared deployment; a loopback hostname is not authentication.
 
 Keep OAuth state, PKCE, exact redirect validation, minimum scopes and mailbox identity checks. Store secrets outside source, artifacts and logs; encrypted durable credential storage is required for hosted accounts. Test rotation and revocation without printing tokens. Keep CSRF/origin defenses on mutations; render untrusted text safely and use appropriate security headers.
 

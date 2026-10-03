@@ -1,6 +1,5 @@
 """Persisted workflow vocabulary and transition rules (no provider behavior)."""
 from enum import StrEnum
-from ..core import Blocked
 
 class MessageState(StrEnum):
     DRAFT='draft'; APPROVED='approved'; REJECTED='rejected'; CANCELLED='cancelled'
@@ -27,6 +26,7 @@ OPERATION_TRANSITIONS = {
 }
 
 def transition(db, entity, to_state, *, domain='message', reason=''):
+    from ..core import Blocked
     from ..models import DomainTransition
     rules = {'message': MESSAGE_TRANSITIONS, 'job': JOB_TRANSITIONS, 'operation': OPERATION_TRANSITIONS}[domain]
     previous = entity.status

@@ -25,6 +25,8 @@ jobs:
         working-directory: backend
       - run: ruff check app scripts tests
         working-directory: backend
+      - run: python ../scripts/frontend_contracts.py --check && python ../scripts/module3_fixture.py --check
+        working-directory: backend
       - run: python -m pytest -q
         working-directory: backend
       - run: alembic upgrade head
@@ -37,5 +39,9 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with: {node-version: '22', cache: npm, cache-dependency-path: frontend/package-lock.json}
-      - run: npm ci && npm run typecheck && npm run build && npm audit --omit=dev
+      - run: npm ci --ignore-scripts && npm run lint && npm run typecheck && npm run format:check && npm run build && npm audit --omit=dev
+        working-directory: frontend
+      - run: npx playwright install --with-deps chromium
+        working-directory: frontend
+      - run: npm run test:browser
         working-directory: frontend

@@ -1,0 +1,595 @@
+{
+  "companies": [
+    {
+      "id": "qa-company-0",
+      "name": "Aster Robotics (Demo)",
+      "domain": "company-0.example",
+      "website": "https://company-0.example/",
+      "industry": "Robotics",
+      "distance_miles": 8.0,
+      "description": "A fictional robotics team building vision tools for small industrial systems.",
+      "source": "Fictional browser QA fixture",
+      "research": {
+        "founder": "Jordan Lee (fictional)",
+        "size": "12 people (fixture)",
+        "internship_history": "Unknown",
+        "technologies": [
+          "Python",
+          "Web tools"
+        ]
+      },
+      "score": 86,
+      "score_factors": {
+        "proximity": 18.0,
+        "technology_alignment": 18.0,
+        "contact_availability": 15.0,
+        "student_friendliness": 0.0
+      },
+      "stage": "drafted",
+      "demo": true,
+      "created_at": "2026-10-03T10:00:00Z",
+      "researched_at": "2026-10-03T10:00:00Z"
+    },
+    {
+      "id": "qa-company-1",
+      "name": "Northline Software (Demo)",
+      "domain": "company-1.example",
+      "website": "https://company-1.example/",
+      "industry": "Software",
+      "distance_miles": 14.0,
+      "description": "A fictional local team improving scheduling tools for service businesses.",
+      "source": "Fictional browser QA fixture",
+      "research": {
+        "founder": "Jordan Lee (fictional)",
+        "size": "12 people (fixture)",
+        "internship_history": "Unknown",
+        "technologies": [
+          "Python",
+          "Web tools"
+        ]
+      },
+      "score": 82,
+      "score_factors": {
+        "proximity": 18.0,
+        "technology_alignment": 18.0,
+        "contact_availability": 15.0,
+        "student_friendliness": 0.0
+      },
+      "stage": "replied",
+      "demo": true,
+      "created_at": "2026-10-03T10:00:00Z",
+      "researched_at": "2026-10-03T10:00:00Z"
+    },
+    {
+      "id": "qa-company-2",
+      "name": "Cedar Engineering (Demo)",
+      "domain": "company-2.example",
+      "website": "https://company-2.example/",
+      "industry": "Engineering",
+      "distance_miles": 20.0,
+      "description": "A fictional engineering studio working with sensor data.",
+      "source": "Fictional browser QA fixture",
+      "research": {
+        "founder": "Jordan Lee (fictional)",
+        "size": "12 people (fixture)",
+        "internship_history": "Unknown",
+        "technologies": [
+          "Python",
+          "Web tools"
+        ]
+      },
+      "score": 78,
+      "score_factors": {
+        "proximity": 18.0,
+        "technology_alignment": 18.0,
+        "contact_availability": 15.0,
+        "student_friendliness": 0.0
+      },
+      "stage": "researched",
+      "demo": true,
+      "created_at": "2026-10-03T10:00:00Z",
+      "researched_at": "2026-10-03T10:00:00Z"
+    },
+    {
+      "id": "qa-company-3",
+      "name": "Meridian Analytics (Demo)",
+      "domain": "company-3.example",
+      "website": "https://company-3.example/",
+      "industry": "Finance",
+      "distance_miles": 26.0,
+      "description": "A fictional analytics studio designing business reporting tools.",
+      "source": "Fictional browser QA fixture",
+      "research": {
+        "founder": "Jordan Lee (fictional)",
+        "size": "12 people (fixture)",
+        "internship_history": "Unknown",
+        "technologies": [
+          "Python",
+          "Web tools"
+        ]
+      },
+      "score": 74,
+      "score_factors": {
+        "proximity": 18.0,
+        "technology_alignment": 18.0,
+        "contact_availability": 15.0,
+        "student_friendliness": 0.0
+      },
+      "stage": "discovered",
+      "demo": true,
+      "created_at": "2026-10-03T10:00:00Z",
+      "researched_at": null
+    },
+    {
+      "id": "qa-company-4",
+      "name": "Juniper Systems (Demo)",
+      "domain": "company-4.example",
+      "website": "https://company-4.example/",
+      "industry": "IT consulting",
+      "distance_miles": 32.0,
+      "description": "A fictional consulting firm supporting local teams.",
+      "source": "Fictional browser QA fixture",
+      "research": {
+        "founder": "Jordan Lee (fictional)",
+        "size": "12 people (fixture)",
+        "internship_history": "Unknown",
+        "technologies": [
+          "Python",
+          "Web tools"
+        ]
+      },
+      "score": 68,
+      "score_factors": {
+        "proximity": 18.0,
+        "technology_alignment": 18.0,
+        "contact_availability": 15.0,
+        "student_friendliness": 0.0
+      },
+      "stage": "discovered",
+      "demo": true,
+      "created_at": "2026-10-03T10:00:00Z",
+      "researched_at": null
+    }
+  ],
+  "details": {
+    "qa-company-0": {
+      "id": "qa-company-0",
+      "name": "Aster Robotics (Demo)",
+      "domain": "company-0.example",
+      "website": "https://company-0.example/",
+      "industry": "Robotics",
+      "distance_miles": 8.0,
+      "description": "A fictional robotics team building vision tools for small industrial systems.",
+      "source": "Fictional browser QA fixture",
+      "research": {
+        "founder": "Jordan Lee (fictional)",
+        "size": "12 people (fixture)",
+        "internship_history": "Unknown",
+        "technologies": [
+          "Python",
+          "Web tools"
+        ]
+      },
+      "score": 86,
+      "score_factors": {
+        "proximity": 18.0,
+        "technology_alignment": 18.0,
+        "contact_availability": 15.0,
+        "student_friendliness": 0.0
+      },
+      "stage": "drafted",
+      "demo": true,
+      "created_at": "2026-10-03T10:00:00Z",
+      "researched_at": "2026-10-03T10:00:00Z",
+      "contacts": [
+        {
+          "id": "qa-contact-0",
+          "company_id": "qa-company-0",
+          "email": "jordan@company-0.example",
+          "name": "Jordan Lee (fictional)",
+          "title": "Founder",
+          "source": "https://company-0.example/team",
+          "validation": "valid",
+          "validated_at": "2026-10-03T10:00:00Z"
+        }
+      ],
+      "evidence": [
+        {
+          "id": "qa-evidence-0",
+          "company_id": "qa-company-0",
+          "fact": "The fixture team is building a vision dashboard for operators.",
+          "quote": "Our vision dashboard gives operators a clearer view of each system. (Fictional fixture quotation.)",
+          "url": "https://company-0.example/products",
+          "category": "product",
+          "fetched_at": "2026-10-03T10:00:00Z"
+        }
+      ],
+      "events": []
+    },
+    "qa-company-1": {
+      "id": "qa-company-1",
+      "name": "Northline Software (Demo)",
+      "domain": "company-1.example",
+      "website": "https://company-1.example/",
+      "industry": "Software",
+      "distance_miles": 14.0,
+      "description": "A fictional local team improving scheduling tools for service businesses.",
+      "source": "Fictional browser QA fixture",
+      "research": {
+        "founder": "Jordan Lee (fictional)",
+        "size": "12 people (fixture)",
+        "internship_history": "Unknown",
+        "technologies": [
+          "Python",
+          "Web tools"
+        ]
+      },
+      "score": 82,
+      "score_factors": {
+        "proximity": 18.0,
+        "technology_alignment": 18.0,
+        "contact_availability": 15.0,
+        "student_friendliness": 0.0
+      },
+      "stage": "replied",
+      "demo": true,
+      "created_at": "2026-10-03T10:00:00Z",
+      "researched_at": "2026-10-03T10:00:00Z",
+      "contacts": [
+        {
+          "id": "qa-contact-1",
+          "company_id": "qa-company-1",
+          "email": "jordan@company-1.example",
+          "name": "Jordan Lee (fictional)",
+          "title": "Founder",
+          "source": "https://company-1.example/team",
+          "validation": "valid",
+          "validated_at": "2026-10-03T10:00:00Z"
+        }
+      ],
+      "evidence": [
+        {
+          "id": "qa-evidence-1",
+          "company_id": "qa-company-1",
+          "fact": "The fixture team is building a vision dashboard for operators.",
+          "quote": "Our vision dashboard gives operators a clearer view of each system. (Fictional fixture quotation.)",
+          "url": "https://company-1.example/products",
+          "category": "product",
+          "fetched_at": "2026-10-03T10:00:00Z"
+        }
+      ],
+      "events": []
+    },
+    "qa-company-2": {
+      "id": "qa-company-2",
+      "name": "Cedar Engineering (Demo)",
+      "domain": "company-2.example",
+      "website": "https://company-2.example/",
+      "industry": "Engineering",
+      "distance_miles": 20.0,
+      "description": "A fictional engineering studio working with sensor data.",
+      "source": "Fictional browser QA fixture",
+      "research": {
+        "founder": "Jordan Lee (fictional)",
+        "size": "12 people (fixture)",
+        "internship_history": "Unknown",
+        "technologies": [
+          "Python",
+          "Web tools"
+        ]
+      },
+      "score": 78,
+      "score_factors": {
+        "proximity": 18.0,
+        "technology_alignment": 18.0,
+        "contact_availability": 15.0,
+        "student_friendliness": 0.0
+      },
+      "stage": "researched",
+      "demo": true,
+      "created_at": "2026-10-03T10:00:00Z",
+      "researched_at": "2026-10-03T10:00:00Z",
+      "contacts": [
+        {
+          "id": "qa-contact-2",
+          "company_id": "qa-company-2",
+          "email": "jordan@company-2.example",
+          "name": "Jordan Lee (fictional)",
+          "title": "Founder",
+          "source": "https://company-2.example/team",
+          "validation": "valid",
+          "validated_at": "2026-10-03T10:00:00Z"
+        }
+      ],
+      "evidence": [
+        {
+          "id": "qa-evidence-2",
+          "company_id": "qa-company-2",
+          "fact": "The fixture team is building a vision dashboard for operators.",
+          "quote": "Our vision dashboard gives operators a clearer view of each system. (Fictional fixture quotation.)",
+          "url": "https://company-2.example/products",
+          "category": "product",
+          "fetched_at": "2026-10-03T10:00:00Z"
+        }
+      ],
+      "events": []
+    },
+    "qa-company-3": {
+      "id": "qa-company-3",
+      "name": "Meridian Analytics (Demo)",
+      "domain": "company-3.example",
+      "website": "https://company-3.example/",
+      "industry": "Finance",
+      "distance_miles": 26.0,
+      "description": "A fictional analytics studio designing business reporting tools.",
+      "source": "Fictional browser QA fixture",
+      "research": {
+        "founder": "Jordan Lee (fictional)",
+        "size": "12 people (fixture)",
+        "internship_history": "Unknown",
+        "technologies": [
+          "Python",
+          "Web tools"
+        ]
+      },
+      "score": 74,
+      "score_factors": {
+        "proximity": 18.0,
+        "technology_alignment": 18.0,
+        "contact_availability": 15.0,
+        "student_friendliness": 0.0
+      },
+      "stage": "discovered",
+      "demo": true,
+      "created_at": "2026-10-03T10:00:00Z",
+      "researched_at": null,
+      "contacts": [
+        {
+          "id": "qa-contact-3",
+          "company_id": "qa-company-3",
+          "email": "jordan@company-3.example",
+          "name": "Jordan Lee (fictional)",
+          "title": "Founder",
+          "source": "https://company-3.example/team",
+          "validation": "valid",
+          "validated_at": "2026-10-03T10:00:00Z"
+        }
+      ],
+      "evidence": [
+        {
+          "id": "qa-evidence-3",
+          "company_id": "qa-company-3",
+          "fact": "The fixture team is building a vision dashboard for operators.",
+          "quote": "Our vision dashboard gives operators a clearer view of each system. (Fictional fixture quotation.)",
+          "url": "https://company-3.example/products",
+          "category": "product",
+          "fetched_at": "2026-10-03T10:00:00Z"
+        }
+      ],
+      "events": []
+    },
+    "qa-company-4": {
+      "id": "qa-company-4",
+      "name": "Juniper Systems (Demo)",
+      "domain": "company-4.example",
+      "website": "https://company-4.example/",
+      "industry": "IT consulting",
+      "distance_miles": 32.0,
+      "description": "A fictional consulting firm supporting local teams.",
+      "source": "Fictional browser QA fixture",
+      "research": {
+        "founder": "Jordan Lee (fictional)",
+        "size": "12 people (fixture)",
+        "internship_history": "Unknown",
+        "technologies": [
+          "Python",
+          "Web tools"
+        ]
+      },
+      "score": 68,
+      "score_factors": {
+        "proximity": 18.0,
+        "technology_alignment": 18.0,
+        "contact_availability": 15.0,
+        "student_friendliness": 0.0
+      },
+      "stage": "discovered",
+      "demo": true,
+      "created_at": "2026-10-03T10:00:00Z",
+      "researched_at": null,
+      "contacts": [
+        {
+          "id": "qa-contact-4",
+          "company_id": "qa-company-4",
+          "email": "jordan@company-4.example",
+          "name": "Jordan Lee (fictional)",
+          "title": "Founder",
+          "source": "https://company-4.example/team",
+          "validation": "valid",
+          "validated_at": "2026-10-03T10:00:00Z"
+        }
+      ],
+      "evidence": [
+        {
+          "id": "qa-evidence-4",
+          "company_id": "qa-company-4",
+          "fact": "The fixture team is building a vision dashboard for operators.",
+          "quote": "Our vision dashboard gives operators a clearer view of each system. (Fictional fixture quotation.)",
+          "url": "https://company-4.example/products",
+          "category": "product",
+          "fetched_at": "2026-10-03T10:00:00Z"
+        }
+      ],
+      "events": []
+    }
+  },
+  "outreach": [
+    {
+      "id": "qa-message-0",
+      "company_id": "qa-company-0",
+      "contact_id": "qa-contact-0",
+      "sequence": 0,
+      "subject": "A small tool for your vision dashboard",
+      "body": "Hi Jordan,\n\nI noticed your team\u2019s vision dashboard focuses on making system data easier to use. Competing at VEX Robotics Worlds made me curious about how the same sensor data can help someone spot a problem faster.\n\nI\u2019m a high-school student in the Rocklin / Roseville area, and I\u2019ve also built websites for local businesses. I\u2019d like to try a small Python tool that summarizes a sample robot log and highlights a few unusual readings. I could start with a test dataset and keep the scope small.\n\nWould you be open to a short conversation about whether a project like that could be useful to your team?\n\nVihaan\n\n[Fictional browser QA fixture \u2014 never sent]",
+      "evidence_ids": [
+        "qa-evidence-0"
+      ],
+      "review": {
+        "passed": true,
+        "personalization_score": 91,
+        "issues": [],
+        "profile_hash": "",
+        "grounded": null,
+        "names_correct": null,
+        "claims_supported": null
+      },
+      "strategy": "practical-help",
+      "status": "draft",
+      "due_at": "2026-10-03T10:00:00Z",
+      "sent_at": null,
+      "provider_id": "",
+      "thread_id": "",
+      "message_id": "",
+      "attempts": 0,
+      "created_at": "2026-10-03T10:00:00Z"
+    },
+    {
+      "id": "qa-message-1",
+      "company_id": "qa-company-1",
+      "contact_id": "qa-contact-1",
+      "sequence": 0,
+      "subject": "A small tool for your vision dashboard",
+      "body": "Hi Jordan,\n\nI noticed your team\u2019s vision dashboard focuses on making system data easier to use. Competing at VEX Robotics Worlds made me curious about how the same sensor data can help someone spot a problem faster.\n\nI\u2019m a high-school student in the Rocklin / Roseville area, and I\u2019ve also built websites for local businesses. I\u2019d like to try a small Python tool that summarizes a sample robot log and highlights a few unusual readings. I could start with a test dataset and keep the scope small.\n\nWould you be open to a short conversation about whether a project like that could be useful to your team?\n\nVihaan\n\n[Fictional browser QA fixture \u2014 never sent]",
+      "evidence_ids": [
+        "qa-evidence-1"
+      ],
+      "review": {
+        "passed": true,
+        "personalization_score": 91,
+        "issues": [],
+        "profile_hash": "",
+        "grounded": null,
+        "names_correct": null,
+        "claims_supported": null
+      },
+      "strategy": "practical-help",
+      "status": "sent",
+      "due_at": "2026-10-03T10:00:00Z",
+      "sent_at": "2026-10-03T10:00:00Z",
+      "provider_id": "fixture-receipt",
+      "thread_id": "fixture-thread",
+      "message_id": "fixture-message",
+      "attempts": 1,
+      "created_at": "2026-10-03T10:00:00Z"
+    }
+  ],
+  "profile": {
+    "name": "Vihaan (QA fixture)",
+    "email": "student@example.com",
+    "grade": "High school freshman",
+    "location": "Rocklin / Roseville, California",
+    "resume": "",
+    "linkedin_url": "",
+    "portfolio_links": [],
+    "projects": [
+      "Built websites for local businesses"
+    ],
+    "awards": [
+      "VEX Robotics World Championship competitor"
+    ],
+    "skills": [
+      "Software development",
+      "Web development",
+      "Robotics"
+    ],
+    "interests": [
+      "Software",
+      "AI",
+      "Robotics",
+      "Finance",
+      "Startups",
+      "Business"
+    ],
+    "cover_letter_snippets": [],
+    "background": "Strong academic profile",
+    "voice_notes": "Direct, curious, friendly. No corporate praise. Sound like a real high-school student, not a sales pitch.",
+    "writing_samples": [],
+    "verified": true
+  },
+  "responses": {
+    "enabled": false,
+    "needs_attention": 1,
+    "responses": [
+      {
+        "id": "qa-reply",
+        "company_id": "qa-company-1",
+        "company": "Northline Software (Demo)",
+        "kind": "reply",
+        "sender": "jordan@company-1.example",
+        "subject": "Re: A small tool for your dashboard",
+        "preview": "Thanks for the thoughtful note. Could you share a small example of a tool you have built? [Fictional QA reply]",
+        "received_at": "2026-10-03T10:00:00Z",
+        "handled": false,
+        "gmail_url": "https://mail.google.com/"
+      }
+    ],
+    "sync": {
+      "status": "ok",
+      "last_success": "2026-10-03T10:00:00Z",
+      "error": null
+    }
+  },
+  "metrics": {
+    "companies": 0,
+    "sent": 0,
+    "replies": 0,
+    "interviews": 0,
+    "offers": 0,
+    "response_rate": 0.0,
+    "interview_rate": 0.0,
+    "conversion_rate": 0.0,
+    "sent_today": 0,
+    "learning": []
+  },
+  "settings": {
+    "manual_mode": true,
+    "dry_run": true,
+    "daily_send_limit": 25,
+    "auto_approve": false,
+    "max_pages": 8,
+    "research_seconds": 60,
+    "mail_provider": "gmail",
+    "mail_connected": false,
+    "demo_allowed": true,
+    "integrations": {},
+    "automation": {
+      "enabled": false
+    }
+  },
+  "campaign": {
+    "active": false,
+    "batch_name": "",
+    "status": "inactive",
+    "detail": "",
+    "can_stop": false,
+    "stop_requested": false,
+    "limit": 25,
+    "planned": 0,
+    "sent": 0,
+    "verified": 0,
+    "skipped": 0,
+    "validation_policy": "",
+    "outreach_ids": [],
+    "ongoing_policy": {
+      "enabled": false,
+      "new_companies_per_weekday": 10,
+      "followup_after_days": 7
+    }
+  },
+  "connection": {
+    "status": "disconnected",
+    "email": "",
+    "connected": false
+  },
+  "desk": []
+}

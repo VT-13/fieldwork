@@ -56,3 +56,7 @@ One local primary operator/profile/Gmail account is the first release boundary. 
 ## Module 2: personal operator sessions and encrypted OAuth
 
 Preserve the single operator boundary: hashed revocable server sessions for browsers and a separate CLI bearer key. Browser proxy forwards cookies, never a backend bearer secret. Store Google tokens/verifiers encrypted with an externally managed keyring. Connect requires session-bound PKCE/state and canonical Gmail identity; disconnect fences later sends and keeps receipts. Database-serialized ingress buckets reuse the existing lock. Explicit privacy content erasure retains delivery/suppression history. PostgreSQL validation is now local disposable evidence, not just CI intent.
+
+## Module 3: field notebook and shared private read contracts
+
+Use ruled task views, local/system typography and one semantic token source, refined from actual production browser renders. Preserve one personal operator. Keep URL navigation/filter state separate from form state and validated cached server data. Generate TypeScript and runtime schema from private Pydantic response contracts; normalize defaults while preserving existing additional contract fields. Do not expose HTTP OpenAPI. A narrow serialized unsent-message edit clears review; reject/return use existing transitions. Pause is returned from the database even without a current batch and UI actions await it. Approval never authorizes transport. No new generation system, provider purchase, deployment, real mail or campaign resume occurs.

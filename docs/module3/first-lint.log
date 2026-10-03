@@ -1,0 +1,20 @@
+
+> fieldwork@0.1.0 lint
+> eslint . --max-warnings=0
+
+
+Oops! Something went wrong! :(
+
+ESLint: 10.12.0
+
+ConfigError: Config "typescript-eslint/base": Key "plugins": Cannot redefine plugin "@typescript-eslint".
+    at rethrowConfigError (/Users/vihaantirumala/Documents/Codex/2026-09-21/wh/outputs/internship-platform/frontend/node_modules/@eslint/config-array/dist/cjs/index.cjs:343:8)
+    at /Users/vihaantirumala/Documents/Codex/2026-09-21/wh/outputs/internship-platform/frontend/node_modules/@eslint/config-array/dist/cjs/index.cjs:1407:5
+    at Array.reduce (<anonymous>)
+    at FlatConfigArray.getConfigWithStatus (/Users/vihaantirumala/Documents/Codex/2026-09-21/wh/outputs/internship-platform/frontend/node_modules/@eslint/config-array/dist/cjs/index.cjs:1400:43)
+    at FlatConfigArray.getConfig (/Users/vihaantirumala/Documents/Codex/2026-09-21/wh/outputs/internship-platform/frontend/node_modules/@eslint/config-array/dist/cjs/index.cjs:1429:15)
+    at entryFilter (/Users/vihaantirumala/Documents/Codex/2026-09-21/wh/outputs/internship-platform/frontend/node_modules/eslint/lib/eslint/eslint-helpers.js:325:27)
+    at async NodeHfs.<anonymous> (file:///Users/vihaantirumala/Documents/Codex/2026-09-21/wh/outputs/internship-platform/frontend/node_modules/@humanfs/core/src/hfs.js:574:24)
+    at async NodeHfs.<anonymous> (file:///Users/vihaantirumala/Documents/Codex/2026-09-21/wh/outputs/internship-platform/frontend/node_modules/@humanfs/core/src/hfs.js:604:6)
+    at async NodeHfs.walk (file:///Users/vihaantirumala/Documents/Codex/2026-09-21/wh/outputs/internship-platform/frontend/node_modules/@humanfs/core/src/hfs.js:614:3)
+    at async globSearch (/Users/vihaantirumala/Documents/Codex/2026-09-21/wh/outputs/internship-platform/frontend/node_modules/eslint/lib/eslint/eslint-helpers.js:366:20)

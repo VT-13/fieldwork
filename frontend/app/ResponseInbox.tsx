@@ -1,13 +1,107 @@
 "use client";
-import {useEffect,useState} from 'react';
-type Reply={id:string;company:string;kind:string;sender:string;subject:string;preview:string;received_at:string;handled:boolean;gmail_url:string};
-type Inbox={enabled:boolean;needs_attention:number;responses:Reply[];sync:{status:string;last_success?:string;error?:string}};
-export default function ResponseInbox(){
- const [data,setData]=useState<Inbox|null>(null),[error,setError]=useState(''),[busy,setBusy]=useState(false);
- async function load(){try{const r=await fetch('/api/responses',{cache:'no-store'});if(!r.ok)throw Error('Reply tracker unavailable');setData(await r.json());setError('')}catch(e){setError(String(e))}}
- useEffect(()=>{load();const timer=setInterval(load,10000);return()=>clearInterval(timer)},[]);
- async function check(){setBusy(true);try{const r=await fetch('/api/responses/sync',{method:'POST'});if(!r.ok)throw Error('Could not start response check');await load()}catch(e){setError(String(e))}finally{setBusy(false)}}
- async function handle(r:Reply){try{const result=await fetch('/api/responses/'+r.id,{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({handled:!r.handled})});if(!result.ok)throw Error('Could not update response');await load()}catch(e){setError(String(e))}}
- const card=(r:Reply)=><article key={r.id} style={{borderTop:'1px solid #ddd',padding:'18px 0'}}><div className="section-heading"><h3>{r.company}</h3><small>{new Date(r.received_at).toLocaleString()}</small></div><p><strong>{r.subject}</strong></p><p className="muted">{r.sender} · {r.kind.replace('_',' ')}</p><p style={{whiteSpace:'pre-wrap',overflowWrap:'anywhere',maxHeight:220,overflowY:'auto'}}>{r.preview}</p><div className="buttons"><a className="secondary" href={r.gmail_url} target="_blank" rel="noreferrer">Open in Gmail ↗</a>{r.kind==='reply'&&<button className="secondary" onClick={()=>handle(r)}>{r.handled?'Mark needing attention':'Mark handled'}</button>}</div></article>;
- return <section className="panel" style={{marginBottom:24}}><div className="eyebrow">YOUR RESPONSE INBOX</div><div className="section-heading"><h2>{data?data.needs_attention:'…'} replies needing attention</h2><button className="secondary" disabled={busy||data?.sync.status==='syncing'} onClick={check}>{busy||data?.sync.status==='syncing'?'Checking Gmail…':'Check now'}</button></div><p className="muted">{data?.enabled?'Checks Gmail every 5 minutes while this app’s server is running.':'Automatic checking is disabled.'} {data?.sync.last_success&&'Last checked '+new Date(data.sync.last_success).toLocaleString()+'.'}</p>{(error||data?.sync.error)&&<p role="alert" className="review-issue">{error||data?.sync.error}</p>}{data?.responses.filter(r=>r.kind==='reply'&&!r.handled).map(card)}{data&&data.needs_attention===0&&<p>No human replies waiting for you.</p>}<details><summary>Handled replies and delivery updates ({data?.responses.filter(r=>r.kind!=='reply'||r.handled).length||0})</summary>{data?.responses.filter(r=>r.kind!=='reply'||r.handled).map(card)}</details><p className="muted">Handling a reply here does not mark it read in Gmail. Replies and delivery failures stop further automated outreach to that company.</p></section>
+import { useState } from "react";
+import { RefreshCw } from "lucide-react";
+import { useResource, request, date } from "../lib/api";
+import { Empty, ErrorState, External, Loading, Status } from "../components/ui";
+export default function ResponseInbox() {
+  const inbox = useResource("responses", "InboxView", false, 30000);
+  const [busy, setBusy] = useState(false),
+    [error, setError] = useState("");
+  async function action(path: string, method: string, body?: unknown) {
+    setBusy(true);
+    setError("");
+    try {
+      await request(path, method, body);
+      await inbox.reload();
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "Reply update failed");
+    } finally {
+      setBusy(false);
+    }
+  }
+  return (
+    <section className="response-inbox">
+      <div className="section-heading">
+        <div>
+          <h2>
+            {inbox.data ? inbox.data.needs_attention : "…"} replies need your
+            attention
+          </h2>
+          <p>
+            {inbox.data?.sync.last_success
+              ? `Gmail last checked ${date(inbox.data.sync.last_success)}`
+              : "No completed inbox check recorded."}{" "}
+            {inbox.data?.enabled
+              ? "Server polling is enabled while it runs."
+              : "Automatic checking is disabled."}
+          </p>
+        </div>
+        <button
+          className="secondary"
+          disabled={busy || inbox.data?.sync.status === "syncing"}
+          onClick={() => action("responses/sync", "POST")}
+        >
+          <RefreshCw size={15} aria-hidden="true" />
+          {busy || inbox.data?.sync.status === "syncing"
+            ? "Checking Gmail…"
+            : "Check Gmail"}
+        </button>
+      </div>
+      <ErrorState
+        error={error || inbox.error || inbox.data?.sync.error || undefined}
+        retry={inbox.reload}
+      />
+      {inbox.loading && !inbox.data ? (
+        <Loading />
+      ) : (
+        inbox.data && (
+          <>
+            {inbox.data.responses.length ? (
+              inbox.data.responses.map((r) => (
+                <article key={r.id} className="response-row">
+                  <div className="section-heading">
+                    <div>
+                      <h3>{r.company}</h3>
+                      <small>
+                        {r.sender} · {date(r.received_at)}
+                      </small>
+                    </div>
+                    <Status value={r.kind} />
+                  </div>
+                  <h4>{r.subject}</h4>
+                  <p className="reply-preview">{r.preview}</p>
+                  <div className="buttons">
+                    <External href={r.gmail_url}>Open in Gmail</External>
+                    {r.kind === "reply" && (
+                      <button
+                        className="secondary"
+                        disabled={busy}
+                        onClick={() =>
+                          action(`responses/${r.id}`, "PUT", {
+                            handled: !r.handled,
+                          })
+                        }
+                      >
+                        {r.handled ? "Mark needing attention" : "Mark handled"}
+                      </button>
+                    )}
+                  </div>
+                </article>
+              ))
+            ) : (
+              <Empty title="No responses have been recorded">
+                Check your connected mailbox to pull in replies, delivery
+                updates and acknowledgments.
+              </Empty>
+            )}
+            <p className="quiet-note">
+              Handling a reply here does not mark it read in Gmail. Replies stop
+              follow-ups; acknowledgments remain held. This app never replies
+              for you.
+            </p>
+          </>
+        )
+      )}
+    </section>
+  );
 }

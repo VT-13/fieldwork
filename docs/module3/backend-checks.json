@@ -1,0 +1,47 @@
+{
+  "temporary_root": "/var/folders/9s/w0n67fhn557gd3bp17pkk9q80000gn/T/fieldwork-module1-rgxjaobh",
+  "checks": {
+    "contract-check": {
+      "command": [
+        "/private/tmp/fieldwork-module2-venv/bin/python",
+        "scripts/frontend_contracts.py",
+        "--check"
+      ],
+      "exit_code": 0,
+      "seconds": 0.34
+    },
+    "fixture-check": {
+      "command": [
+        "/private/tmp/fieldwork-module2-venv/bin/python",
+        "scripts/module3_fixture.py",
+        "--check"
+      ],
+      "exit_code": 0,
+      "seconds": 0.23
+    },
+    "backend-tests": {
+      "command": [
+        "/private/tmp/fieldwork-module2-venv/bin/python",
+        "-m",
+        "pytest",
+        "-q",
+        "-ra"
+      ],
+      "exit_code": 0,
+      "seconds": 7.23
+    },
+    "backend-lint": {
+      "command": [
+        "/private/tmp/fieldwork-module2-venv/bin/python",
+        "-m",
+        "ruff",
+        "check",
+        "app",
+        "scripts",
+        "tests"
+      ],
+      "exit_code": 0,
+      "seconds": 0.1
+    }
+  }
+}

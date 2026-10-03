@@ -1,0 +1,25 @@
+
+> fieldwork@0.1.0 test:browser
+> playwright test
+
+[WebServer] (node:30069) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 12 tests using 1 worker
+
+(node:30071) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   1 tests/workspace.spec.ts:109:5 › generated contracts reject malformed data and unsafe source links (6ms)
+  ✓   2 tests/workspace.spec.ts:119:5 › workspace renders with fictional records (1.4s)
+  ✓   3 tests/workspace.spec.ts:141:5 › flagship navigation, URL filters and command palette work by keyboard (965ms)
+  ✓   4 tests/workspace.spec.ts:175:5 › pause is database-authoritative even with no active batch; failed pause is not optimistic (428ms)
+  ✓   5 tests/workspace.spec.ts:200:5 › review supports approval, return for changes, return to draft and edits that invalidate review (682ms)
+  ✓   6 tests/workspace.spec.ts:239:5 › sent and uncertain messages are locked and never offer retry/send (365ms)
+  ✓   7 tests/workspace.spec.ts:254:5 › localized loading, empty, failed reads and retry are usable (2.0s)
+  ✓   8 tests/workspace.spec.ts:279:5 › profile form uses native validation and retains edits through failed save (551ms)
+  ✓   9 tests/workspace.spec.ts:301:5 › reply handling refreshes attention without sending or reading Gmail (429ms)
+  ✓  10 tests/workspace.spec.ts:313:5 › responsive flagship screenshots, contrast and semantic accessibility (8.7s)
+  ✓  11 tests/workspace.spec.ts:353:5 › editor expands on viewport changes and decision controls precede the reading surface (722ms)
+  ✓  12 tests/workspace.spec.ts:384:5 › resource reads are deduplicated and secondary screens retain the shared visual language (1.9s)
+
+  12 passed (20.8s)

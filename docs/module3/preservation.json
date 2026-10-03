@@ -1,0 +1,14 @@
+{
+  "installed_source_unchanged": true,
+  "recurring_policy_unchanged": true,
+  "recurring_enabled": false,
+  "historical_counts_unchanged": true,
+  "counts": {
+    "companies": 46,
+    "outreach": 46,
+    "events": 6
+  },
+  "real_provider_calls": 0,
+  "real_emails_sent": 0,
+  "deployed": false
+}

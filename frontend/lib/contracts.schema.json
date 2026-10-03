@@ -1,0 +1,1413 @@
+{
+  "$defs": {
+    "ProfileInput": {
+      "properties": {
+        "name": {
+          "default": "",
+          "maxLength": 120,
+          "title": "Name",
+          "type": "string"
+        },
+        "email": {
+          "default": "",
+          "title": "Email",
+          "type": "string"
+        },
+        "grade": {
+          "default": "High school freshman",
+          "title": "Grade",
+          "type": "string"
+        },
+        "location": {
+          "default": "Rocklin / Roseville, California",
+          "title": "Location",
+          "type": "string"
+        },
+        "resume": {
+          "default": "",
+          "maxLength": 20000,
+          "title": "Resume",
+          "type": "string"
+        },
+        "linkedin_url": {
+          "default": "",
+          "title": "Linkedin Url",
+          "type": "string"
+        },
+        "portfolio_links": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Portfolio Links",
+          "type": "array"
+        },
+        "projects": {
+          "default": [
+            "Built websites for local businesses"
+          ],
+          "items": {
+            "type": "string"
+          },
+          "title": "Projects",
+          "type": "array"
+        },
+        "awards": {
+          "default": [
+            "VEX Robotics World Championship competitor"
+          ],
+          "items": {
+            "type": "string"
+          },
+          "title": "Awards",
+          "type": "array"
+        },
+        "skills": {
+          "default": [
+            "Software development",
+            "Web development",
+            "Robotics"
+          ],
+          "items": {
+            "type": "string"
+          },
+          "title": "Skills",
+          "type": "array"
+        },
+        "interests": {
+          "default": [
+            "Software",
+            "AI",
+            "Robotics",
+            "Finance",
+            "Startups",
+            "Business"
+          ],
+          "items": {
+            "type": "string"
+          },
+          "title": "Interests",
+          "type": "array"
+        },
+        "cover_letter_snippets": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Cover Letter Snippets",
+          "type": "array"
+        },
+        "background": {
+          "default": "Strong academic profile",
+          "title": "Background",
+          "type": "string"
+        },
+        "voice_notes": {
+          "default": "Direct, curious, friendly. No corporate praise. Sound like a real high-school student, not a sales pitch.",
+          "maxLength": 2000,
+          "title": "Voice Notes",
+          "type": "string"
+        },
+        "writing_samples": {
+          "items": {
+            "type": "string"
+          },
+          "maxItems": 3,
+          "title": "Writing Samples",
+          "type": "array"
+        },
+        "verified": {
+          "default": false,
+          "title": "Verified",
+          "type": "boolean"
+        }
+      },
+      "title": "ProfileInput",
+      "type": "object",
+      "required": [
+        "name",
+        "email",
+        "grade",
+        "location",
+        "resume",
+        "linkedin_url",
+        "portfolio_links",
+        "projects",
+        "awards",
+        "skills",
+        "interests",
+        "cover_letter_snippets",
+        "background",
+        "voice_notes",
+        "writing_samples",
+        "verified"
+      ]
+    },
+    "CompanyView": {
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "name": {
+          "title": "Name",
+          "type": "string"
+        },
+        "domain": {
+          "title": "Domain",
+          "type": "string"
+        },
+        "website": {
+          "title": "Website",
+          "type": "string"
+        },
+        "industry": {
+          "title": "Industry",
+          "type": "string"
+        },
+        "distance_miles": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Distance Miles"
+        },
+        "description": {
+          "title": "Description",
+          "type": "string"
+        },
+        "source": {
+          "title": "Source",
+          "type": "string"
+        },
+        "research": {
+          "additionalProperties": true,
+          "title": "Research",
+          "type": "object"
+        },
+        "score": {
+          "title": "Score",
+          "type": "integer"
+        },
+        "score_factors": {
+          "additionalProperties": {
+            "type": "number"
+          },
+          "title": "Score Factors",
+          "type": "object"
+        },
+        "stage": {
+          "title": "Stage",
+          "type": "string"
+        },
+        "demo": {
+          "title": "Demo",
+          "type": "boolean"
+        },
+        "created_at": {
+          "format": "date-time",
+          "title": "Created At",
+          "type": "string"
+        },
+        "researched_at": {
+          "anyOf": [
+            {
+              "format": "date-time",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Researched At"
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "domain",
+        "website",
+        "industry",
+        "distance_miles",
+        "description",
+        "source",
+        "research",
+        "score",
+        "score_factors",
+        "stage",
+        "demo",
+        "created_at",
+        "researched_at"
+      ],
+      "title": "CompanyView",
+      "type": "object"
+    },
+    "ContactView": {
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "company_id": {
+          "title": "Company Id",
+          "type": "string"
+        },
+        "email": {
+          "title": "Email",
+          "type": "string"
+        },
+        "name": {
+          "title": "Name",
+          "type": "string"
+        },
+        "title": {
+          "title": "Title",
+          "type": "string"
+        },
+        "source": {
+          "title": "Source",
+          "type": "string"
+        },
+        "validation": {
+          "title": "Validation",
+          "type": "string"
+        },
+        "validated_at": {
+          "anyOf": [
+            {
+              "format": "date-time",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Validated At"
+        }
+      },
+      "required": [
+        "id",
+        "company_id",
+        "email",
+        "name",
+        "title",
+        "source",
+        "validation",
+        "validated_at"
+      ],
+      "title": "ContactView",
+      "type": "object"
+    },
+    "EventView": {
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "company_id": {
+          "title": "Company Id",
+          "type": "string"
+        },
+        "kind": {
+          "title": "Kind",
+          "type": "string"
+        },
+        "detail": {
+          "title": "Detail",
+          "type": "string"
+        },
+        "source_id": {
+          "title": "Source Id",
+          "type": "string"
+        },
+        "created_at": {
+          "format": "date-time",
+          "title": "Created At",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "company_id",
+        "kind",
+        "detail",
+        "source_id",
+        "created_at"
+      ],
+      "title": "EventView",
+      "type": "object"
+    },
+    "EvidenceView": {
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "company_id": {
+          "title": "Company Id",
+          "type": "string"
+        },
+        "fact": {
+          "title": "Fact",
+          "type": "string"
+        },
+        "quote": {
+          "title": "Quote",
+          "type": "string"
+        },
+        "url": {
+          "title": "Url",
+          "type": "string"
+        },
+        "category": {
+          "title": "Category",
+          "type": "string"
+        },
+        "fetched_at": {
+          "format": "date-time",
+          "title": "Fetched At",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "company_id",
+        "fact",
+        "quote",
+        "url",
+        "category",
+        "fetched_at"
+      ],
+      "title": "EvidenceView",
+      "type": "object"
+    },
+    "CompanyDetail": {
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "name": {
+          "title": "Name",
+          "type": "string"
+        },
+        "domain": {
+          "title": "Domain",
+          "type": "string"
+        },
+        "website": {
+          "title": "Website",
+          "type": "string"
+        },
+        "industry": {
+          "title": "Industry",
+          "type": "string"
+        },
+        "distance_miles": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Distance Miles"
+        },
+        "description": {
+          "title": "Description",
+          "type": "string"
+        },
+        "source": {
+          "title": "Source",
+          "type": "string"
+        },
+        "research": {
+          "additionalProperties": true,
+          "title": "Research",
+          "type": "object"
+        },
+        "score": {
+          "title": "Score",
+          "type": "integer"
+        },
+        "score_factors": {
+          "additionalProperties": {
+            "type": "number"
+          },
+          "title": "Score Factors",
+          "type": "object"
+        },
+        "stage": {
+          "title": "Stage",
+          "type": "string"
+        },
+        "demo": {
+          "title": "Demo",
+          "type": "boolean"
+        },
+        "created_at": {
+          "format": "date-time",
+          "title": "Created At",
+          "type": "string"
+        },
+        "researched_at": {
+          "anyOf": [
+            {
+              "format": "date-time",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Researched At"
+        },
+        "contacts": {
+          "items": {
+            "$ref": "#/$defs/ContactView"
+          },
+          "title": "Contacts",
+          "type": "array"
+        },
+        "evidence": {
+          "items": {
+            "$ref": "#/$defs/EvidenceView"
+          },
+          "title": "Evidence",
+          "type": "array"
+        },
+        "events": {
+          "items": {
+            "$ref": "#/$defs/EventView"
+          },
+          "title": "Events",
+          "type": "array"
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "domain",
+        "website",
+        "industry",
+        "distance_miles",
+        "description",
+        "source",
+        "research",
+        "score",
+        "score_factors",
+        "stage",
+        "demo",
+        "created_at",
+        "researched_at",
+        "contacts",
+        "evidence",
+        "events"
+      ],
+      "title": "CompanyDetail",
+      "type": "object"
+    },
+    "MessageState": {
+      "enum": [
+        "draft",
+        "approved",
+        "rejected",
+        "cancelled",
+        "sending",
+        "sent",
+        "unknown",
+        "failed",
+        "demo"
+      ],
+      "title": "MessageState",
+      "type": "string"
+    },
+    "ReviewView": {
+      "additionalProperties": true,
+      "properties": {
+        "passed": {
+          "default": false,
+          "title": "Passed",
+          "type": "boolean"
+        },
+        "personalization_score": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Personalization Score"
+        },
+        "issues": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Issues",
+          "type": "array"
+        },
+        "profile_hash": {
+          "default": "",
+          "title": "Profile Hash",
+          "type": "string"
+        },
+        "grounded": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Grounded"
+        },
+        "names_correct": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Names Correct"
+        },
+        "claims_supported": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Claims Supported"
+        }
+      },
+      "title": "ReviewView",
+      "type": "object",
+      "required": [
+        "passed",
+        "personalization_score",
+        "issues",
+        "profile_hash",
+        "grounded",
+        "names_correct",
+        "claims_supported"
+      ]
+    },
+    "OutreachView": {
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "company_id": {
+          "title": "Company Id",
+          "type": "string"
+        },
+        "contact_id": {
+          "title": "Contact Id",
+          "type": "string"
+        },
+        "sequence": {
+          "title": "Sequence",
+          "type": "integer"
+        },
+        "subject": {
+          "title": "Subject",
+          "type": "string"
+        },
+        "body": {
+          "title": "Body",
+          "type": "string"
+        },
+        "evidence_ids": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Evidence Ids",
+          "type": "array"
+        },
+        "review": {
+          "$ref": "#/$defs/ReviewView"
+        },
+        "strategy": {
+          "title": "Strategy",
+          "type": "string"
+        },
+        "status": {
+          "$ref": "#/$defs/MessageState"
+        },
+        "due_at": {
+          "format": "date-time",
+          "title": "Due At",
+          "type": "string"
+        },
+        "sent_at": {
+          "anyOf": [
+            {
+              "format": "date-time",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Sent At"
+        },
+        "provider_id": {
+          "title": "Provider Id",
+          "type": "string"
+        },
+        "thread_id": {
+          "title": "Thread Id",
+          "type": "string"
+        },
+        "message_id": {
+          "title": "Message Id",
+          "type": "string"
+        },
+        "attempts": {
+          "title": "Attempts",
+          "type": "integer"
+        },
+        "created_at": {
+          "format": "date-time",
+          "title": "Created At",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "company_id",
+        "contact_id",
+        "sequence",
+        "subject",
+        "body",
+        "evidence_ids",
+        "review",
+        "strategy",
+        "status",
+        "due_at",
+        "sent_at",
+        "provider_id",
+        "thread_id",
+        "message_id",
+        "attempts",
+        "created_at"
+      ],
+      "title": "OutreachView",
+      "type": "object"
+    },
+    "PolicyView": {
+      "properties": {
+        "enabled": {
+          "default": false,
+          "title": "Enabled",
+          "type": "boolean"
+        },
+        "new_companies_per_weekday": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "New Companies Per Weekday"
+        },
+        "followup_after_days": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Followup After Days"
+        }
+      },
+      "title": "PolicyView",
+      "type": "object",
+      "required": [
+        "enabled",
+        "new_companies_per_weekday",
+        "followup_after_days"
+      ]
+    },
+    "CampaignView": {
+      "additionalProperties": true,
+      "properties": {
+        "active": {
+          "title": "Active",
+          "type": "boolean"
+        },
+        "batch_name": {
+          "default": "",
+          "title": "Batch Name",
+          "type": "string"
+        },
+        "status": {
+          "default": "inactive",
+          "title": "Status",
+          "type": "string"
+        },
+        "detail": {
+          "default": "",
+          "title": "Detail",
+          "type": "string"
+        },
+        "can_stop": {
+          "default": false,
+          "title": "Can Stop",
+          "type": "boolean"
+        },
+        "stop_requested": {
+          "default": false,
+          "title": "Stop Requested",
+          "type": "boolean"
+        },
+        "limit": {
+          "default": 25,
+          "title": "Limit",
+          "type": "integer"
+        },
+        "planned": {
+          "default": 0,
+          "title": "Planned",
+          "type": "integer"
+        },
+        "sent": {
+          "default": 0,
+          "title": "Sent",
+          "type": "integer"
+        },
+        "verified": {
+          "default": 0,
+          "title": "Verified",
+          "type": "integer"
+        },
+        "skipped": {
+          "default": 0,
+          "title": "Skipped",
+          "type": "integer"
+        },
+        "validation_policy": {
+          "default": "",
+          "title": "Validation Policy",
+          "type": "string"
+        },
+        "outreach_ids": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Outreach Ids",
+          "type": "array"
+        },
+        "ongoing_policy": {
+          "$ref": "#/$defs/PolicyView"
+        }
+      },
+      "required": [
+        "active",
+        "batch_name",
+        "status",
+        "detail",
+        "can_stop",
+        "stop_requested",
+        "limit",
+        "planned",
+        "sent",
+        "verified",
+        "skipped",
+        "validation_policy",
+        "outreach_ids",
+        "ongoing_policy"
+      ],
+      "title": "CampaignView",
+      "type": "object"
+    },
+    "ReplyView": {
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "company_id": {
+          "title": "Company Id",
+          "type": "string"
+        },
+        "company": {
+          "title": "Company",
+          "type": "string"
+        },
+        "kind": {
+          "title": "Kind",
+          "type": "string"
+        },
+        "sender": {
+          "title": "Sender",
+          "type": "string"
+        },
+        "subject": {
+          "title": "Subject",
+          "type": "string"
+        },
+        "preview": {
+          "title": "Preview",
+          "type": "string"
+        },
+        "received_at": {
+          "format": "date-time",
+          "title": "Received At",
+          "type": "string"
+        },
+        "handled": {
+          "title": "Handled",
+          "type": "boolean"
+        },
+        "gmail_url": {
+          "title": "Gmail Url",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "company_id",
+        "company",
+        "kind",
+        "sender",
+        "subject",
+        "preview",
+        "received_at",
+        "handled",
+        "gmail_url"
+      ],
+      "title": "ReplyView",
+      "type": "object"
+    },
+    "SyncView": {
+      "properties": {
+        "status": {
+          "title": "Status",
+          "type": "string"
+        },
+        "last_success": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Last Success"
+        },
+        "error": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Error"
+        }
+      },
+      "required": [
+        "status",
+        "last_success",
+        "error"
+      ],
+      "title": "SyncView",
+      "type": "object"
+    },
+    "InboxView": {
+      "properties": {
+        "enabled": {
+          "title": "Enabled",
+          "type": "boolean"
+        },
+        "needs_attention": {
+          "title": "Needs Attention",
+          "type": "integer"
+        },
+        "responses": {
+          "items": {
+            "$ref": "#/$defs/ReplyView"
+          },
+          "title": "Responses",
+          "type": "array"
+        },
+        "sync": {
+          "$ref": "#/$defs/SyncView"
+        }
+      },
+      "required": [
+        "enabled",
+        "needs_attention",
+        "responses",
+        "sync"
+      ],
+      "title": "InboxView",
+      "type": "object"
+    },
+    "MetricsView": {
+      "additionalProperties": true,
+      "properties": {
+        "companies": {
+          "title": "Companies",
+          "type": "integer"
+        },
+        "sent": {
+          "title": "Sent",
+          "type": "integer"
+        },
+        "replies": {
+          "title": "Replies",
+          "type": "integer"
+        },
+        "interviews": {
+          "title": "Interviews",
+          "type": "integer"
+        },
+        "offers": {
+          "title": "Offers",
+          "type": "integer"
+        },
+        "response_rate": {
+          "title": "Response Rate",
+          "type": "number"
+        },
+        "interview_rate": {
+          "title": "Interview Rate",
+          "type": "number"
+        },
+        "conversion_rate": {
+          "title": "Conversion Rate",
+          "type": "number"
+        },
+        "sent_today": {
+          "title": "Sent Today",
+          "type": "integer"
+        },
+        "learning": {
+          "items": {
+            "additionalProperties": true,
+            "type": "object"
+          },
+          "title": "Learning",
+          "type": "array"
+        }
+      },
+      "required": [
+        "companies",
+        "sent",
+        "replies",
+        "interviews",
+        "offers",
+        "response_rate",
+        "interview_rate",
+        "conversion_rate",
+        "sent_today",
+        "learning"
+      ],
+      "title": "MetricsView",
+      "type": "object"
+    },
+    "SettingsView": {
+      "additionalProperties": true,
+      "properties": {
+        "manual_mode": {
+          "title": "Manual Mode",
+          "type": "boolean"
+        },
+        "dry_run": {
+          "title": "Dry Run",
+          "type": "boolean"
+        },
+        "daily_send_limit": {
+          "title": "Daily Send Limit",
+          "type": "integer"
+        },
+        "auto_approve": {
+          "title": "Auto Approve",
+          "type": "boolean"
+        },
+        "max_pages": {
+          "title": "Max Pages",
+          "type": "integer"
+        },
+        "research_seconds": {
+          "title": "Research Seconds",
+          "type": "integer"
+        },
+        "mail_provider": {
+          "title": "Mail Provider",
+          "type": "string"
+        },
+        "mail_connected": {
+          "title": "Mail Connected",
+          "type": "boolean"
+        },
+        "demo_allowed": {
+          "title": "Demo Allowed",
+          "type": "boolean"
+        },
+        "integrations": {
+          "additionalProperties": {
+            "type": "boolean"
+          },
+          "title": "Integrations",
+          "type": "object"
+        },
+        "automation": {
+          "additionalProperties": true,
+          "title": "Automation",
+          "type": "object"
+        }
+      },
+      "required": [
+        "manual_mode",
+        "dry_run",
+        "daily_send_limit",
+        "auto_approve",
+        "max_pages",
+        "research_seconds",
+        "mail_provider",
+        "mail_connected",
+        "demo_allowed",
+        "integrations",
+        "automation"
+      ],
+      "title": "SettingsView",
+      "type": "object"
+    },
+    "ConnectionView": {
+      "additionalProperties": true,
+      "properties": {
+        "status": {
+          "title": "Status",
+          "type": "string"
+        },
+        "email": {
+          "title": "Email",
+          "type": "string"
+        },
+        "connected": {
+          "title": "Connected",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "status",
+        "email",
+        "connected"
+      ],
+      "title": "ConnectionView",
+      "type": "object"
+    },
+    "OutreachEdit": {
+      "properties": {
+        "subject": {
+          "maxLength": 180,
+          "minLength": 1,
+          "title": "Subject",
+          "type": "string"
+        },
+        "body": {
+          "maxLength": 8000,
+          "minLength": 1,
+          "title": "Body",
+          "type": "string"
+        }
+      },
+      "required": [
+        "subject",
+        "body"
+      ],
+      "title": "OutreachEdit",
+      "type": "object"
+    },
+    "DetectorView": {
+      "additionalProperties": true,
+      "properties": {
+        "provider": {
+          "title": "Provider",
+          "type": "string"
+        },
+        "ai_probability": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Ai Probability"
+        },
+        "result": {
+          "title": "Result",
+          "type": "string"
+        },
+        "checked_at": {
+          "format": "date-time",
+          "title": "Checked At",
+          "type": "string"
+        },
+        "report_url": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Report Url"
+        }
+      },
+      "required": [
+        "provider",
+        "ai_probability",
+        "result",
+        "checked_at",
+        "report_url"
+      ],
+      "title": "DetectorView",
+      "type": "object"
+    },
+    "MailboxDraftView": {
+      "additionalProperties": true,
+      "properties": {
+        "status": {
+          "title": "Status",
+          "type": "string"
+        },
+        "to": {
+          "title": "To",
+          "type": "string"
+        },
+        "at": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "At"
+        }
+      },
+      "required": [
+        "status",
+        "to",
+        "at"
+      ],
+      "title": "MailboxDraftView",
+      "type": "object"
+    },
+    "StyleView": {
+      "properties": {
+        "words": {
+          "title": "Words",
+          "type": "integer"
+        },
+        "generic_phrases": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Generic Phrases",
+          "type": "array"
+        },
+        "long_sentences": {
+          "title": "Long Sentences",
+          "type": "integer"
+        },
+        "has_question": {
+          "title": "Has Question",
+          "type": "boolean"
+        },
+        "note": {
+          "title": "Note",
+          "type": "string"
+        }
+      },
+      "required": [
+        "words",
+        "generic_phrases",
+        "long_sentences",
+        "has_question",
+        "note"
+      ],
+      "title": "StyleView",
+      "type": "object"
+    },
+    "PacketView": {
+      "additionalProperties": true,
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "company": {
+          "title": "Company",
+          "type": "string"
+        },
+        "subject": {
+          "title": "Subject",
+          "type": "string"
+        },
+        "body": {
+          "title": "Body",
+          "type": "string"
+        },
+        "evidence": {
+          "title": "Evidence",
+          "type": "string"
+        },
+        "fictional": {
+          "title": "Fictional",
+          "type": "boolean"
+        },
+        "draft_hash": {
+          "title": "Draft Hash",
+          "type": "string"
+        },
+        "status": {
+          "title": "Status",
+          "type": "string"
+        },
+        "updated_at": {
+          "format": "date-time",
+          "title": "Updated At",
+          "type": "string"
+        },
+        "style": {
+          "$ref": "#/$defs/StyleView"
+        },
+        "detector": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/DetectorView"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "signoff": {
+          "anyOf": [
+            {
+              "additionalProperties": true,
+              "type": "object"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Signoff"
+        },
+        "mailbox_draft": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/MailboxDraftView"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "history": {
+          "items": {
+            "additionalProperties": true,
+            "type": "object"
+          },
+          "title": "History",
+          "type": "array"
+        }
+      },
+      "required": [
+        "id",
+        "company",
+        "subject",
+        "body",
+        "evidence",
+        "fictional",
+        "draft_hash",
+        "status",
+        "updated_at",
+        "style",
+        "detector",
+        "signoff",
+        "mailbox_draft",
+        "history"
+      ],
+      "title": "PacketView",
+      "type": "object"
+    },
+    "EmlView": {
+      "properties": {
+        "filename": {
+          "title": "Filename",
+          "type": "string"
+        },
+        "content": {
+          "title": "Content",
+          "type": "string"
+        }
+      },
+      "required": [
+        "filename",
+        "content"
+      ],
+      "title": "EmlView",
+      "type": "object"
+    },
+    "SelfTestView": {
+      "additionalProperties": true,
+      "properties": {
+        "status": {
+          "title": "Status",
+          "type": "string"
+        },
+        "to": {
+          "title": "To",
+          "type": "string"
+        }
+      },
+      "required": [
+        "status",
+        "to"
+      ],
+      "title": "SelfTestView",
+      "type": "object"
+    }
+  }
+}

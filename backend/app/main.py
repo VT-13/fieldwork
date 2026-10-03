@@ -12,6 +12,7 @@ from .config import settings
 from .db import session
 from .models import Company, Contact, Evidence, Outreach, Event, Profile, Job, Usage, State, now
 from .schemas import ProfileInput, CompanyInput, ContactInput, DiscoveryInput, EventInput
+from . import ui_contracts as ui
 from .core import Blocked, public_url, record_event, day_start, score_company, profile_fingerprint
 from .pipeline import learning
 from .worker import enqueue
@@ -61,7 +62,7 @@ def health(db:DB):
     db.execute(text("SELECT 1"))
     return {"status":"ok"}
 
-@app.get("/profile",dependencies=[Auth])
+@app.get("/profile",dependencies=[Auth],response_model=ProfileInput)
 def profile(db:DB):
     row=db.get(Profile,1)
     return row.data if row else ProfileInput().model_dump()
@@ -87,7 +88,7 @@ def update_profile(body:ProfileInput,db:DB):
     db.commit()
     return body
 
-@app.get("/companies",dependencies=[Auth])
+@app.get("/companies",dependencies=[Auth],response_model=list[ui.CompanyView])
 def companies(db:DB):
     return [asdict(r) for r in db.scalars(select(Company).order_by(Company.score.desc(),Company.created_at.desc()).limit(1000))]
 
@@ -108,7 +109,7 @@ def import_companies(body:list[CompanyInput],db:DB):
         raise HTTPException(422,"Import at most 50 companies per batch")
     return [add_company(c,db) for c in body]
 
-@app.get("/companies/{id}",dependencies=[Auth])
+@app.get("/companies/{id}",dependencies=[Auth],response_model=ui.CompanyDetail)
 def company_detail(id:str,db:DB):
     row=get(db,Company,id)
     return {**asdict(row),"contacts":[asdict(c) for c in db.scalars(select(Contact).where(Contact.company_id==id))],
@@ -161,20 +162,51 @@ def verify_contact(id:str,db:DB):
     get(db,Contact,id)
     return asdict(enqueue(db,"verify",{"id":id},"verify:"+id+":"+now().strftime("%Y-%m-%d")))
 
-@app.get("/outreach",dependencies=[Auth])
+@app.get("/outreach",dependencies=[Auth],response_model=list[ui.OutreachView])
 def outreach(db:DB):
     return [asdict(r) for r in db.scalars(select(Outreach).order_by(Outreach.created_at.desc()).limit(1000))]
 
 @app.post("/outreach/{id}/approve",dependencies=[Auth])
 def approve(id:str,db:DB):
+    from .services import ledger
+    ledger.lock(db)
     row=get(db,Outreach,id)
-    if row.status!="draft" or not row.review.get("passed"):
+    if row.status!="draft" or row.attempts or not row.review.get("passed"):
         raise Blocked("Only quality-passed drafts can be approved")
     profile=get(db,Profile,1)
     if row.review.get("profile_hash")!=profile_fingerprint(profile.data):
         raise Blocked("Profile changed; regenerate the draft")
     from .domain.states import transition
     transition(db,row,"approved",reason="operator_approved")
+    db.commit()
+    return asdict(row)
+
+@app.patch("/outreach/{id}",dependencies=[Auth],response_model=ui.OutreachView)
+def edit_outreach(id:str,body:ui.OutreachEdit,db:DB):
+    from .services import ledger
+    from .domain.states import transition
+    ledger.lock(db)
+    row=get(db,Outreach,id)
+    if row.status not in {"draft","approved","rejected"} or row.attempts:
+        raise Blocked("Only unsent messages without an attempt can be edited")
+    if "\n" in body.subject or "\r" in body.subject:
+        raise Blocked("Subject must be one line")
+    if body.subject!=row.subject or body.body!=row.body:
+        transition(db,row,"draft",reason="operator_edit")
+        row.subject=body.subject;row.body=body.body
+        row.review={"passed":False,"issues":["Message edited. Regenerate to run quality review before approval."]}
+    db.commit()
+    return asdict(row)
+
+@app.post("/outreach/{id}/review/{decision}",dependencies=[Auth],response_model=ui.OutreachView)
+def review_outreach(id:str,decision:Literal["reject","draft"],db:DB):
+    from .services import ledger
+    from .domain.states import transition
+    ledger.lock(db)
+    row=get(db,Outreach,id)
+    if row.status not in {"draft","approved","rejected"} or row.attempts:
+        raise Blocked("Only unsent messages without an attempt may return to review")
+    transition(db,row,"rejected" if decision=="reject" else "draft",reason="operator_"+decision)
     db.commit()
     return asdict(row)
 
@@ -223,7 +255,7 @@ def automation(body:AutomationInput,db:DB):
     db.commit()
     return body
 
-@app.get("/settings",dependencies=[Auth])
+@app.get("/settings",dependencies=[Auth],response_model=ui.SettingsView)
 def config(db:DB):
     s=settings()
     state=db.get(State,"automation")
@@ -233,7 +265,7 @@ def config(db:DB):
         "integrations":{name:bool(getattr(s,name+"_api_key")) for name in ["openai","tavily","firecrawl","google_maps","apollo","hunter"]},
         "mail_connected":gmail_oauth.status(db)["connected"],"demo_allowed":s.environment!="production"}
 
-@app.get("/metrics",dependencies=[Auth])
+@app.get("/metrics",dependencies=[Auth],response_model=ui.MetricsView)
 def metrics(db:DB):
     real_ids=list(db.scalars(select(Company.id).where(Company.demo==False)))
     sent_ids=set(db.scalars(select(Outreach.company_id).where(Outreach.status=="sent",Outreach.sequence==0,Outreach.company_id.in_(real_ids))))
@@ -260,27 +292,27 @@ def demo(db:DB):
 
 from . import desk
 
-@app.get("/desk",dependencies=[Auth])
+@app.get("/desk",dependencies=[Auth],response_model=list[ui.PacketView])
 def desk_list(db:DB):
     return desk.list_packets(db)
 
-@app.post("/desk",dependencies=[Auth])
+@app.post("/desk",dependencies=[Auth],response_model=ui.PacketView)
 def desk_create(body:desk.DeskDraft,db:DB):
     return desk.new_packet(db,body)
 
-@app.put("/desk/{id}",dependencies=[Auth])
+@app.put("/desk/{id}",dependencies=[Auth],response_model=ui.PacketView)
 def desk_edit(id:str,body:desk.DeskDraft,db:DB):
     return desk.edit_packet(db,id,body)
 
-@app.post("/desk/{id}/detector",dependencies=[Auth])
+@app.post("/desk/{id}/detector",dependencies=[Auth],response_model=ui.PacketView)
 def desk_detect(id:str,body:desk.DetectorInput,db:DB):
     return desk.detector_result(db,id,body)
 
-@app.post("/desk/{id}/signoff",dependencies=[Auth])
+@app.post("/desk/{id}/signoff",dependencies=[Auth],response_model=ui.PacketView)
 def desk_signoff(id:str,body:desk.SignoffInput,db:DB):
     return desk.signoff(db,id,body)
 
-@app.get("/desk/{id}/eml",dependencies=[Auth])
+@app.get("/desk/{id}/eml",dependencies=[Auth],response_model=ui.EmlView)
 def desk_eml(id:str,db:DB):
     return {"filename":"dry-run.eml","content":desk.eml(db,id)}
 
@@ -290,7 +322,7 @@ def desk_mailbox(id:str,db:DB):
     return asdict(enqueue(db,"mailbox_draft",{"id":id,"draft_hash":packet["draft_hash"]},"mailbox-draft:"+id+":"+packet["draft_hash"]))
 
 from . import campaign
-@app.get('/campaign', dependencies=[Auth])
+@app.get('/campaign', dependencies=[Auth],response_model=ui.CampaignView)
 def campaign_status():
     return campaign.status()
 
@@ -306,7 +338,7 @@ def switch_outreach_policy(body:PolicySwitch,db:DB):
     from .services.policy import set_paused
     return set_paused(db,body.enabled)
 
-@app.get('/responses',dependencies=[Auth])
+@app.get('/responses',dependencies=[Auth],response_model=ui.InboxView)
 def response_list(db:DB):
     return responses.listing(db)
 
@@ -365,7 +397,7 @@ def logout(db:DB,operator:Annotated[object,Depends(browser_operator)]):
     result=JSONResponse({'logged_out':True});result.delete_cookie(COOKIE,path='/');return result
 
 from . import gmail_oauth
-@app.get('/integrations/gmail',dependencies=[Auth])
+@app.get('/integrations/gmail',dependencies=[Auth],response_model=ui.ConnectionView)
 def gmail_status(db:DB):return gmail_oauth.status(db)
 
 @app.post('/integrations/gmail/connect')

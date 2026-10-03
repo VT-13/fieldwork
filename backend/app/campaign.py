@@ -16,7 +16,7 @@ def current_batch(db):
  verified={r['outreach_id'] for r in p.get('results',[]) if r.get('sent_verified') and r['outreach_id'] in ids}
  policy=db.get(State,'outreach_policy')
  stopping=bool(scope.get('stop_requested'))
- return {'active':True,'batch_name':'Greater Sacramento outreach','status':'stopping' if stopping and p.get('status') in {'running','sending'} else p.get('status','pending'),'detail':p.get('detail',''),'limit':25,'planned':len(ids),'sent':sum(r.status=='sent' for r in records),'verified':len(verified),'skipped':0,'followups':False,'ongoing_policy':policy.value if policy else {},'validation_policy':'Published business contacts checked against primary sources; syntax and domain MX checked. Gmail Sent confirmation does not guarantee inbox delivery.','stop_requested':stopping,'can_stop':scope.get('enabled',False) and p.get('status') in {'running','sending'},'manual':True}
+ return {'active':True,'batch_name':'Greater Sacramento outreach','status':'stopping' if stopping and p.get('status') in {'running','sending'} else p.get('status','pending'),'detail':p.get('detail',''),'limit':25,'planned':len(ids),'outreach_ids':ids,'sent':sum(r.status=='sent' for r in records),'verified':len(verified),'skipped':0,'followups':False,'ongoing_policy':policy.value if policy else {},'validation_policy':'Published business contacts checked against primary sources; syntax and domain MX checked. Gmail Sent confirmation does not guarantee inbox delivery.','stop_requested':stopping,'can_stop':scope.get('enabled',False) and p.get('status') in {'running','sending'},'manual':True}
 
 def directory():
  value=os.environ.get('LIVE_BATCH_DIRECTORY','')
@@ -27,7 +27,10 @@ def status():
   current=current_batch(db)
   if current:return current
  root=directory()
- if not root or not (root/'receipts.json').exists():return {'active':False}
+ if not root or not (root/'receipts.json').exists():
+  with Session() as db:
+   row=db.get(State,'outreach_policy')
+   return {'active':False,'ongoing_policy':row.value if row else {'enabled':False}}
  with Session() as db:
   row=db.get(State,'outreach_policy');policy=row.value if row else {}
  receipt=json.loads((root/'receipts.json').read_text())

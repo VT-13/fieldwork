@@ -1,0 +1,30 @@
+"""Synthetic browser-only fixture. Never imported by application/runtime code."""
+import json,sys
+from pathlib import Path
+ROOT=Path(__file__).resolve().parents[1];sys.path.insert(0,str(ROOT/'backend'))
+from app.ui_contracts import CompanyDetail, OutreachView, InboxView, MetricsView, ProfileInput, CampaignView, SettingsView, ConnectionView
+
+def fixture():
+    stamp='2026-10-03T10:00:00Z'
+    descriptions=[('Aster Robotics (Demo)','Robotics','A fictional robotics team building vision tools for small industrial systems.',86,'drafted'),('Northline Software (Demo)','Software','A fictional local team improving scheduling tools for service businesses.',82,'replied'),('Cedar Engineering (Demo)','Engineering','A fictional engineering studio working with sensor data.',78,'researched'),('Meridian Analytics (Demo)','Finance','A fictional analytics studio designing business reporting tools.',74,'discovered'),('Juniper Systems (Demo)','IT consulting','A fictional consulting firm supporting local teams.',68,'discovered')]
+    companies=[];messages=[]
+    for i,(name,industry,description,score,stage) in enumerate(descriptions):
+        id=f'qa-company-{i}';contact=f'qa-contact-{i}';url=f'https://company-{i}.example/'
+        company=CompanyDetail(id=id,name=name,domain=f'company-{i}.example',website=url,industry=industry,description=description,distance_miles=8+i*6,source='Fictional browser QA fixture',research={'founder':'Jordan Lee (fictional)','size':'12 people (fixture)','internship_history':'Unknown','technologies':['Python','Web tools']},score=score,score_factors={'proximity':18,'technology_alignment':18,'contact_availability':15,'student_friendliness':0},stage=stage,demo=True,created_at=stamp,researched_at=stamp if i<3 else None,contacts=[{'id':contact,'company_id':id,'name':'Jordan Lee (fictional)','title':'Founder','email':f'jordan@company-{i}.example','source':url+'team','validation':'valid','validated_at':stamp}],evidence=[{'id':f'qa-evidence-{i}','company_id':id,'url':url+'products','quote':'Our vision dashboard gives operators a clearer view of each system. (Fictional fixture quotation.)','fact':'The fixture team is building a vision dashboard for operators.','category':'product','fetched_at':stamp}],events=[])
+        companies.append(company.model_dump(mode='json'))
+        if i<2:
+            message=OutreachView(id=f'qa-message-{i}',company_id=id,contact_id=contact,sequence=0,subject='A small tool for your vision dashboard',body="Hi Jordan,\n\nI noticed your team’s vision dashboard focuses on making system data easier to use. Competing at VEX Robotics Worlds made me curious about how the same sensor data can help someone spot a problem faster.\n\nI’m a high-school student in the Rocklin / Roseville area, and I’ve also built websites for local businesses. I’d like to try a small Python tool that summarizes a sample robot log and highlights a few unusual readings. I could start with a test dataset and keep the scope small.\n\nWould you be open to a short conversation about whether a project like that could be useful to your team?\n\nVihaan\n\n[Fictional browser QA fixture — never sent]",evidence_ids=[f'qa-evidence-{i}'],review={'passed':True,'personalization_score':91,'issues':[]},strategy='practical-help',status='draft' if i==0 else 'sent',due_at=stamp,sent_at=stamp if i==1 else None,provider_id='fixture-receipt' if i==1 else '',thread_id='fixture-thread' if i==1 else '',message_id='fixture-message' if i==1 else '',attempts=0 if i==0 else 1,created_at=stamp)
+            messages.append(message.model_dump(mode='json'))
+    profile=ProfileInput(name='Vihaan (QA fixture)',email='student@example.com',verified=True).model_dump(mode='json')
+    inbox=InboxView(enabled=False,needs_attention=1,sync={'status':'ok','last_success':stamp},responses=[{'id':'qa-reply','company_id':'qa-company-1','company':descriptions[1][0],'kind':'reply','sender':'jordan@company-1.example','subject':'Re: A small tool for your dashboard','preview':'Thanks for the thoughtful note. Could you share a small example of a tool you have built? [Fictional QA reply]','received_at':stamp,'handled':False,'gmail_url':'https://mail.google.com/'}]).model_dump(mode='json')
+    # Metrics exclude all demo records, matching backend semantics.
+    metrics=MetricsView(companies=0,sent=0,replies=0,interviews=0,offers=0,response_rate=0,interview_rate=0,conversion_rate=0,sent_today=0,learning=[]).model_dump(mode='json')
+    settings=SettingsView(manual_mode=True,dry_run=True,daily_send_limit=25,auto_approve=False,max_pages=8,research_seconds=60,mail_provider='gmail',mail_connected=False,demo_allowed=True,integrations={},automation={'enabled':False}).model_dump(mode='json')
+    campaign=CampaignView(active=False,ongoing_policy={'enabled':False,'new_companies_per_weekday':10,'followup_after_days':7}).model_dump(mode='json')
+    data={'companies':[ {k:v for k,v in c.items() if k not in ('contacts','evidence','events')} for c in companies], 'details':{c['id']:c for c in companies},'outreach':messages,'profile':profile,'responses':inbox,'metrics':metrics,'settings':settings,'campaign':campaign,'connection':ConnectionView(status='disconnected',email='',connected=False).model_dump(mode='json'),'desk':[]}
+    return data
+if __name__=='__main__':
+    path=ROOT/'frontend/tests/fixture.json';value=json.dumps(fixture(),indent=2)+'\n'
+    if '--check' in sys.argv:
+        if path.read_text()!=value:raise SystemExit('Browser fixture is stale')
+    else:path.write_text(value)
