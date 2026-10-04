@@ -1,0 +1,28 @@
+{
+  "fieldwork6b-backend": {
+    "result": "passed",
+    "image_id": "sha256:7a7ed110aaf0fccf9fbe2bd41e93b353b43a5bf535a9f4e6ca4ea431fcb2ed45",
+    "os": "linux",
+    "architecture": "arm64",
+    "runtime_user": "app",
+    "saved_image_bytes": 89636352,
+    "layer_archives_checked": 11,
+    "decompressed_layer_file_contents_checked": true,
+    "secret_matches": 0,
+    "private_database_or_QA_fixture_paths": [],
+    "runtime_secret_variables_baked": false
+  },
+  "fieldwork6b-frontend": {
+    "result": "passed",
+    "image_id": "sha256:ce475bc271405e0db3df52a97cd58bfbd469d2708894241b98fd29ce4c0011cd",
+    "os": "linux",
+    "architecture": "arm64",
+    "runtime_user": "node",
+    "saved_image_bytes": 77183488,
+    "layer_archives_checked": 8,
+    "decompressed_layer_file_contents_checked": true,
+    "secret_matches": 0,
+    "private_database_or_QA_fixture_paths": [],
+    "runtime_secret_variables_baked": false
+  }
+}

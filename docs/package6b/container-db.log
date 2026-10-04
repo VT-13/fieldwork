@@ -1,0 +1,189 @@
+The files belonging to this database system will be owned by user "postgres".
+This user must also own the server process.
+
+The database cluster will be initialized with locale "en_US.utf8".
+The default database encoding has accordingly been set to "UTF8".
+The default text search configuration will be set to "english".
+
+Data page checksums are disabled.
+
+fixing permissions on existing directory /var/lib/postgresql/data ... ok
+creating subdirectories ... ok
+selecting dynamic shared memory implementation ... posix
+selecting default "max_connections" ... 100
+selecting default "shared_buffers" ... 128MB
+selecting default time zone ... UTC
+creating configuration files ... ok
+running bootstrap script ... ok
+performing post-bootstrap initialization ... ok
+syncing data to disk ... ok
+
+
+Success. You can now start the database server using:
+
+    pg_ctl -D /var/lib/postgresql/data -l logfile start
+
+waiting for server to start....2026-10-04 04:00:55.332 UTC [40] LOG:  starting PostgreSQL 17.11 on aarch64-unknown-linux-musl, compiled by gcc (Alpine 15.2.0) 15.2.0, 64-bit
+2026-10-04 04:00:55.333 UTC [40] LOG:  listening on Unix socket "/var/run/postgresql/.s.PGSQL.5432"
+2026-10-04 04:00:55.339 UTC [43] LOG:  database system was shut down at 2026-10-04 04:00:55 UTC
+2026-10-04 04:00:55.342 UTC [40] LOG:  database system is ready to accept connections
+ done
+server started
+CREATE DATABASE
+
+
+/usr/local/bin/docker-entrypoint.sh: ignoring /docker-entrypoint-initdb.d/*
+
+waiting for server to shut down...2026-10-04 04:00:55.501 UTC [40] LOG:  received fast shutdown request
+.2026-10-04 04:00:55.502 UTC [40] LOG:  aborting any active transactions
+2026-10-04 04:00:55.504 UTC [40] LOG:  background worker "logical replication launcher" (PID 46) exited with exit code 1
+2026-10-04 04:00:55.505 UTC [41] LOG:  shutting down
+2026-10-04 04:00:55.506 UTC [41] LOG:  checkpoint starting: shutdown immediate
+2026-10-04 04:00:55.553 UTC [41] LOG:  checkpoint complete: wrote 926 buffers (5.7%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.019 s, sync=0.027 s, total=0.049 s; sync files=301, longest=0.008 s, average=0.001 s; distance=4266 kB, estimate=4266 kB; lsn=0/191E808, redo lsn=0/191E808
+2026-10-04 04:00:55.557 UTC [40] LOG:  database system is shut down
+ done
+server stopped
+
+PostgreSQL init process complete; ready for start up.
+
+sh: locale: not found
+2026-10-04 04:00:54.902 UTC [34] WARNING:  no usable system locales were found
+initdb: warning: enabling "trust" authentication for local connections
+initdb: hint: You can change this by editing pg_hba.conf or using the option -A, or --auth-local and --auth-host, the next time you run initdb.
+2026-10-04 04:00:55.615 UTC [1] LOG:  starting PostgreSQL 17.11 on aarch64-unknown-linux-musl, compiled by gcc (Alpine 15.2.0) 15.2.0, 64-bit
+2026-10-04 04:00:55.616 UTC [1] LOG:  listening on IPv4 address "0.0.0.0", port 5432
+2026-10-04 04:00:55.616 UTC [1] LOG:  listening on IPv6 address "::", port 5432
+2026-10-04 04:00:55.618 UTC [1] LOG:  listening on Unix socket "/var/run/postgresql/.s.PGSQL.5432"
+2026-10-04 04:00:55.622 UTC [56] LOG:  database system was shut down at 2026-10-04 04:00:55 UTC
+2026-10-04 04:00:55.624 UTC [1] LOG:  database system is ready to accept connections
+2026-10-04 04:00:59.579 UTC [67] FATAL:  database "fieldwork" does not exist
+2026-10-04 04:01:04.682 UTC [78] FATAL:  database "fieldwork" does not exist
+2026-10-04 04:01:09.824 UTC [86] FATAL:  database "fieldwork" does not exist
+2026-10-04 04:01:14.905 UTC [93] FATAL:  database "fieldwork" does not exist
+2026-10-04 04:01:19.967 UTC [100] FATAL:  database "fieldwork" does not exist
+2026-10-04 04:01:25.085 UTC [107] FATAL:  database "fieldwork" does not exist
+2026-10-04 04:01:30.213 UTC [115] FATAL:  database "fieldwork" does not exist
+2026-10-04 04:01:35.321 UTC [122] FATAL:  database "fieldwork" does not exist
+2026-10-04 04:01:40.414 UTC [129] FATAL:  database "fieldwork" does not exist
+2026-10-04 04:01:45.484 UTC [138] FATAL:  database "fieldwork" does not exist
+2026-10-04 04:01:50.601 UTC [146] FATAL:  database "fieldwork" does not exist
+2026-10-04 04:01:55.767 UTC [153] FATAL:  database "fieldwork" does not exist
+2026-10-04 04:02:00.865 UTC [160] FATAL:  database "fieldwork" does not exist
+2026-10-04 04:02:05.967 UTC [168] FATAL:  database "fieldwork" does not exist
+2026-10-04 04:02:11.100 UTC [175] FATAL:  database "fieldwork" does not exist
+2026-10-04 04:02:16.198 UTC [184] FATAL:  database "fieldwork" does not exist
+2026-10-04 04:02:21.270 UTC [191] FATAL:  database "fieldwork" does not exist
+2026-10-04 04:02:26.317 UTC [199] FATAL:  database "fieldwork" does not exist
+2026-10-04 04:02:31.428 UTC [206] FATAL:  database "fieldwork" does not exist
+2026-10-04 04:02:36.521 UTC [212] FATAL:  database "fieldwork" does not exist
+2026-10-04 04:02:41.646 UTC [219] FATAL:  database "fieldwork" does not exist
+2026-10-04 04:02:46.710 UTC [238] FATAL:  database "fieldwork" does not exist
+2026-10-04 04:02:51.787 UTC [245] FATAL:  database "fieldwork" does not exist
+2026-10-04 04:02:56.885 UTC [252] FATAL:  database "fieldwork" does not exist
+2026-10-04 04:03:01.995 UTC [259] FATAL:  database "fieldwork" does not exist
+2026-10-04 04:03:07.095 UTC [267] FATAL:  database "fieldwork" does not exist
+2026-10-04 04:03:12.213 UTC [275] FATAL:  database "fieldwork" does not exist
+2026-10-04 04:03:17.298 UTC [284] FATAL:  database "fieldwork" does not exist
+2026-10-04 04:03:22.413 UTC [291] FATAL:  database "fieldwork" does not exist
+2026-10-04 04:03:27.507 UTC [299] FATAL:  database "fieldwork" does not exist
+2026-10-04 04:03:32.634 UTC [306] FATAL:  database "fieldwork" does not exist
+2026-10-04 04:03:37.742 UTC [312] FATAL:  database "fieldwork" does not exist
+2026-10-04 04:03:42.835 UTC [319] FATAL:  database "fieldwork" does not exist
+2026-10-04 04:03:47.930 UTC [329] FATAL:  database "fieldwork" does not exist
+2026-10-04 04:03:52.994 UTC [336] FATAL:  database "fieldwork" does not exist
+2026-10-04 04:03:58.123 UTC [343] FATAL:  database "fieldwork" does not exist
+2026-10-04 04:04:03.223 UTC [350] FATAL:  database "fieldwork" does not exist
+2026-10-04 04:04:08.342 UTC [358] FATAL:  database "fieldwork" does not exist
+2026-10-04 04:04:13.465 UTC [365] FATAL:  database "fieldwork" does not exist
+2026-10-04 04:04:18.551 UTC [374] FATAL:  database "fieldwork" does not exist
+2026-10-04 04:04:23.613 UTC [381] FATAL:  database "fieldwork" does not exist
+2026-10-04 04:04:28.677 UTC [389] FATAL:  database "fieldwork" does not exist
+2026-10-04 04:04:33.773 UTC [396] FATAL:  database "fieldwork" does not exist
+2026-10-04 04:04:38.837 UTC [403] FATAL:  database "fieldwork" does not exist
+2026-10-04 04:04:43.920 UTC [415] FATAL:  database "fieldwork" does not exist
+2026-10-04 04:04:48.980 UTC [425] FATAL:  database "fieldwork" does not exist
+2026-10-04 04:04:54.056 UTC [432] FATAL:  database "fieldwork" does not exist
+2026-10-04 04:04:59.137 UTC [439] FATAL:  database "fieldwork" does not exist
+2026-10-04 04:05:04.217 UTC [446] FATAL:  database "fieldwork" does not exist
+2026-10-04 04:05:09.340 UTC [454] FATAL:  database "fieldwork" does not exist
+2026-10-04 04:05:14.441 UTC [461] FATAL:  database "fieldwork" does not exist
+2026-10-04 04:05:19.522 UTC [470] FATAL:  database "fieldwork" does not exist
+2026-10-04 04:05:24.628 UTC [477] FATAL:  database "fieldwork" does not exist
+2026-10-04 04:05:29.729 UTC [485] FATAL:  database "fieldwork" does not exist
+2026-10-04 04:05:34.843 UTC [491] FATAL:  database "fieldwork" does not exist
+2026-10-04 04:05:39.971 UTC [498] FATAL:  database "fieldwork" does not exist
+2026-10-04 04:05:45.063 UTC [505] FATAL:  database "fieldwork" does not exist
+2026-10-04 04:05:50.106 UTC [513] FATAL:  database "fieldwork" does not exist
+2026-10-04 04:05:55.196 UTC [522] FATAL:  database "fieldwork" does not exist
+2026-10-04 04:05:55.720 UTC [54] LOG:  checkpoint starting: time
+2026-10-04 04:06:00.277 UTC [529] FATAL:  database "fieldwork" does not exist
+2026-10-04 04:06:05.359 UTC [536] FATAL:  database "fieldwork" does not exist
+2026-10-04 04:06:10.466 UTC [544] FATAL:  database "fieldwork" does not exist
+2026-10-04 04:06:15.590 UTC [550] FATAL:  database "fieldwork" does not exist
+2026-10-04 04:06:20.706 UTC [557] FATAL:  database "fieldwork" does not exist
+2026-10-04 04:06:22.469 UTC [54] LOG:  checkpoint complete: wrote 257 buffers (1.6%); 0 WAL file(s) added, 0 removed, 0 recycled; write=26.734 s, sync=0.011 s, total=26.749 s; sync files=186, longest=0.001 s, average=0.001 s; distance=1452 kB, estimate=1452 kB; lsn=0/1A8CC70, redo lsn=0/1A89BC0
+2026-10-04 04:06:25.780 UTC [567] FATAL:  database "fieldwork" does not exist
+2026-10-04 04:06:30.893 UTC [574] FATAL:  database "fieldwork" does not exist
+2026-10-04 04:06:36.015 UTC [581] FATAL:  database "fieldwork" does not exist
+2026-10-04 04:06:41.125 UTC [588] FATAL:  database "fieldwork" does not exist
+2026-10-04 04:06:46.237 UTC [596] FATAL:  database "fieldwork" does not exist
+2026-10-04 04:06:51.332 UTC [603] FATAL:  database "fieldwork" does not exist
+2026-10-04 04:06:56.400 UTC [612] FATAL:  database "fieldwork" does not exist
+2026-10-04 04:07:01.505 UTC [619] FATAL:  database "fieldwork" does not exist
+2026-10-04 04:07:06.570 UTC [626] FATAL:  database "fieldwork" does not exist
+2026-10-04 04:07:11.652 UTC [633] FATAL:  database "fieldwork" does not exist
+2026-10-04 04:07:16.763 UTC [640] FATAL:  database "fieldwork" does not exist
+2026-10-04 04:07:21.865 UTC [647] FATAL:  database "fieldwork" does not exist
+2026-10-04 04:07:26.934 UTC [657] FATAL:  database "fieldwork" does not exist
+2026-10-04 04:07:32.043 UTC [664] FATAL:  database "fieldwork" does not exist
+2026-10-04 04:07:37.164 UTC [671] FATAL:  database "fieldwork" does not exist
+2026-10-04 04:07:42.278 UTC [679] FATAL:  database "fieldwork" does not exist
+2026-10-04 04:07:47.370 UTC [687] FATAL:  database "fieldwork" does not exist
+2026-10-04 04:07:52.487 UTC [694] FATAL:  database "fieldwork" does not exist
+2026-10-04 04:07:57.649 UTC [704] FATAL:  database "fieldwork" does not exist
+2026-10-04 04:08:02.757 UTC [711] FATAL:  database "fieldwork" does not exist
+2026-10-04 04:08:07.854 UTC [719] FATAL:  database "fieldwork" does not exist
+2026-10-04 04:08:12.952 UTC [726] FATAL:  database "fieldwork" does not exist
+2026-10-04 04:08:18.086 UTC [733] FATAL:  database "fieldwork" does not exist
+2026-10-04 04:08:23.128 UTC [740] FATAL:  database "fieldwork" does not exist
+2026-10-04 04:08:28.233 UTC [750] FATAL:  database "fieldwork" does not exist
+2026-10-04 04:08:33.288 UTC [759] FATAL:  database "fieldwork" does not exist
+2026-10-04 04:08:38.422 UTC [770] FATAL:  database "fieldwork" does not exist
+2026-10-04 04:08:43.552 UTC [779] FATAL:  database "fieldwork" does not exist
+2026-10-04 04:08:48.627 UTC [787] FATAL:  database "fieldwork" does not exist
+2026-10-04 04:08:53.679 UTC [793] FATAL:  database "fieldwork" does not exist
+2026-10-04 04:08:58.728 UTC [800] FATAL:  database "fieldwork" does not exist
+2026-10-04 04:09:03.828 UTC [807] FATAL:  database "fieldwork" does not exist
+2026-10-04 04:09:08.893 UTC [815] FATAL:  database "fieldwork" does not exist
+2026-10-04 04:09:14.000 UTC [824] FATAL:  database "fieldwork" does not exist
+2026-10-04 04:09:19.096 UTC [830] FATAL:  database "fieldwork" does not exist
+2026-10-04 04:09:24.173 UTC [837] FATAL:  database "fieldwork" does not exist
+2026-10-04 04:09:29.205 UTC [844] FATAL:  database "fieldwork" does not exist
+2026-10-04 04:09:34.251 UTC [851] FATAL:  database "fieldwork" does not exist
+2026-10-04 04:09:39.359 UTC [858] FATAL:  database "fieldwork" does not exist
+2026-10-04 04:09:44.450 UTC [867] FATAL:  database "fieldwork" does not exist
+2026-10-04 04:09:49.543 UTC [875] FATAL:  database "fieldwork" does not exist
+2026-10-04 04:09:54.599 UTC [885] FATAL:  database "fieldwork" does not exist
+2026-10-04 04:09:59.686 UTC [895] FATAL:  database "fieldwork" does not exist
+2026-10-04 04:10:04.797 UTC [905] FATAL:  database "fieldwork" does not exist
+2026-10-04 04:10:09.893 UTC [913] FATAL:  database "fieldwork" does not exist
+2026-10-04 04:10:14.985 UTC [920] FATAL:  database "fieldwork" does not exist
+2026-10-04 04:10:20.063 UTC [927] FATAL:  database "fieldwork" does not exist
+2026-10-04 04:10:25.112 UTC [934] FATAL:  database "fieldwork" does not exist
+2026-10-04 04:10:30.167 UTC [942] FATAL:  database "fieldwork" does not exist
+2026-10-04 04:10:35.220 UTC [950] FATAL:  database "fieldwork" does not exist
+2026-10-04 04:10:40.315 UTC [957] FATAL:  database "fieldwork" does not exist
+2026-10-04 04:10:45.443 UTC [964] FATAL:  database "fieldwork" does not exist
+2026-10-04 04:10:50.519 UTC [972] FATAL:  database "fieldwork" does not exist
+2026-10-04 04:10:55.570 UTC [54] LOG:  checkpoint starting: time
+2026-10-04 04:10:55.579 UTC [980] FATAL:  database "fieldwork" does not exist
+2026-10-04 04:10:56.606 UTC [54] LOG:  checkpoint complete: wrote 12 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=1.022 s, sync=0.002 s, total=1.037 s; sync files=8, longest=0.001 s, average=0.001 s; distance=136 kB, estimate=1321 kB; lsn=0/1AABEB8, redo lsn=0/1AABE60
+2026-10-04 04:11:00.702 UTC [991] FATAL:  database "fieldwork" does not exist
+2026-10-04 04:11:05.896 UTC [1000] FATAL:  database "fieldwork" does not exist
+2026-10-04 04:11:10.949 UTC [1010] FATAL:  database "fieldwork" does not exist
+2026-10-04 04:11:14.629 UTC [994] LOG:  unexpected EOF on client connection with an open transaction
+2026-10-04 04:11:14.629 UTC [993] LOG:  unexpected EOF on client connection with an open transaction
+2026-10-04 04:11:15.997 UTC [1019] FATAL:  database "fieldwork" does not exist
+2026-10-04 04:11:21.110 UTC [1029] FATAL:  database "fieldwork" does not exist
+2026-10-04 04:11:26.149 UTC [1036] FATAL:  database "fieldwork" does not exist
+2026-10-04 04:11:31.233 UTC [1043] FATAL:  database "fieldwork" does not exist

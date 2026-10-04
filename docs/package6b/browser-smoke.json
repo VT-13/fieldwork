@@ -1,0 +1,10 @@
+{
+  "result": "passed",
+  "scope": "One isolated host Chromium browser through actual Node22 Linux container -> Python3.13 API -> PG17; no UI suite",
+  "login_and_secure_session": true,
+  "authenticated_profile": true,
+  "schema": "006",
+  "recurring_paused": true,
+  "certificate_scope": "Only ephemeral staging leaf public-key hash permitted; no system trust change",
+  "browser_version": "154.0.8037.93"
+}

@@ -1,0 +1,49 @@
+{
+  "result": "passed",
+  "production_mutations": false,
+  "duplicate_worker": {
+    "passed": true,
+    "separate_containers": 2,
+    "job_attempts": 1,
+    "extra_fake_transmissions": 0
+  },
+  "sigterm_graceful": {
+    "passed": true,
+    "exit_code": 0
+  },
+  "advisory_leader_fence": {
+    "passed": true,
+    "independent_linux_processes": 2
+  },
+  "scheduler_duplicate_tick": {
+    "passed": true,
+    "new_duplicate_jobs": 0
+  },
+  "backup_restore": {
+    "passed": true,
+    "tool_major": 17,
+    "mode": "0600",
+    "sha256": "e4f7194f5056d5b54dd51573ed41e01e0ecaefae20401dc8358a942fdfd66c65",
+    "all_ORM_tables_exact": true,
+    "schema": "006",
+    "fresh_restore_database": true
+  },
+  "postgres_restart_persistence": {
+    "passed": true,
+    "all_ORM_tables_exact": true,
+    "named_volume": true
+  },
+  "app_restart_persistence": {
+    "passed": true,
+    "web_api_worker_restarted": true,
+    "durable_records_exact": true,
+    "extra_fake_transmissions": 0,
+    "volatile_exclusions": [
+      "worker/scheduler State heartbeat",
+      "safe-read Job leases",
+      "ExecutionLock.version tick counter"
+    ]
+  },
+  "communication_paused_at_end": true,
+  "fake_transmissions_total": 5
+}

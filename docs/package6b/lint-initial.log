@@ -1,0 +1,95 @@
+S102 Use of `exec` detected
+  --> scripts/package6b_browser.py:24:1
+   |
+22 | node=next(n for n in ast.parse((ROOT/'scripts/package6b_staging.py').read_text()).body if isinstance(n,ast.FunctionDef) and n.name=='t…
+23 | tls_scope={'TEST':TEST,'subprocess':subprocess,'HTTPConnection':HTTPConnection,'BaseHTTPRequestHandler':BaseHTTPRequestHandler,'Thread…
+24 | exec(compile(ast.Module(body=[node],type_ignores=[]),'staging-tls-edge','exec'),tls_scope)
+   | ^^^^
+25 | server=tls_scope['tls_edge']()
+26 | leaf=x509.load_pem_x509_certificate((TEST/'server.pem').read_bytes())
+   |
+
+PLW1510 `subprocess.run` without explicit `check` argument
+  --> scripts/package6b_recovery.py:28:7
+   |
+27 | def docker(*args,data=None):
+28 |     r=subprocess.run([DOCKER,*args],input=data,text=True,capture_output=True,timeout=120)
+   |       ^^^^^^^^^^^^^^
+29 |     if r.returncode:raise RuntimeError('Staging Docker '+args[0]+' failed: '+str(r.returncode))
+30 |     return r.stdout
+   |
+help: Add explicit `check=False`
+
+PLW1510 `subprocess.run` without explicit `check` argument
+  --> scripts/package6b_staging.py:38:9
+   |
+37 | def docker(*args, data=None, check=True):
+38 |     r = subprocess.run([DOCKER, *args], input=data, text=True, capture_output=True, timeout=150)
+   |         ^^^^^^^^^^^^^^
+39 |     if check and r.returncode:
+40 |         # Do not print inspect/env/config outputs containing runtime secrets.
+   |
+help: Add explicit `check=False`
+
+PLW1510 `subprocess.run` without explicit `check` argument
+  --> scripts/package6b_tools.py:43:15
+   |
+41 |     for part in ('backend','frontend'):
+42 |         with (out/(part+'-build.log')).open('w') as log:
+43 |             r=subprocess.run([d,'build','--no-cache','--progress=plain','-t','fieldwork6b-'+part,str(root/part)],env=env,stdout=log,st…
+   |               ^^^^^^^^^^^^^^
+44 |         if r.returncode:raise SystemExit('Clean '+part+' Docker build failed')
+45 | if mode=='up':
+   |
+help: Add explicit `check=False`
+
+PLW1510 `subprocess.run` without explicit `check` argument
+  --> scripts/package6b_tools.py:48:52
+   |
+46 |     root=Path((p/'context-path').read_text())
+47 |     args=[d,'compose','--project-name','fieldwork6b','--project-directory',str(root),'--env-file',str(root/'.env'),'-f',str(root/'comp…
+48 |     with (out/'safe-start.log').open('w') as log:r=subprocess.run(args,env=env,stdout=log,stderr=subprocess.STDOUT)
+   |                                                    ^^^^^^^^^^^^^^
+49 |     if r.returncode:raise SystemExit('Paused staging startup failed')
+50 | if mode=='qa-build':
+   |
+help: Add explicit `check=False`
+
+PLW1510 `subprocess.run` without explicit `check` argument
+  --> scripts/package6b_tools.py:55:50
+   |
+53 |     shutil.copytree(ROOT/'backend/tests',root/'backend/tests',dirs_exist_ok=True)
+54 |     (root/'backend/Dockerfile.qa').write_text('FROM fieldwork6b-backend\nUSER root\nRUN pip install --no-cache-dir pytest==9.1.1 pytes…
+55 |     with (out/'qa-build.log').open('w') as log:r=subprocess.run([d,'build','--progress=plain','-f',str(root/'backend/Dockerfile.qa'),'…
+   |                                                  ^^^^^^^^^^^^^^
+56 |     if r.returncode:raise SystemExit('Disposable test image build failed')
+57 | if mode not in {'prepare','build','up','defaults','scan','qa-build','tests'}:
+   |
+help: Add explicit `check=False`
+
+PIE810 Call `endswith` once with a `tuple`
+   --> scripts/package6b_tools.py:129:43
+    |
+127 | …
+128 | …m(n in block for n in needles);tail=block[-256:]
+129 | …and (name.endswith(('.sqlite','.db','.env','.env.production')) or name.startswith('app/tests/') or name.endswith('qa_release.py')):bad…
+    |       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+130 | …
+131 | …(image,'Image security assertion failed')
+    |
+help: Merge into a single `endswith` call
+
+PLW1510 `subprocess.run` without explicit `check` argument
+   --> scripts/package6b_tools.py:147:72
+    |
+145 |     env=os.environ.copy()
+146 |     tests=['tests/test_postgres_security.py::test_fresh_migrations_indices_constraints_and_schema','tests/test_postgres_security.py::…
+147 |     with Path('docs/package6b/linux-regressions.log').open('w') as f:r=subprocess.run([d,'run','--rm','--network','fieldwork6b_defaul…
+    |                                                                        ^^^^^^^^^^^^^^
+148 |     print('Target Linux concurrency/schema/config/worker regressions exit',r.returncode)
+149 |     if r.returncode:print(Path('docs/package6b/linux-regressions.log').read_text()[-4000:])
+    |
+help: Add explicit `check=False`
+
+Found 24 errors (16 fixed, 8 remaining).
+No fixes available (1 hidden fix can be enabled with the `--unsafe-fixes` option).

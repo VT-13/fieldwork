@@ -36,3 +36,7 @@ RUNBOOK.md, RELEASE_CHECKLIST.md, DEPLOYMENT.md and MIGRATION_PLAN.md define lat
 ## Package6A superseding migration evidence
 
 FW-026 is RESOLVED in canonical head006: exact111-character historical self-test identity/JSON/provenance survives transactional001→006 import and full-record SQLite/PG17.11 backup/restore. Installed read-only preflight passes with no source/DB/credential/service/pause changes. See ../package6a/verification.json and README.md. Original Module6 build/UI/E2E/test results above remain historical005 evidence; no such suite was rerun for this narrow package. All other open release gates remain; no Package6B or production activation.
+
+## Package6B superseding container evidence
+
+The previous Docker absence/native-only gap is superseded by ../package6b/verification.json: actual Linux ARM64/Python3.13/Node22/PG17 production images pass the runtime-container gate, including private networking, runtime secrets/layer scans, separate processes, fake-provider E2E, restart and full-record persistence/backup/restore. Original Module6 evidence remains historical. Intended hosted/live Google/activation gates remain, production unchanged, Package6C not begun.

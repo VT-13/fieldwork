@@ -1,0 +1,16 @@
+{
+  "ServerVersion": "29.5.2",
+  "OSType": "linux",
+  "Architecture": "aarch64",
+  "OperatingSystem": "Ubuntu 24.04.4 LTS",
+  "KernelVersion": "6.8.0-117-generic",
+  "NCPU": 2,
+  "MemTotal": 4094390272,
+  "Driver": "overlayfs",
+  "frontend_runtime": {
+    "node": "v22.23.3",
+    "uid": 1000,
+    "node_env": "production",
+    "playwright_present": false
+  }
+}

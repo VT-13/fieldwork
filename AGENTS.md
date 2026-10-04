@@ -30,3 +30,7 @@ Read docs/module6/README.md, verification.json, RELEASE_CHECKLIST.md and RUNBOOK
 ## Package6A handoff
 
 Current canonical head006 preserves exact legacy State identities with a255-character column. Do not change frozen001–006 or skip002 receipt backfill. The empty-target transfer uses006's idempotent widening before001 copy, then002–006 in one transaction. Installed runtime/schema001/credentials/services and recurring pause remain unchanged. FW-026 is resolved only for the verified migration/preflight; all other Module6 gates persist. No Package6B, deployment, worker activation, OAuth, automation or email is authorized by this task.
+
+## Package6B handoff
+
+Read docs/package6b/README.md and verification.json. The runtime-container gate passes actual Linux ARM64 production images, schema006, private networking, runtime-only secrets, separate API/web/worker/scheduler, fake E2E/recovery and full-record PG17 persistence/backup/restore. No product/Dockerfile redesign or installed production change. Fakes remain test-only and outside runtime images; scripts require isolated named staging targets. Hosted/private TLS/live Google/production activation remain separate gates. Package6C requires its own user request. Keep the personal schema001/source/credentials/services/pause unchanged.

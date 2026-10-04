@@ -45,3 +45,7 @@ Production verification performed in canonical source only. Fresh clean pins, ma
 ## Package6A verification outcome
 
 Only FW-026 is resolved: versioned006 exact State widening, representative001→006 on SQLite/PG17.11, full-record backup/restore and installed read-only compatibility/preservation. Historical Module6 evidence remains dated005; package6a/verification.json is the current migration evidence. Container/hosted/live Gmail gates remain unverified and release NOT READY. No production migration, worker/service/automation/OAuth/pause/mail changes; Package6B has not started.
+
+## Package6B verification outcome
+
+Runtime-container PASS only: actual Linux ARM64 clean Python3.13/Node22 builds, PG17/schema006, paused startup, non-root/runtime-injected secrets/layer scans/private network, separate worker/scheduler,16 target regressions, container fake E2E/recovery, full-record backup/restore and one host-browser smoke. Temporary staging removed; installed source/schema001/credentials/services/pause unchanged. Intended hosted/live-provider/activation gates stay unverified. Package6C not begun.

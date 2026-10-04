@@ -1,0 +1,8 @@
+{
+  "scope": "Actual Linux production images: HTTPS -> Node22 Next -> Python3.13 API -> separate worker/scheduler -> persistent PG17; fake provider seams, internal network",
+  "production_mutations": false,
+  "scenarios": {},
+  "readiness_error": "[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: Missing Authority Key Identifier (_ssl.c:1028)",
+  "result": "failed",
+  "failure_type": "AssertionError"
+}

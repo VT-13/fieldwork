@@ -14,9 +14,17 @@ from pathlib import Path
 from urllib.parse import parse_qs
 
 ROOT = Path(os.environ["FIELDWORK_RELEASE_TEST_ROOT"]).resolve()
-assert ROOT.is_relative_to(Path("/private/tmp/fieldwork-module6"))
-assert os.environ["DATABASE_URL"].endswith("/fieldwork_m6_e2e")
-assert "127.0.0.1:55436" in os.environ["DATABASE_URL"]
+CONTAINER = os.environ.get('FIELDWORK_RELEASE_CONTAINER_TEST') == 'disposable-only'
+if CONTAINER:
+    from sqlalchemy.engine import make_url
+    target = make_url(os.environ['DATABASE_URL'])
+    assert ROOT == Path('/staging/fieldwork6b')
+    assert target.host == 'db' and target.port == 5432
+    assert target.database == 'fieldwork6b_e2e'
+else:
+    assert ROOT.is_relative_to(Path("/private/tmp/fieldwork-module6"))
+    assert os.environ["DATABASE_URL"].endswith("/fieldwork_m6_e2e")
+    assert "127.0.0.1:55436" in os.environ["DATABASE_URL"]
 assert os.environ["SENDER_EMAIL"] == "student@example.com"
 assert os.environ["FIELDWORK_RELEASE_TEST"] == "disposable-only"
 
@@ -337,8 +345,8 @@ if __name__ == "__main__":
 
         uvicorn.run(
             "app.main:app",
-            host="127.0.0.1",
-            port=18036,
+            host="0.0.0.0" if CONTAINER else "127.0.0.1",
+            port=8000 if CONTAINER else 18036,
             access_log=False,
             proxy_headers=False,
         )

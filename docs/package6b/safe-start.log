@@ -1,0 +1,122 @@
+ Image postgres:17-alpine Pulling
+ 87e7bc91b13b Pulling fs layer 0B
+ 571d921d3454 Pulling fs layer 0B
+ 0c4d12928c8b Pulling fs layer 0B
+ ba4c01c41a64 Pulling fs layer 0B
+ 334e16b2a68c Pulling fs layer 0B
+ 363a00f0fb05 Pulling fs layer 0B
+ 2561c1a92c32 Pulling fs layer 0B
+ b266f5de3807 Pulling fs layer 0B
+ 17bc19c5b6b3 Pulling fs layer 0B
+ e0461b3d34b8 Download complete 0B
+ fa9ddeef3087 Download complete 0B
+ 571d921d3454 Downloading 168B
+ 334e16b2a68c Download complete 0B
+ 363a00f0fb05 Download complete 0B
+ 2561c1a92c32 Downloading 1.049MB
+ 17bc19c5b6b3 Download complete 0B
+ ba4c01c41a64 Download complete 0B
+ b266f5de3807 Download complete 0B
+ 571d921d3454 Download complete 0B
+ 0c4d12928c8b Download complete 0B
+ 87e7bc91b13b Download complete 0B
+ 0c4d12928c8b Pull complete 0B
+ 2561c1a92c32 Downloading 6.291MB
+ 334e16b2a68c Extracting 1B
+ 2561c1a92c32 Downloading 11.53MB
+ 334e16b2a68c Pull complete 0B
+ 87e7bc91b13b Pull complete 0B
+ 2561c1a92c32 Downloading 15.73MB
+ 2561c1a92c32 Downloading 19.97MB
+ 2561c1a92c32 Downloading 25.17MB
+ 2561c1a92c32 Downloading 29.36MB
+ 2561c1a92c32 Downloading 35.65MB
+ 2561c1a92c32 Downloading 39.96MB
+ 2561c1a92c32 Downloading 45.09MB
+ 2561c1a92c32 Downloading 51.38MB
+ 2561c1a92c32 Downloading 55.57MB
+ 2561c1a92c32 Downloading 60.82MB
+ 2561c1a92c32 Downloading 65.01MB
+ 2561c1a92c32 Downloading 69.21MB
+ 2561c1a92c32 Downloading 74.45MB
+ 2561c1a92c32 Downloading 78.92MB
+ 2561c1a92c32 Downloading 83.89MB
+ 2561c1a92c32 Downloading 88.63MB
+ 2561c1a92c32 Downloading 93.92MB
+ 2561c1a92c32 Downloading 99.61MB
+ 2561c1a92c32 Downloading 104.9MB
+ 2561c1a92c32 Downloading 109.1MB
+ 2561c1a92c32 Downloading 110MB
+ 2561c1a92c32 Download complete 0B
+ 2561c1a92c32 Extracting 1B
+ 2561c1a92c32 Extracting 1B
+ 2561c1a92c32 Extracting 1B
+ 2561c1a92c32 Extracting 1B
+ 2561c1a92c32 Extracting 1B
+ 2561c1a92c32 Extracting 1B
+ 2561c1a92c32 Extracting 1B
+ 2561c1a92c32 Extracting 1B
+ 2561c1a92c32 Extracting 1B
+ 2561c1a92c32 Extracting 1B
+ 2561c1a92c32 Extracting 1B
+ 2561c1a92c32 Extracting 2B
+ 2561c1a92c32 Extracting 2B
+ 2561c1a92c32 Extracting 2B
+ 2561c1a92c32 Extracting 2B
+ 2561c1a92c32 Extracting 2B
+ 2561c1a92c32 Extracting 2B
+ 2561c1a92c32 Extracting 2B
+ 17bc19c5b6b3 Extracting 1B
+ b266f5de3807 Pull complete 0B
+ 2561c1a92c32 Pull complete 0B
+ 363a00f0fb05 Pull complete 0B
+ 17bc19c5b6b3 Pull complete 0B
+ ba4c01c41a64 Pull complete 0B
+ 571d921d3454 Pull complete 0B
+ Image postgres:17-alpine Pulled
+ Network fieldwork6b_default Creating
+ Network fieldwork6b_default Creating
+ Volume fieldwork6b_postgres-data Creating
+ Volume fieldwork6b_postgres-data Creating
+ Volume fieldwork6b_postgres-data Created
+ Volume fieldwork6b_postgres-data Created
+ Network fieldwork6b_default Created
+ Network fieldwork6b_default Created
+ Container fieldwork6b-db-1 Creating
+ Container fieldwork6b-db-1 Created
+ Container fieldwork6b-migrate-1 Creating
+ Container fieldwork6b-migrate-1 Created
+ Container fieldwork6b-worker-1 Creating
+ Container fieldwork6b-api-1 Creating
+ Container fieldwork6b-worker-1 Created
+ Container fieldwork6b-api-1 Created
+ Container fieldwork6b-web-1 Creating
+ Container fieldwork6b-web-1 Created
+ Container fieldwork6b-db-1 Starting
+ Container fieldwork6b-db-1 Started
+ Container fieldwork6b-db-1 Waiting
+ Container fieldwork6b-db-1 Healthy
+ Container fieldwork6b-migrate-1 Starting
+ Container fieldwork6b-migrate-1 Started
+ Container fieldwork6b-migrate-1 Waiting
+ Container fieldwork6b-migrate-1 Waiting
+ Container fieldwork6b-migrate-1 Exited
+ Container fieldwork6b-migrate-1 Exited
+ Container fieldwork6b-api-1 Starting
+ Container fieldwork6b-worker-1 Starting
+ Container fieldwork6b-api-1 Started
+ Container fieldwork6b-api-1 Waiting
+ Container fieldwork6b-worker-1 Started
+ Container fieldwork6b-api-1 Healthy
+ Container fieldwork6b-web-1 Starting
+ Container fieldwork6b-web-1 Started
+ Container fieldwork6b-api-1 Waiting
+ Container fieldwork6b-worker-1 Waiting
+ Container fieldwork6b-web-1 Waiting
+ Container fieldwork6b-db-1 Waiting
+ Container fieldwork6b-migrate-1 Waiting
+ Container fieldwork6b-worker-1 Healthy
+ Container fieldwork6b-db-1 Healthy
+ Container fieldwork6b-migrate-1 Exited
+ Container fieldwork6b-web-1 Healthy
+ Container fieldwork6b-api-1 Healthy

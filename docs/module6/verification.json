@@ -376,10 +376,6 @@
   },
   "remaining_conditions": [
     {
-      "id": "runtime-container",
-      "condition": "Execute declared Python3.13/Node22/Linux/PG17 images and separate worker/health/env/nonroot/persistence in Docker-enabled staging"
-    },
-    {
       "id": "hosted-tls",
       "condition": "Verify intended private hosted trusted certificate, ingress/network/host/header/cookie/callback behavior"
     },
@@ -410,6 +406,14 @@
     ],
     "verification": "docs/package6a/verification.json",
     "production_migrated": false,
+    "other_gates_unchanged": true
+  },
+  "historical_module6_container_verified": false,
+  "current_runtime_container_gate": "PASS",
+  "package6b": {
+    "result": "PASS",
+    "verification": "docs/package6b/verification.json",
+    "production_mutated": false,
     "other_gates_unchanged": true
   }
 }

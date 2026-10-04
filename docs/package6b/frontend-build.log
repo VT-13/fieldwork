@@ -1,0 +1,140 @@
+#0 building with "default" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile
+#1 transferring dockerfile: 459B done
+#1 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/library/node:22-alpine
+#2 DONE 2.3s
+
+#3 [internal] load .dockerignore
+#3 transferring context: 65B done
+#3 DONE 0.0s
+
+#4 [build 1/6] FROM docker.io/library/node:22-alpine@sha256:0a7108bf6c7bf5de370ffb1a3ed6be93d405b43ff159f681a8d18c0e2bc2e402
+#4 resolve docker.io/library/node:22-alpine@sha256:0a7108bf6c7bf5de370ffb1a3ed6be93d405b43ff159f681a8d18c0e2bc2e402 done
+#4 ...
+
+#5 [internal] load build context
+#5 transferring context: 536.40kB 0.0s done
+#5 DONE 0.0s
+
+#4 [build 1/6] FROM docker.io/library/node:22-alpine@sha256:0a7108bf6c7bf5de370ffb1a3ed6be93d405b43ff159f681a8d18c0e2bc2e402
+#4 sha256:66fa63c7a061939c4346f9c3c1ada45434b276dd4e4274721d6bf13cb8adec6e 444B / 444B 0.1s done
+#4 sha256:74849c662da757b89cfe8b5406d7beaaf491727ea6843cbba85b8889d1543956 1.26MB / 1.26MB 0.2s done
+#4 sha256:87919ed734a39bc185155d715bdcf2ce6c52d112ff642650d9e0e35502b481e9 0B / 55.60MB 0.2s
+#4 sha256:a9986cd6f37dbddae7862a6d4be71683472e7c2ea708e87db14f8a6393c00f00 0B / 4.19MB 0.2s
+#4 sha256:87919ed734a39bc185155d715bdcf2ce6c52d112ff642650d9e0e35502b481e9 8.39MB / 55.60MB 0.5s
+#4 sha256:87919ed734a39bc185155d715bdcf2ce6c52d112ff642650d9e0e35502b481e9 13.63MB / 55.60MB 0.6s
+#4 sha256:a9986cd6f37dbddae7862a6d4be71683472e7c2ea708e87db14f8a6393c00f00 1.05MB / 4.19MB 0.6s
+#4 sha256:a9986cd6f37dbddae7862a6d4be71683472e7c2ea708e87db14f8a6393c00f00 3.15MB / 4.19MB 0.8s
+#4 sha256:87919ed734a39bc185155d715bdcf2ce6c52d112ff642650d9e0e35502b481e9 27.26MB / 55.60MB 0.9s
+#4 sha256:a9986cd6f37dbddae7862a6d4be71683472e7c2ea708e87db14f8a6393c00f00 4.19MB / 4.19MB 0.8s done
+#4 extracting sha256:a9986cd6f37dbddae7862a6d4be71683472e7c2ea708e87db14f8a6393c00f00
+#4 sha256:87919ed734a39bc185155d715bdcf2ce6c52d112ff642650d9e0e35502b481e9 34.60MB / 55.60MB 1.1s
+#4 extracting sha256:a9986cd6f37dbddae7862a6d4be71683472e7c2ea708e87db14f8a6393c00f00 0.1s done
+#4 sha256:87919ed734a39bc185155d715bdcf2ce6c52d112ff642650d9e0e35502b481e9 42.99MB / 55.60MB 1.2s
+#4 sha256:87919ed734a39bc185155d715bdcf2ce6c52d112ff642650d9e0e35502b481e9 50.33MB / 55.60MB 1.4s
+#4 sha256:87919ed734a39bc185155d715bdcf2ce6c52d112ff642650d9e0e35502b481e9 55.60MB / 55.60MB 1.5s
+#4 sha256:87919ed734a39bc185155d715bdcf2ce6c52d112ff642650d9e0e35502b481e9 55.60MB / 55.60MB 1.6s done
+#4 extracting sha256:87919ed734a39bc185155d715bdcf2ce6c52d112ff642650d9e0e35502b481e9
+#4 extracting sha256:87919ed734a39bc185155d715bdcf2ce6c52d112ff642650d9e0e35502b481e9 0.8s done
+#4 DONE 2.5s
+
+#4 [build 1/6] FROM docker.io/library/node:22-alpine@sha256:0a7108bf6c7bf5de370ffb1a3ed6be93d405b43ff159f681a8d18c0e2bc2e402
+#4 extracting sha256:74849c662da757b89cfe8b5406d7beaaf491727ea6843cbba85b8889d1543956 0.1s done
+#4 DONE 2.6s
+
+#4 [build 1/6] FROM docker.io/library/node:22-alpine@sha256:0a7108bf6c7bf5de370ffb1a3ed6be93d405b43ff159f681a8d18c0e2bc2e402
+#4 extracting sha256:66fa63c7a061939c4346f9c3c1ada45434b276dd4e4274721d6bf13cb8adec6e done
+#4 DONE 2.6s
+
+#6 [build 2/6] WORKDIR /app
+#6 DONE 0.7s
+
+#7 [build 3/6] COPY package*.json ./
+#7 DONE 0.0s
+
+#8 [build 4/6] RUN npm ci
+#8 7.661 npm warn deprecated eslint@9.39.5: This version is no longer supported. Please see https://eslint.org/version-support for other options.
+#8 14.11
+#8 14.11 added 366 packages, and audited 367 packages in 14s
+#8 14.11
+#8 14.11 143 packages are looking for funding
+#8 14.11   run `npm fund` for details
+#8 14.15
+#8 14.15 5 high severity vulnerabilities
+#8 14.15
+#8 14.15 To address all issues (including breaking changes), run:
+#8 14.15   npm audit fix --force
+#8 14.15
+#8 14.15 Run `npm audit` for details.
+#8 14.15 npm notice
+#8 14.15 npm notice New major version of npm available! 10.9.9 -> 12.2.0
+#8 14.15 npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.0
+#8 14.15 npm notice To update run: npm install -g npm@12.2.0
+#8 14.15 npm notice
+#8 DONE 15.3s
+
+#9 [build 5/6] COPY . .
+#9 DONE 0.2s
+
+#10 [build 6/6] RUN npm run build
+#10 0.255
+#10 0.255 > fieldwork@0.1.0 build
+#10 0.255 > next build
+#10 0.255
+#10 0.651 ▲ Next.js 16.3.8 (Turbopack)
+#10 0.725 ✓ Running next.config.ts took 74ms
+#10 0.733 Attention: Next.js now collects completely anonymous telemetry regarding usage.
+#10 0.733 This information is used to shape Next.js' roadmap and prioritize features.
+#10 0.733 You can learn more, including how to opt-out if you'd not like to participate in this anonymous program, by visiting the following URL:
+#10 0.733 https://nextjs.org/telemetry
+#10 0.733
+#10 0.744
+#10 0.855   Creating an optimized production build ...
+#10 10.81 ✓ Compiled successfully in 9.3s
+#10 10.85   Running TypeScript ...
+#10 18.31   Finished TypeScript in 7.5s ...
+#10 18.34   Collecting page data using 1 worker ...
+#10 18.83   Generating static pages using 1 worker (0/4) ...
+#10 19.02   Generating static pages using 1 worker (1/4)
+#10 19.02   Generating static pages using 1 worker (2/4)
+#10 19.02   Generating static pages using 1 worker (3/4)
+#10 19.02 ✓ Generating static pages using 1 worker (4/4) in 189ms
+#10 19.03   Finalizing page optimization ...
+#10 19.24
+#10 19.24 Route (app)
+#10 19.24 ┌ ○ /
+#10 19.24 ├ ○ /_not-found
+#10 19.24 ├ ƒ /api/[...path]
+#10 19.24 └ ○ /login
+#10 19.24
+#10 19.24
+#10 19.24 ƒ Proxy (Middleware)
+#10 19.24
+#10 19.24 ○  (Static)   prerendered as static content
+#10 19.24 ƒ  (Dynamic)  server-rendered on demand
+#10 19.24
+#10 DONE 19.4s
+
+#11 [stage-1 3/5] COPY --from=build --chown=node:node /app/.next/standalone ./
+#11 DONE 0.2s
+
+#12 [stage-1 4/5] COPY --from=build --chown=node:node /app/.next/static ./.next/static
+#12 DONE 0.0s
+
+#13 [stage-1 5/5] COPY --from=build --chown=node:node /app/public ./public
+#13 DONE 0.0s
+
+#14 exporting to image
+#14 exporting layers
+#14 exporting layers 1.2s done
+#14 exporting manifest sha256:73cecbdbe03f85d05cf6383ae133f2fd1453468e04472f22413c89c1c1e04b4e done
+#14 exporting config sha256:42f0705f24e7fa77d1c75cabb547998bd781dd49e4c9fd2a1885d653ef51c69b done
+#14 exporting attestation manifest sha256:d8cee4c8efd40173823984c521366387072830aa2d2a0e577200c649ee90535b done
+#14 exporting manifest list sha256:ce475bc271405e0db3df52a97cd58bfbd469d2708894241b98fd29ce4c0011cd done
+#14 naming to docker.io/library/fieldwork6b-frontend:latest done
+#14 unpacking to docker.io/library/fieldwork6b-frontend:latest
+#14 unpacking to docker.io/library/fieldwork6b-frontend:latest 0.3s done
+#14 DONE 1.6s

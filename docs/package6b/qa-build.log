@@ -1,0 +1,59 @@
+#0 building with "default" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile.qa
+#1 transferring dockerfile: 172B 0.0s done
+#1 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/library/fieldwork6b-backend:latest
+#2 DONE 0.0s
+
+#3 [internal] load .dockerignore
+#3 transferring context: 95B done
+#3 DONE 0.0s
+
+#4 [1/3] FROM docker.io/library/fieldwork6b-backend:latest@sha256:7a7ed110aaf0fccf9fbe2bd41e93b353b43a5bf535a9f4e6ca4ea431fcb2ed45
+#4 resolve docker.io/library/fieldwork6b-backend:latest@sha256:7a7ed110aaf0fccf9fbe2bd41e93b353b43a5bf535a9f4e6ca4ea431fcb2ed45 0.0s done
+#4 DONE 0.1s
+
+#5 [internal] load build context
+#5 transferring context: 304.52kB 0.0s done
+#5 DONE 0.0s
+
+#6 [2/3] RUN pip install --no-cache-dir pytest==9.1.1 pytest-asyncio==1.4.0
+#6 1.111 Collecting pytest==9.1.1
+#6 1.258   Downloading pytest-9.1.1-py3-none-any.whl.metadata (7.6 kB)
+#6 1.306 Collecting pytest-asyncio==1.4.0
+#6 1.341   Downloading pytest_asyncio-1.4.0-py3-none-any.whl.metadata (4.1 kB)
+#6 1.382 Collecting iniconfig>=1.0.1 (from pytest==9.1.1)
+#6 1.420   Downloading iniconfig-2.3.0-py3-none-any.whl.metadata (2.5 kB)
+#6 1.422 Requirement already satisfied: packaging>=22 in /usr/local/lib/python3.13/site-packages (from pytest==9.1.1) (26.3)
+#6 1.456 Collecting pluggy<2,>=1.5 (from pytest==9.1.1)
+#6 1.488   Downloading pluggy-1.6.0-py3-none-any.whl.metadata (4.8 kB)
+#6 1.526 Collecting pygments>=2.7.2 (from pytest==9.1.1)
+#6 1.557   Downloading pygments-2.21.0-py3-none-any.whl.metadata (2.5 kB)
+#6 1.592 Downloading pytest-9.1.1-py3-none-any.whl (386 kB)
+#6 1.725 Downloading pytest_asyncio-1.4.0-py3-none-any.whl (16 kB)
+#6 1.764 Downloading pluggy-1.6.0-py3-none-any.whl (20 kB)
+#6 1.792 Downloading iniconfig-2.3.0-py3-none-any.whl (7.5 kB)
+#6 1.825 Downloading pygments-2.21.0-py3-none-any.whl (1.3 MB)
+#6 1.885    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.3/1.3 MB 20.2 MB/s  0:00:00
+#6 1.999 Installing collected packages: pygments, pluggy, iniconfig, pytest, pytest-asyncio
+#6 2.945
+#6 2.951 Successfully installed iniconfig-2.3.0 pluggy-1.6.0 pygments-2.21.0 pytest-9.1.1 pytest-asyncio-1.4.0
+#6 2.951 WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager, possibly rendering your system unusable. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv. Use the --root-user-action option if you know what you are doing and want to suppress this warning.
+#6 DONE 3.2s
+
+#7 [3/3] COPY tests ./tests
+#7 DONE 0.1s
+
+#8 exporting to image
+#8 exporting layers
+#8 exporting layers 0.7s done
+#8 exporting manifest sha256:00e117367592f1db853eab4db7af3fcf60da0c586091c179965e7c15dfbd1d16 done
+#8 exporting config sha256:cd62277af8c5614512e995f68dfc7931486f5b014830d54b134f0ee5ff2df57a done
+#8 exporting attestation manifest sha256:2997499c7cb40244651e4a37213cbdb881ac15fbd93b457efd6c3050f260b7bb 0.0s done
+#8 exporting manifest list sha256:330503874930e4cb4298c69ad55e0174193ac6e1ce6426938788fa4d57f4850d done
+#8 naming to docker.io/library/fieldwork6b-qa:latest done
+#8 unpacking to docker.io/library/fieldwork6b-qa:latest
+#8 unpacking to docker.io/library/fieldwork6b-qa:latest 0.3s done
+#8 DONE 1.2s

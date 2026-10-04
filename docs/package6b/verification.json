@@ -1,0 +1,248 @@
+{
+  "package": "FIELDWORK 6B",
+  "gate": "runtime-container",
+  "container_gate": "PASS",
+  "timestamp_utc": "2026-10-04T04:37:43.122569+00:00",
+  "release_candidate_ref": "fieldwork-package6b-container",
+  "application_baseline_commit": "a11557f7462203df39da89713556406faa5ef2bd",
+  "application_and_dockerfiles_unchanged": true,
+  "fw026_prerequisite": "RESOLVED; docs/package6a/verification.json",
+  "schema_revision": "006",
+  "frozen_migrations_unchanged": {
+    "backend/alembic/versions/006_state_identity.py": "5af869e8aec73bcc062b8e8c0edf14c2d1638c921f661a21431991cd3fd6a352",
+    "backend/alembic/versions/002_operations.py": "6f6dd5397b2753e8bcf2b2b7a41faa0dc2491332fda447a09ba7420fae40410e",
+    "backend/alembic/versions/005_runtime.py": "ddeba29d76ac0bc038266d8057a01da873d8a786b24157c624cb5e2c6d2b38af",
+    "backend/alembic/versions/004_intelligence.py": "7dd9bcc6edbdd09c1625c5a445e836a760e942c7fdbb22c0925308d29b8cbc2d",
+    "backend/alembic/versions/003_security.py": "53125455cec33df2e1086e61434f904407de16e269502080ad54173248f4add9",
+    "backend/alembic/versions/001_initial.py": "8daa776ebc1893e6248ef36913f7755a6c4ae2ae9e128bad608677845a470103"
+  },
+  "runtime": {
+    "ServerVersion": "29.5.2",
+    "OSType": "linux",
+    "Architecture": "aarch64",
+    "OperatingSystem": "Ubuntu 24.04.4 LTS",
+    "KernelVersion": "6.8.0-117-generic",
+    "NCPU": 2,
+    "MemTotal": 4094390272,
+    "Driver": "overlayfs",
+    "frontend_runtime": {
+      "node": "v22.23.3",
+      "uid": 1000,
+      "node_env": "production",
+      "playwright_present": false
+    }
+  },
+  "initial_paused_startup": {
+    "os": "Linux",
+    "python": "3.13.16",
+    "uid": 1000,
+    "environment": "production",
+    "schema": "006",
+    "dry_run": true,
+    "manual_mode": true,
+    "response_poll": false,
+    "auto_approve": false,
+    "profiles": 0,
+    "integrations": 0,
+    "attempts": 0,
+    "jobs": 0,
+    "worker_heartbeat": true,
+    "scheduler_heartbeat": true,
+    "pytest_present": false,
+    "playwright_present": false,
+    "writable_data": true,
+    "node": "v22.23.3",
+    "node_uid": "1000",
+    "postgres": "postgres (PostgreSQL) 17.11",
+    "postgres_not_published": true,
+    "api_internal_only": true,
+    "web_loopback_only": true,
+    "staging_external_egress_disabled": true,
+    "result": "passed"
+  },
+  "images": {
+    "fieldwork6b-backend": {
+      "result": "passed",
+      "image_id": "sha256:7a7ed110aaf0fccf9fbe2bd41e93b353b43a5bf535a9f4e6ca4ea431fcb2ed45",
+      "os": "linux",
+      "architecture": "arm64",
+      "runtime_user": "app",
+      "saved_image_bytes": 89636352,
+      "layer_archives_checked": 11,
+      "decompressed_layer_file_contents_checked": true,
+      "secret_matches": 0,
+      "private_database_or_QA_fixture_paths": [],
+      "runtime_secret_variables_baked": false
+    },
+    "fieldwork6b-frontend": {
+      "result": "passed",
+      "image_id": "sha256:ce475bc271405e0db3df52a97cd58bfbd469d2708894241b98fd29ce4c0011cd",
+      "os": "linux",
+      "architecture": "arm64",
+      "runtime_user": "node",
+      "saved_image_bytes": 77183488,
+      "layer_archives_checked": 8,
+      "decompressed_layer_file_contents_checked": true,
+      "secret_matches": 0,
+      "private_database_or_QA_fixture_paths": [],
+      "runtime_secret_variables_baked": false
+    }
+  },
+  "linux_regressions": {
+    "passed": 16,
+    "skipped": 0,
+    "evidence": "linux-regressions.log"
+  },
+  "container_e2e": {
+    "scope": "Actual Linux production images: HTTPS -> Node22 Next -> Python3.13 API -> separate worker/scheduler -> persistent PG17; fake provider seams, internal network",
+    "production_mutations": false,
+    "scenarios": {
+      "initial_followup_reply": {
+        "passed": true,
+        "transmissions": 2,
+        "operator_review_before_each_send": true,
+        "same_subject_thread": true,
+        "replay_no_duplicate": true,
+        "reply_linkage_and_cancellation": true
+      },
+      "forced_crash_uncertain_reconciliation": {
+        "passed": true,
+        "no_evidence_held": true,
+        "exact_evidence_sent": true,
+        "no_resend": true,
+        "transmissions": 1
+      },
+      "shared_daily_quota": {
+        "passed": true,
+        "cap": 4,
+        "types": [
+          "followup",
+          "uncertain_initial",
+          "self_test",
+          "initial"
+        ],
+        "overflow_calls": 0,
+        "unknown_counted": true
+      },
+      "timezone_rollover_no_catchup": {
+        "passed": true,
+        "timezone": "America/Los_Angeles",
+        "new_day_attempts": 0
+      },
+      "due_followup_reply_race": {
+        "passed": true,
+        "reserved_transmissions": 0,
+        "pending_message_cancelled": true
+      }
+    },
+    "result": "passed"
+  },
+  "browser_smoke": {
+    "result": "passed",
+    "scope": "One isolated host Chromium browser through actual Node22 Linux container -> Python3.13 API -> PG17; no UI suite",
+    "login_and_secure_session": true,
+    "authenticated_profile": true,
+    "schema": "006",
+    "recurring_paused": true,
+    "certificate_scope": "Only ephemeral staging leaf public-key hash permitted; no system trust change",
+    "browser_version": "154.0.8037.93"
+  },
+  "restart_backup": {
+    "result": "passed",
+    "production_mutations": false,
+    "duplicate_worker": {
+      "passed": true,
+      "separate_containers": 2,
+      "job_attempts": 1,
+      "extra_fake_transmissions": 0
+    },
+    "sigterm_graceful": {
+      "passed": true,
+      "exit_code": 0
+    },
+    "advisory_leader_fence": {
+      "passed": true,
+      "independent_linux_processes": 2
+    },
+    "scheduler_duplicate_tick": {
+      "passed": true,
+      "new_duplicate_jobs": 0
+    },
+    "backup_restore": {
+      "passed": true,
+      "tool_major": 17,
+      "mode": "0600",
+      "sha256": "e4f7194f5056d5b54dd51573ed41e01e0ecaefae20401dc8358a942fdfd66c65",
+      "all_ORM_tables_exact": true,
+      "schema": "006",
+      "fresh_restore_database": true
+    },
+    "postgres_restart_persistence": {
+      "passed": true,
+      "all_ORM_tables_exact": true,
+      "named_volume": true
+    },
+    "app_restart_persistence": {
+      "passed": true,
+      "web_api_worker_restarted": true,
+      "durable_records_exact": true,
+      "extra_fake_transmissions": 0,
+      "volatile_exclusions": [
+        "worker/scheduler State heartbeat",
+        "safe-read Job leases",
+        "ExecutionLock.version tick counter"
+      ]
+    },
+    "communication_paused_at_end": true,
+    "fake_transmissions_total": 5
+  },
+  "network": {
+    "web_loopback": "127.0.0.1:13066",
+    "web_edge_and_internal_network": true,
+    "api_worker_database_internal_only": true,
+    "postgres_not_published": true,
+    "staging_backend_provider_egress_disabled": true
+  },
+  "secrets": {
+    "runtime_injected_only": true,
+    "private_environment_never_copied_to_build": true,
+    "decompressed_image_layers_assets_and_config_scanned": true,
+    "runtime_secret_matches": 0,
+    "production_images_have_no_QA_bootstrap_or_personal_SQLite": true
+  },
+  "portability": {
+    "executed_architecture": "linux/arm64",
+    "amd64_not_claimed": true,
+    "runtime_paths": "/app and configured absolute storage; private separate PostgreSQL",
+    "Mac_tmp_paths_only_in_native_test_branch": true,
+    "Linux_case_shell_permission_and_runtime_package_checks_passed": true,
+    "browser_required_by_runtime": false
+  },
+  "lint": "passed",
+  "preservation_evidence": "preservation.json",
+  "production_mutations": {
+    "source": false,
+    "database": false,
+    "live_db_migrated": false,
+    "real_outreach_sent": 0,
+    "recurring_pause_changed": false,
+    "real_oauth_changed": false,
+    "services_or_launch_agents_changed": false,
+    "automation_changed": false
+  },
+  "staging_removed": true,
+  "temporary_VM_removed": true,
+  "package6c_started": false,
+  "overall_release": "NOT READY; intended hosted private TLS/live Google/production activation gates remain separate",
+  "harness_corrections": [
+    "internal network had no ingress; web-only edge bridge added",
+    "Python3.13 strict certificate validation required AKI/CA extensions; added, not disabled",
+    "ExecutionLock.version advances on ticks; restart verifies retained row/nondecreasing counter; stopped DB backup/restore still compares every ORM table exactly"
+  ],
+  "source_integrity": {
+    "baseline_verified": true,
+    "current_manifest_verified": true,
+    "canonical_manifest_sha256": "54d629a3b89b1de0cadc33eb53334a1fe79b67115268d720773389c9ff443867",
+    "includes_container_harness_and_docs": true
+  }
+}
