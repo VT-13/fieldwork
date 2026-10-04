@@ -12,6 +12,8 @@ async def save_mailbox_draft(db,id,draft_hash,mailbox=None):
     if row.value['draft_hash']!=draft_hash:
         raise Blocked('Draft changed after queueing; save the current version instead')
     address=mailbox_address(db)
+    from .gmail_validation import spec
+    validation=spec(db,id,'draft')
     previous=row.value.get('mailbox_draft') or {}
     if previous.get('status') in {'saving','unknown'}:
         raise Blocked('Previous draft save is uncertain. Check Drafts before retrying; no duplicate created')
@@ -32,6 +34,7 @@ async def save_mailbox_draft(db,id,draft_hash,mailbox=None):
     def authorize():
         if hasattr(box,'ensure_authorized'):box.ensure_authorized(db)
         if get_packet(db,id).value['draft_hash']!=draft_hash:raise Blocked('Draft changed after queueing')
+        if spec(db,id,'draft')!=validation:raise Blocked('Validation scope changed')
         return policy.own_mailbox(db,mailbox_address(db),getattr(box,'cfg',settings()).sender_email,'mailbox_draft')
     def reserve(attempt):
         row.value={**row.value,'mailbox_draft':{**previous,'status':'saving','draft_hash':draft_hash,'to':address}}
@@ -53,6 +56,8 @@ async def save_mailbox_draft(db,id,draft_hash,mailbox=None):
                 'subject':'[DRY RUN] '+row.value['subject'],'body':{'contentType':'Text','content':label+row.value['body']},
                 'toRecipients':[{'emailAddress':{'address':address}}]})
         saved={'status':'saved','provider_id':result['id'],'draft_hash':draft_hash,'to':address,'at':now().isoformat(),'provider':settings().mail_provider}
+        if settings().mail_provider=='gmail':
+            saved={**saved,'gmail_id':result.get('message',{}).get('id',''),'thread_id':result.get('message',{}).get('threadId','')}
         db.refresh(row)
         row.value={**row.value,'mailbox_draft':saved}
         ledger.finish(db,attempt,'succeeded',receipt={k:v for k,v in saved.items() if k!='to'},reason='draft_saved')

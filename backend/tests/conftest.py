@@ -28,6 +28,7 @@ def clean_settings(monkeypatch):
     monkeypatch.setenv("ENVIRONMENT","development")
     monkeypatch.setenv("DRY_RUN","true")
     monkeypatch.setenv("RESPONSE_POLL_ENABLED","false")
+    monkeypatch.setenv("LIVE_GMAIL_VALIDATION_ENABLED","false")
     monkeypatch.setenv("MANUAL_MODE","false")
     monkeypatch.setenv("OPERATOR_PASSWORD_HASH","")
     monkeypatch.setenv("CREDENTIAL_KEYS","")

@@ -1,7 +1,7 @@
 {
   "package": "FIELDWORK 6D LIVE VALIDATION",
-  "status": "BLOCKED",
-  "checkpoint": "1_google_owner_authorization_retry",
+  "status": "IN PROGRESS",
+  "checkpoint": "4_live_draft_after_targeted_staging_deploy",
   "timestamp_utc": "2026-10-04T07:23:41.518156+00:00",
   "resume_without_restarting": true,
   "old_exposed_credential_revoked": true,
@@ -11,16 +11,26 @@
     "current_client_validated": true
   },
   "google_browser_checkpoint": "Fresh account chooser after test-user persistence verification",
-  "google_authorization_completed": false,
+  "google_authorization_completed": true,
   "drafts_created": 0,
   "test_messages_sent": 0,
   "controlled_replies_sent": 0,
   "company_messages_sent": 0,
   "recurring_paused": true,
-  "required_owner_action": "Complete the Google authorization currently shown in the browser, then tell me done.",
+  "required_owner_action": null,
   "authorized_test_accounts": "Designated A/B identities stored privately; no third identity authorized",
   "package6e_started": false,
   "test_user_verified_after_reload": true,
   "previous_oauth_error": "403 access_denied: developer-approved testers only",
-  "test_user_repair": "Audience initially showed no saved rows; committed email entry and saved again. Google displayed an ineligible dialog, but subsequent page reload confirms the exact designated entry persisted. Actual consent eligibility still requires retry."
+  "test_user_repair": "Audience initially showed no saved rows; committed email entry and saved again. Google displayed an ineligible dialog, but subsequent page reload confirms the exact designated entry persisted. Actual consent eligibility still requires retry.",
+  "oauth_verified": true,
+  "google_identity_matches_account_a": true,
+  "encrypted_storage_verified": true,
+  "authenticated_gmail_profile_verified": true,
+  "history_current_boundary_initialized": true,
+  "targeted_tests": {
+    "passed": 159,
+    "disposable_postgresql": "17.11",
+    "lint": "PASS"
+  }
 }

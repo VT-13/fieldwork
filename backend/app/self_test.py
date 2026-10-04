@@ -18,23 +18,29 @@ async def send(db,id,box=None):
     if old:
         if old.value['status']=='sent':return old.value
         raise Blocked('Previous test delivery is uncertain. Check Gmail before trying another version.')
+    from .gmail_validation import spec
+    validation=spec(db,id,'send')
+    recipient=validation['to'] if validation else address
     box=box or Mailbox();await box.connect()
     if box.cfg.mail_provider!='gmail':raise Blocked('Self-tests require Gmail in this release')
     def authorize():
         if hasattr(box,'ensure_authorized'):box.ensure_authorized(db)
         if desk.get_packet(db,id).value['draft_hash']!=fingerprint:raise Blocked('Draft changed; save current version')
-        return policy.own_mailbox(db,desk.mailbox_address(db),box.cfg.sender_email,'self_test')
+        decision=policy.own_mailbox(db,desk.mailbox_address(db),box.cfg.sender_email,'self_test')
+        current=spec(db,id,'send')
+        if current!=validation:raise Blocked('Validation scope changed')
+        return {**decision,**({'validation_scope_hash':current['scope_hash']} if current else {})}
     def reserve(attempt):
-        db.add(State(key=state_key,value={'status':'sending','to':address,'at':attempt.started_at.isoformat()}))
+        db.add(State(key=state_key,value={'status':'sending','to':recipient,'at':attempt.started_at.isoformat()}))
     attempt,replay=ledger.claim(db,key,'self_test',box.cfg.mail_provider,authorize,entity_id=id,reserve=reserve)
-    if replay:return {**attempt.receipt,'status':'sent','to':address}
-    msg=EmailMessage();msg['From']=address;msg['To']=address;msg['Subject']='[DRY RUN] '+packet['subject']
+    if replay:return {**attempt.receipt,'status':'sent','to':recipient}
+    msg=EmailMessage();msg['From']=address;msg['To']=recipient;msg['Subject']=validation['subject'] if validation else '[DRY RUN] '+packet['subject']
     msg['Message-ID']='<fieldwork-test-'+attempt.operation_id+'@gmail.com>'
-    msg.set_content('TEST COPY TO YOURSELF — no company was contacted.\n\n'+packet['body'])
+    msg.set_content(validation['body'] if validation else 'TEST COPY TO YOURSELF — no company was contacted.\n\n'+packet['body'])
     try:
         with ledger.permit(attempt):
             result=await box.call('POST','https://gmail.googleapis.com/gmail/v1/users/me/messages/send',json={'raw':base64.urlsafe_b64encode(msg.as_bytes()).decode()})
-        receipt={'gmail_id':result['id'],'thread_id':result.get('threadId',''),'at':now().isoformat()}
+        receipt={'gmail_id':result['id'],'thread_id':result.get('threadId',''),'at':now().isoformat(),'message_id':msg['Message-ID']}
     except Exception:
         db.rollback();row=db.get(State,state_key);row.value={**row.value,'status':'unknown'}
         ledger.finish(db,attempt,'unknown',reason='delivery_uncertain')

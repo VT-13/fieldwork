@@ -105,8 +105,11 @@ def eml(db,id):
     data=get_packet(db,id).value
     email=mailbox_address(db)
     msg=EmailMessage()
+    from .gmail_validation import spec
+    validation=spec(db,id,'draft')
     msg['To']=email
-    msg['Subject']='[DRY RUN] '+data['subject']
+    if validation:msg['From']=email
+    msg['Subject']=validation['subject'] if validation else '[DRY RUN] '+data['subject']
     msg['X-Unsent']='1'
     label='FICTIONAL PRACTICE — not a researched opportunity.\n\n' if data.get('fictional') else ''
     msg.set_content(label+data['body'])

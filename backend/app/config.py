@@ -16,6 +16,7 @@ class Settings(BaseSettings):
     max_request_bytes: int = Field(100_000, ge=10_000, le=500_000)
     oauth_redirect_uri: str = "http://localhost:3000/api/integrations/gmail/callback"
     gmail_drafts_enabled: bool = False
+    live_gmail_validation_enabled: bool = False
     allow_legacy_oauth: bool = False
     environment: Literal["development", "production"] = "development"
     dry_run: bool = True

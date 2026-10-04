@@ -64,6 +64,8 @@ async def verify_identity(db, box):
 def ingest(db, msg, rows, contacts, sender_email):
     from .services.reconciliation import headers, matches
 
+    from .gmail_validation import ingest as ingest_validation
+    if ingest_validation(db, msg):return None
     h = headers(msg)
     sender = parseaddr(h.get("from", ""))[1].lower()
     if sender == sender_email.lower() and "SENT" in msg.get("labelIds", []):
@@ -261,7 +263,15 @@ async def sync_session(db, box=None):
                 if pending:
                     mid = pending[0]
                     try:
-                        msg = await call("messages/" + mid, {"format": "full"})
+                        from .gmail_validation import context, send_state, related
+                        validation = context(db)
+                        if validation:
+                            # Active staging validation never reads unrelated message bodies.
+                            metadata = await call("messages/" + mid, {"format": "metadata", "metadataHeaders": ["From", "To", "References", "In-Reply-To"]})
+                            receipt = send_state(db, validation)
+                            msg = await call("messages/" + mid, {"format": "full"}) if receipt and related(validation, receipt.value, metadata) else metadata
+                        else:
+                            msg = await call("messages/" + mid, {"format": "full"})
                     except MailboxFailure as exc:
                         if exc.code != "not_found":
                             raise

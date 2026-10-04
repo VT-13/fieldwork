@@ -68,15 +68,19 @@ def validate(db, attempt, op, payload, account):
             from ..desk import get_packet
 
             packet = get_packet(db, op.entity_id).value
+            from ..gmail_validation import spec
+            validation = spec(db, op.entity_id, "send")
+            expected_to = validation["to"] if validation else account.lower()
+            expected_subject = validation["subject"] if validation else "[DRY RUN] " + packet["subject"]
+            expected_body = validation["body"] if validation else "TEST COPY TO YOURSELF — no company was contacted.\n\n" + packet["body"]
+            if validation and validation["scope_hash"] != attempt.policy.get("validation_scope_hash"):
+                raise ValueError()
             if (
-                recipients != {account.lower()}
+                recipients != {expected_to}
                 or msg["Message-ID"] != "<fieldwork-test-" + op.id + "@gmail.com>"
-                or msg["Subject"] != "[DRY RUN] " + packet["subject"]
+                or msg["Subject"] != expected_subject
                 or body
-                != (
-                    "TEST COPY TO YOURSELF — no company was contacted.\n\n"
-                    + packet["body"]
-                ).strip()
+                != expected_body.strip()
                 or not op.idempotency_key.endswith(":" + packet["draft_hash"])
                 or payload.get("threadId")
             ):

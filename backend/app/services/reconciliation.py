@@ -16,33 +16,26 @@ def headers(msg):
     }
 
 
-def matches(db, row, msg, account):
+def matches_envelope(msg, account, recipient, message_id, subject, body, sent_at):
     from ..responses import text_body
-
     h = headers(msg)
-    ct = db.get(Contact, row.contact_id)
     recipients = {a.lower() for _, a in getaddresses([h.get("to", "")])}
     sender = {a.lower() for _, a in getaddresses([h.get("from", "")])}
     try:
         at = datetime.fromtimestamp(int(msg["internalDate"]) / 1000, timezone.utc)
     except (KeyError, ValueError, OverflowError):
         return False
-    return bool(
-        ct
-        and row.sent_at
-        and "SENT" in msg.get("labelIds", [])
-        and sender == {account.lower()}
-        and recipients == {ct.email.lower()}
-        and not h.get("cc")
-        and not h.get("bcc")
-        and h.get("message-id") == row.message_id
-        and h.get("subject") == row.subject
-        and text_body(msg.get("payload", {})).replace("\r\n", "\n").strip()
-        == row.body.replace("\r\n", "\n").strip()
-        and aware(row.sent_at) - timedelta(minutes=2)
-        <= at
-        <= aware(row.sent_at) + timedelta(hours=1)
-    )
+    return bool(sent_at and "SENT" in msg.get("labelIds", [])
+        and sender == {account.lower()} and recipients == {recipient.lower()}
+        and not h.get("cc") and not h.get("bcc")
+        and h.get("message-id") == message_id and h.get("subject") == subject
+        and text_body(msg.get("payload", {})).replace("\r\n", "\n").strip() == body.replace("\r\n", "\n").strip()
+        and aware(sent_at) - timedelta(minutes=2) <= at <= aware(sent_at) + timedelta(hours=1))
+
+
+def matches(db, row, msg, account):
+    ct = db.get(Contact, row.contact_id)
+    return bool(ct and matches_envelope(msg, account, ct.email, row.message_id, row.subject, row.body, row.sent_at))
 
 
 async def reconcile(db, id, box=None):
@@ -50,7 +43,10 @@ async def reconcile(db, id, box=None):
     from ..responses import verify_identity
 
     row = db.get(Outreach, id)
-    if not row or not row.message_id or not row.sent_at:
+    if not row:
+        from ..gmail_validation import reconcile as reconcile_validation
+        return await reconcile_validation(db, id, box or Mailbox())
+    if not row.message_id or not row.sent_at:
         raise Blocked("Reserved message identity required")
     box = box or Mailbox()
     account, _ = await verify_identity(db, box)
