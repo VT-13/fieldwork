@@ -1,31 +1,34 @@
 {
   "package": "FIELDWORK 6D PRE-FLIGHT",
-  "status": "BLOCKED",
-  "timestamp_utc": "2026-10-04T06:54:15.763538+00:00",
+  "status": "READY",
+  "timestamp_utc": "2026-10-04T07:04:35.364503+00:00",
   "google_project": {
     "name": "Fieldwork Staging",
     "id": "fieldwork-staging-510606",
     "created": true,
     "original_project_unchanged": true
   },
-  "oauth_branding": "Created by owner; External/Testing audience selected",
+  "oauth_branding": "Configured; External/Testing mode",
   "client_created": true,
   "redirect_uri_configured_in_railway": "https://fieldwork-staging.up.railway.app/api/integrations/gmail/callback",
   "redirect_uri_registered_in_google": true,
   "authorized_javascript_origin": "Not required by server-side authorization-code/PKCE flow",
-  "account_a_test_user": "Authorized address received; not yet added to Google test users",
-  "account_b": "Separately authorized controlled-reply address not supplied",
-  "scopes": {
-    "current": [
-      "gmail.send",
-      "gmail.readonly"
-    ],
-    "existing_draft_capability": "gmail.compose required only when GMAIL_DRAFTS_ENABLED enabled; not enabled yet"
-  },
-  "railway_secrets_changed": false,
+  "account_a_test_user": "Explicitly authorized and added; only designated Account A added",
+  "account_b": "Explicitly authorized distinct controlled reply account received; identities stored privately outside Git",
+  "scopes": [
+    "https://www.googleapis.com/auth/gmail.send",
+    "https://www.googleapis.com/auth/gmail.readonly",
+    "https://www.googleapis.com/auth/gmail.compose"
+  ],
+  "railway_secrets_changed": true,
   "oauth_secret_present": true,
-  "redeploy": "Not needed; no runtime config changed",
-  "google_authorization_url": "Pending secure credential download and Railway configuration",
+  "redeploy": {
+    "api": "d3eb8af7-ebc4-46be-abaa-e34d690ce598",
+    "worker": "d0b452fa-2364-4495-8e0c-78742dc6028d",
+    "status": "SUCCESS",
+    "frontend_redeployed": false
+  },
+  "google_authorization_url": "Verified real authenticated hosted connect endpoint: accounts.google.com, exact public HTTPS callback, S256 PKCE, minimum existing send/read/compose scopes; consent not completed",
   "staging_http": 200,
   "worker": "available",
   "scheduler": "available",
@@ -33,8 +36,43 @@
   "communication_attempts": 0,
   "emails_sent": 0,
   "production_preserved": true,
-  "required_owner_action": "Create a replacement secret and download its JSON before closing the creation dialog, then remove the currently enabled secret. Do not paste secret into chat.",
+  "required_owner_action": null,
   "full_package6d_started": false,
   "client_form": "Created Fieldwork Railway Staging web client",
-  "secret_exposure_check": "Exposed credential replaced by owner; UI shows one enabled replacement. Replacement JSON unavailable locally; no new secret displayed or injected."
+  "secret_exposure_check": "Previously exposed credential replaced by owner. New credential downloaded privately; zero secret matches in seven browser JS assets and recent runtime/build logs. No OAuth credential in frontend variables.",
+  "gmail_api_enabled": true,
+  "profile_identity_prepared": true,
+  "verification": {
+    "staging_loads": true,
+    "callback_exact": true,
+    "authorization_url_generated": true,
+    "google_authorization_host": "accounts.google.com",
+    "pkce_s256": true,
+    "scopes": [
+      "https://www.googleapis.com/auth/gmail.send",
+      "https://www.googleapis.com/auth/gmail.readonly",
+      "https://www.googleapis.com/auth/gmail.compose"
+    ],
+    "gmail_consent_completed": false,
+    "gmail_connected": false,
+    "worker": "available",
+    "scheduler": "available",
+    "recurring_paused": true,
+    "daily_attempts": 0,
+    "runtime_configs": {
+      "api": {
+        "oauth_credentials_configured": true
+      },
+      "worker": {
+        "oauth_credentials_configured": true
+      },
+      "fieldwork": {
+        "oauth_credentials_configured": false
+      }
+    },
+    "browser_js_assets_scanned": 7,
+    "browser_asset_secret_matches": 0,
+    "recent_runtime_log_secret_matches": 0,
+    "production_preserved": true
+  }
 }

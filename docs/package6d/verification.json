@@ -1,18 +1,18 @@
 {
   "package": "FIELDWORK 6D",
-  "live_google_gate": "BLOCKED",
+  "live_google_gate": "NOT VERIFIED LIVE",
   "timestamp_utc": "2026-10-04T06:25:39.588867+00:00",
   "environment": "Railway fieldwork-staging/staging",
   "staging_url": "https://fieldwork-staging.up.railway.app",
   "callback_url": "https://fieldwork-staging.up.railway.app/api/integrations/gmail/callback",
   "prerequisite_hosted_tls": "PASS",
-  "blocker": "No explicitly designated staging test mailbox identity supplied. Existing Cloud project/client belongs to historical production outreach and was not reused or changed.",
-  "required_input": "Email address of the authorized staging test mailbox and a separately authorized test reply sender; no passwords/tokens.",
+  "blocker": "Live Gmail validation has not begun; dedicated OAuth pre-flight is READY.",
+  "required_input": null,
   "preflight": {
     "services_online": true,
     "source_manifest_verified": true,
-    "oauth_configured": false,
-    "draft_compose_enabled": false,
+    "oauth_configured": true,
+    "draft_compose_enabled": true,
     "dry_run": true,
     "manual_mode": true,
     "polling_enabled": false,
@@ -44,9 +44,9 @@
     "bounded_initial_backfill_can_touch_recent_mail_metadata": "Use designated test mailbox or explicitly scoped current-history boundary before controlled tests; do not scan unrelated personal contents."
   },
   "mutations": {
-    "staging_oauth_changed": false,
-    "google_project_created": false,
-    "google_client_created": false,
+    "staging_oauth_changed": true,
+    "google_project_created": true,
+    "google_client_created": true,
     "production_changed": false,
     "company_emails_sent": 0,
     "self_test_emails_sent": 0,
@@ -56,5 +56,6 @@
   },
   "production_preservation_unchanged": true,
   "code_changes": false,
-  "package6e_readiness": "NOT READY"
+  "package6e_readiness": "NOT READY",
+  "oauth_preflight_artifact": "docs/package6d/preflight.json"
 }
