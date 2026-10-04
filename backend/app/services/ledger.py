@@ -101,9 +101,9 @@ def usage(db, since, kind=None):
     return db.scalar(q)
 
 
-def reconcile_sent(db,row,provider_id,thread_id,message_id,*,account=None):
-    """Only use after a provider Sent record matched the original RFC Message-ID."""
-    if not provider_id or not message_id or message_id!=row.message_id:
+def reconcile_sent(db,row,provider_id,thread_id,message_id,*,account=None,reserved_message_id=None):
+    """Only use after exact Sent evidence; aliases additionally require a durable API receipt."""
+    if not provider_id or not message_id or message_id!=row.message_id and reserved_message_id!=row.message_id:
         raise Blocked('Reconciliation requires matching provider Sent evidence')
     lock(db)
     from ..models import Outreach
@@ -111,6 +111,17 @@ def reconcile_sent(db,row,provider_id,thread_id,message_id,*,account=None):
     if (row.provider_id and row.provider_id!=provider_id) or (row.thread_id and row.thread_id!=thread_id):
         db.rollback();raise Blocked('Sent evidence conflicts with recorded provider receipt; investigate')
     op=operation(db,'send:'+row.id)
+    if reserved_message_id is not None and row.message_id!=reserved_message_id:
+        db.rollback();raise Blocked('Reserved RFC identity changed during reconciliation')
+    alias=message_id!=row.message_id
+    attempt=latest(db,op) if op else None
+    if alias and (not op or op.status!='succeeded' or attempt.status!='succeeded'
+        or attempt.receipt.get('provider_id')!=provider_id or attempt.receipt.get('thread_id')!=thread_id
+        or row.provider_id!=provider_id or row.thread_id!=thread_id):
+        db.rollback();raise Blocked('Durable accepted receipt required for RFC normalization')
+    if alias:
+        attempt.receipt={**attempt.receipt,'reserved_message_id':attempt.receipt.get('reserved_message_id',row.message_id)}
+        row.message_id=message_id
     if op and op.status in {'running','unknown','succeeded'}:
         attempt=latest(db,op)
         if op.status!='succeeded':transition(db,op,'succeeded',domain='operation',reason='sent_reconciled')

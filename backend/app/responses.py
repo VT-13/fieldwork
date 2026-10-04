@@ -62,7 +62,7 @@ async def verify_identity(db, box):
 
 
 def ingest(db, msg, rows, contacts, sender_email):
-    from .services.reconciliation import headers, matches
+    from .services.reconciliation import headers, matches, accepted_company_rfc
 
     from .gmail_validation import ingest as ingest_validation
     if ingest_validation(db, msg):return None
@@ -70,14 +70,23 @@ def ingest(db, msg, rows, contacts, sender_email):
     sender = parseaddr(h.get("from", ""))[1].lower()
     if sender == sender_email.lower() and "SENT" in msg.get("labelIds", []):
         for row in rows:
-            if matches(db, row, msg, sender_email):
+            reserved = row.message_id
+            actual = reserved
+            matched = matches(db, row, msg, sender_email)
+            if not matched and row.provider_id == msg.get('id'):
+                try:
+                    actual = accepted_company_rfc(db, row, msg, sender_email)
+                    matched = True
+                except Blocked: pass
+            if matched:
                 ledger.reconcile_sent(
                     db,
                     row,
                     msg["id"],
                     msg.get("threadId", ""),
-                    row.message_id,
+                    actual,
                     account=sender_email,
+                    reserved_message_id=reserved,
                 )
         return None
     if (

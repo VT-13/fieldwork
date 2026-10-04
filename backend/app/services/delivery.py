@@ -82,8 +82,8 @@ async def send_company(db,id,*,mode='scheduled',provider=None):
     ledger.finish(db,attempt,'succeeded',receipt=result,reason='provider_accepted')
     # Acceptance is durable even if confirmation fails; confirmation never resends.
     try:
-        verified=await provider.confirm(receipt)
-        result={**result,'sent_verified':verified,'confirmation_pending':verified is not True}
+        verified=await provider.confirm_message(db,row,receipt) if hasattr(provider,'confirm_message') else await provider.confirm(receipt)
+        result={**ledger.latest(db,ledger.operation(db,key)).receipt,'sent_verified':verified,'confirmation_pending':verified is not True}
     except Exception: result={**result,'confirmation_pending':True}
     attempt=db.get(type(attempt),attempt.id);attempt.receipt=result;db.commit()
     return result

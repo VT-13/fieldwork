@@ -44,3 +44,9 @@ class MailboxProvider:
         if self.name!='gmail':return None
         result=await self.mailbox.call('GET',BASE+'messages/'+receipt.provider_id,params={'format':'minimal'})
         return 'SENT' in result.get('labelIds',[])
+
+    async def confirm_message(self, db, row, receipt):
+        from .reconciliation import reconcile
+        # Acceptance is already durable; this read-only confirmation never sends.
+        result = await reconcile(db, row.id, self.mailbox)
+        return result['status'] == 'confirmed'

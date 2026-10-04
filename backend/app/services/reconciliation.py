@@ -33,6 +33,30 @@ def matches_envelope(msg, account, recipient, message_id, subject, body, sent_at
         and aware(sent_at) - timedelta(minutes=2) <= at <= aware(sent_at) + timedelta(hours=1))
 
 
+def accepted_rfc(msg, account, recipient, provider_id, thread_id, subject, body, sent_at):
+    """Observe an RFC alias only through an exact accepted immutable API receipt."""
+    import re
+    actual = headers(msg).get("message-id", "")
+    if (not provider_id or not thread_id or msg.get("id") != provider_id
+        or msg.get("threadId") != thread_id or len(actual) > 255
+        or not re.fullmatch(r"<[^<>\s@]+@[^<>\s@]+>", actual)
+        or not matches_envelope(msg, account, recipient, actual, subject, body, sent_at)):
+        raise Blocked("Accepted receipt conflicts with provider Sent evidence")
+    return actual
+
+
+def accepted_company_rfc(db, row, msg, account):
+    op = ledger.operation(db, "send:" + row.id)
+    attempt = ledger.latest(db, op) if op else None
+    receipt = attempt.receipt if attempt else {}
+    if (not op or op.status != "succeeded" or attempt.status != "succeeded"
+        or receipt.get("provider_id") != row.provider_id or receipt.get("thread_id") != row.thread_id):
+        raise Blocked("Durable accepted receipt required for RFC normalization")
+    ct = db.get(Contact, row.contact_id)
+    if not ct: raise Blocked("Original contact required")
+    return accepted_rfc(msg, account, ct.email, row.provider_id, row.thread_id, row.subject, row.body, row.sent_at)
+
+
 def matches(db, row, msg, account):
     ct = db.get(Contact, row.contact_id)
     return bool(ct and matches_envelope(msg, account, ct.email, row.message_id, row.subject, row.body, row.sent_at))
@@ -50,12 +74,17 @@ async def reconcile(db, id, box=None):
         raise Blocked("Reserved message identity required")
     box = box or Mailbox()
     account, _ = await verify_identity(db, box)
-    # Search is constrained to the reserved RFC identifier, never subject similarity.
+    reserved = row.message_id
+    message_id = reserved
+    if row.provider_id:
+        msg = await box.call("GET", BASE + "messages/" + row.provider_id, params={"format": "full"})
+        message_id = accepted_company_rfc(db, row, msg, account)
+    # Unknown attempts without an accepted API receipt retain strict reserved-ID search.
     result = await box.call(
         "GET",
         BASE + "messages",
         params={
-            "q": "in:sent rfc822msgid:" + row.message_id.strip("<>"),
+            "q": "in:sent rfc822msgid:" + message_id.strip("<>"),
             "maxResults": 5,
         },
     )
@@ -64,7 +93,8 @@ async def reconcile(db, id, box=None):
         msg = await box.call(
             "GET", BASE + "messages/" + item["id"], params={"format": "full"}
         )
-        if matches(db, row, msg, account):
+        ct = db.get(Contact, row.contact_id)
+        if ct and matches_envelope(msg, account, ct.email, message_id, row.subject, row.body, row.sent_at):
             matched.append(msg)
     if len(matched) != 1 or result.get("nextPageToken"):
         return {
@@ -73,6 +103,6 @@ async def reconcile(db, id, box=None):
         }
     msg = matched[0]
     ledger.reconcile_sent(
-        db, row, msg["id"], msg.get("threadId", ""), row.message_id, account=account
+        db, row, msg["id"], msg.get("threadId", ""), message_id, account=account, reserved_message_id=reserved
     )
     return {"status": "confirmed", "provider_id": msg["id"], "outreach_id": id}
