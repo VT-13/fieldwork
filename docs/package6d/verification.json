@@ -1,13 +1,13 @@
 {
   "package": "FIELDWORK 6D",
   "live_google_gate": "BLOCKED",
-  "timestamp_utc": "2026-10-04T07:15:58.398327+00:00",
+  "timestamp_utc": "2026-10-04T07:52:24.681031+00:00",
   "environment": "Railway fieldwork-staging/staging",
   "staging_url": "https://fieldwork-staging.up.railway.app",
   "callback_url": "https://fieldwork-staging.up.railway.app/api/integrations/gmail/callback",
   "prerequisite_hosted_tls": "PASS",
-  "blocker": "Owner Google account selection/consent pending at current Safari screen.",
-  "required_input": "Complete the Google authorization currently shown in the browser, then tell me done.",
+  "blocker": "Account B controlled reply requires owner sign-in; no signed-in B Safari session available.",
+  "required_input": "Open Account B, reply to the existing '[Fieldwork staging test] Gmail live verification' email in the same thread with: 'Fieldwork staging controlled reply test.' Then tell me done.",
   "preflight": {
     "services_online": true,
     "source_manifest_verified": true,
@@ -21,19 +21,21 @@
     "existing_cloud_project_inspected_read_only": true
   },
   "live_checks": {
-    "oauth_consent": "NOT RUN",
-    "token_exchange": "NOT RUN",
-    "identity": "NOT RUN",
-    "token_refresh": "NOT RUN",
-    "draft": "NOT RUN",
-    "own_account_send": "NOT RUN",
-    "rfc_message_id": "NOT RUN",
-    "thread_id": "NOT RUN",
-    "sent_reconciliation": "NOT RUN",
-    "controlled_reply": "NOT RUN",
-    "history_checkpoint": "NOT RUN",
-    "sync_restart": "NOT RUN",
-    "disconnect_reconnect": "NOT RUN"
+    "oauth_consent": "VERIFIED LIVE",
+    "token_exchange": "VERIFIED LIVE",
+    "identity": "VERIFIED LIVE; exact designated Account A",
+    "token_refresh": "PARTIALLY VERIFIED; real refresh credential available, no forced expiry",
+    "draft": "VERIFIED LIVE; exactly one unsent A-to-A draft",
+    "own_account_send": "VERIFIED LIVE; exactly one scoped A-to-B synthetic self-test",
+    "rfc_message_id": "VERIFIED LIVE; observed Gmail alias and original reserved ID preserved",
+    "thread_id": "VERIFIED LIVE",
+    "sent_reconciliation": "VERIFIED LIVE; initial and replay confirm same receipt",
+    "controlled_reply": "PENDING OWNER REPLY",
+    "history_checkpoint": "Current-history boundary persisted before test; live reply sync pending",
+    "sync_restart": "PENDING REPLY",
+    "disconnect_reconnect": "NOT TESTED; mandatory reply tests not complete",
+    "token_storage": "VERIFIED LIVE; encrypted canonical Integration",
+    "authenticated_gmail_api": "VERIFIED LIVE; profile and exact synthetic messages only"
   },
   "research_findings": {
     "compose_scope_required_for_draft": true,
@@ -49,15 +51,39 @@
     "google_client_created": true,
     "production_changed": false,
     "company_emails_sent": 0,
-    "self_test_emails_sent": 0,
-    "drafts_created": 0,
+    "self_test_emails_sent": 1,
+    "drafts_created": 1,
     "paid_provider_calls": 0,
-    "production_recurring_pause_changed": false
+    "production_recurring_pause_changed": false,
+    "controlled_replies_sent": 0
   },
   "production_preservation_unchanged": true,
-  "code_changes": false,
+  "code_changes": true,
   "package6e_readiness": "NOT READY",
   "oauth_preflight_artifact": "docs/package6d/preflight.json",
   "live_checkpoint": "docs/package6d/live-checkpoint.json",
-  "old_exposed_credential_revoked": true
+  "old_exposed_credential_revoked": true,
+  "targeted_tests": {
+    "passed": 166,
+    "postgresql": "17.11 disposable",
+    "lint": "PASS"
+  },
+  "privacy_review": {
+    "staging_logs_scanned": [
+      "frontend",
+      "api",
+      "worker"
+    ],
+    "credential_values_in_logs": false,
+    "authorization_headers_in_logs": false,
+    "browser_assets_scanned": 7,
+    "credential_values_in_browser_assets": false,
+    "frontend_online": true,
+    "tracked_source_and_artifacts_secret_check": "PASS"
+  },
+  "source_commits": [
+    "fafd8b1",
+    "f6f35e4",
+    "cd868ca"
+  ]
 }

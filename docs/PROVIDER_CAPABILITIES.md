@@ -23,3 +23,27 @@ Module6 proved the full authenticated production-build/actual-worker workflow wi
 ## Package6D live-validation preflight
 
 Hosted Package6C passes, but all Gmail live statuses above remain NOT VERIFIED LIVE. Dedicated OAuth pre-flight is READY: separate staging project/client, exact callback, minimum send/read/compose scopes, server-side credentials and explicit A/B identities are configured. Live Package6D is paused at owner Google account selection/consent; no draft/send/reply/scan has occurred. The retired exposed client credential is independently rejected by Google as invalid_client. See package6d/verification.json. Existing production OAuth was neither reused nor changed. Draft compose permission and a separate controlled reply identity are needed to test those capabilities honestly; self-tests themselves do not create Outreach records. Outlook status is unchanged.
+
+## Package6D current live evidence (supersedes preflight-only status)
+
+Railway staging only; company outreach remains unverified and paused. The opt-in expiring two-account validation reuses the normal self-test ledger/transport and cannot authorize company recipients. Public verification excludes private IDs/credentials; exact receipts remain in staging.
+
+| Gmail capability | Actual status |
+|---|---|
+| OAuth, state, PKCE, hosted callback/token exchange | VERIFIED LIVE |
+| Google-derived Account A identity | VERIFIED LIVE |
+| Authenticated Gmail API | VERIFIED LIVE; profile and exact synthetic messages |
+| Canonical encrypted token storage | VERIFIED LIVE |
+| Token refresh | PARTIALLY VERIFIED; real refresh credential available, forced expiry not performed, simulated expiry regressions retained |
+| Own-account unsent draft | VERIFIED LIVE; exactly one |
+| Authorized scoped A-to-B test send | VERIFIED LIVE; exactly one |
+| Provider message ID | VERIFIED LIVE |
+| RFC Message-ID | VERIFIED LIVE; Gmail rewrote supplied identifier; reserved and observed identities both retained |
+| Gmail thread ID / SENT label | VERIFIED LIVE |
+| Sent reconciliation / replay | VERIFIED LIVE against existing accepted receipt; zero duplicate transmissions |
+| Controlled reply synchronization | NOT VERIFIED; owner reply pending |
+| History cursor / checkpoint | Current boundary initialized live; incremental reply processing NOT VERIFIED yet |
+| Worker restart continuation | NOT VERIFIED LIVE for Gmail; pending controlled reply |
+| Disconnect/reconnect | NOT TESTED; required reply validation incomplete |
+
+Default own-account self-tests, unknown-delivery holds and company delivery policy are unchanged. Observed RFC rewriting is normalized only with an exact accepted API message/thread receipt and full matching Sent evidence; subject similarity cannot authorize reconciliation. No live company delivery, bounce, follow-up send or inbox-placement assertion follows from this synthetic test.

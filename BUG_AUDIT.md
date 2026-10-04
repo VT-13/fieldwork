@@ -67,3 +67,9 @@ The runtime-container gate is PASS on actual Linux ARM64/Python3.13.16/Node22.23
 ## Package6C hosted result
 
 Actual hosted TLS gate PASS on existing Railway staging; docs/package6c/verification.json supersedes the historical access blocker. A narrow public Next ingress gap (missing the API's existing HSTS/Permissions-Policy) is fixed and verified at the actual HTTPS endpoint. No applicable hosted blocker remains; live Google and cutover remain unverified and require separate authorization. No personal production changes.
+
+## Package6D real provider discrepancy
+
+| ID | Severity | Finding | Status/evidence |
+|---|---|---|---|
+| FW-030 | P1 | Gmail's accepted scoped staging self-test has a provider-generated RFC Message-ID differing from its reserved ID; strict reserved-ID reconciliation held despite a valid API receipt. | Fixed for the observed test path: exact accepted immutable API ID/thread plus full Sent envelope/body/time validation establishes the provider RFC alias, original reserved ID is retained, and unique actual-ID search/replay passes live with one attempt and no resend. Seven added mismatch/normalization regressions;166 targeted tests pass on disposable PG17.11. Company-send RFC retention remains NOT VERIFIED LIVE and is not certified by this synthetic test. |
