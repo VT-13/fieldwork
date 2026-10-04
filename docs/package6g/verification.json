@@ -6,7 +6,7 @@
   "branch": "main",
   "historical_verified_release": "b68a84fb7d5426a30a54aab650a0715493c9533e",
   "prior_main": "3c40152f0c8882e6c869413945ca53895c4c67ca",
-  "candidate_identity": "Final Package6G commit recorded by Git; completion report supplies exact HEAD",
+  "candidate_identity": "Final evidence commit on main; application files match application_commit",
   "schema_before": "006",
   "schema_after": "006",
   "schema_change": false,
@@ -255,10 +255,20 @@
     ]
   },
   "real_company_outreach_during_6g": 0,
-  "source_integrity": "Final committed bundle verification pending after this review-visibility correction",
+  "source_integrity": {
+    "application_commit": "c4d8fe8caf59beafe58b0fea309be8ad98e8c6d1",
+    "tracked_source_manifest": "PASS",
+    "source_only_committed_bundle": "PASS",
+    "extracted_bundle_integrity": "PASS",
+    "manifest_files": 201,
+    "bundle_sha256": "00dd92081fb62caeda86f076157e9b7d367e83fc2d810b1a6b4ab3517eef2cf5",
+    "sensitive_runtime_paths_included": false,
+    "deployed_by_bundle_command": false
+  },
   "focused_release_reverification_required": [
     "new6G Linux/Python3.13/Node22 runtime",
     "new6G hosted staging policy/UI while paused",
     "current release identity/security/config/health before6F resume"
-  ]
+  ],
+  "application_commit": "c4d8fe8caf59beafe58b0fea309be8ad98e8c6d1"
 }
