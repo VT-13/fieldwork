@@ -43,17 +43,22 @@ def reserve(db, service, amount, company_id=None):
     # Reservations include failures; policy also protects direct provider callers.
     from .services.policy import background
     background(db,"paid_provider")
+    from .services.ledger import lock
+    lock(db)
     cfg = settings()
     if cfg.manual_mode:
         raise Blocked("Personal manual mode: paid API calls are disabled. Use the review desk.")
     daily = db.scalar(select(func.coalesce(func.sum(Usage.reserved_usd), 0)).where(Usage.created_at >= day_start()))
     if daily + amount > cfg.daily_budget_usd:
         raise Blocked("Daily cost reservation budget reached")
+    if service in ('llm:generate','llm:review'):
+        generated=db.scalar(select(func.coalesce(func.sum(Usage.reserved_usd),0)).where(Usage.created_at>=day_start(),Usage.service.in_(['llm:generate','llm:review'])))
+        if generated+amount>cfg.daily_generation_budget_usd:raise Blocked('Personal campaign daily generation reservation budget reached')
     if company_id:
         used = db.scalar(select(func.coalesce(func.sum(Usage.reserved_usd), 0)).where(Usage.company_id == company_id, Usage.created_at >= day_start()))
         if used + amount > cfg.company_budget_usd:
             raise Blocked("Company daily cost reservation budget reached")
-    row = Usage(service=service, reserved_usd=amount, company_id=company_id)
+    row = Usage(service=service, reserved_usd=amount, company_id=company_id, details={"network_units":0,"cache_hit":False,"reservation_only":True})
     db.add(row)
     db.commit()
     return row
@@ -67,22 +72,11 @@ def cache_put(db, key, value, days=14):
     db.commit()
 
 def score_company(company, has_contact, interests):
-    r = company.research or {}
-    text = " ".join([company.industry, company.description, *r.get("technologies", [])]).lower()
-    align = sum(1 for s in interests if s.lower() in text)
-    factors = {
-        "proximity": 0 if company.distance_miles is None else round(15*max(0,1-company.distance_miles/150)),
-        "company_size": 10 if r.get("size") in ["1-10", "11-50", "51-200"] else 3,
-        "response_likelihood": 8 if has_contact else 2,
-        "startup_friendliness": 10 if r.get("startup_friendly") else 0,
-        "internship_history": 15 if any(f.get("category")=="internship" for f in r.get("facts", [])) else 0,
-        "technology_alignment": min(20, align*7),
-        "student_friendliness": 10 if r.get("student_friendly") else 0,
-        "contact_availability": 10 if has_contact else 0,
-    }
-    company.score_factors = factors
-    company.score = min(100, sum(factors.values()))
-    return company.score
+    # Legacy callers lack entity evidence; unknowns never invent response likelihood.
+    factors={'proximity':0 if company.distance_miles is None else round(15*max(0,1-company.distance_miles/150)),
+             'company_size':0,'role_relevance':0,'company_relevance':0,'technology_alignment':0,
+             'internship_history':0,'student_friendliness':0,'contact_availability':0,'evidence_quality':0}
+    company.score_factors=factors;company.score=sum(factors.values());return company.score
 
 STOP_STAGES = {"auto_reply", "replied", "positive", "negative", "bounce", "opt_out", "interview", "offer", "closed"}
 

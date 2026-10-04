@@ -2,6 +2,10 @@ import { test, expect, type Page } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
 import seed from "./fixture.json";
 import type {
+  CandidateView,
+  JobView,
+  CapabilitiesView,
+  GenerationView,
   CampaignView,
   CompanyDetail,
   CompanyView,
@@ -15,7 +19,8 @@ import type {
 } from "../lib/contracts";
 import { decode, safeLink } from "../lib/api";
 import { mkdirSync } from "node:fs";
-const artifact = "../docs/module3";
+const artifact =
+  process.env.FIELDWORK_BROWSER_ARTIFACT_DIR || "../docs/module3";
 type Fixture = {
   companies: CompanyView[];
   details: Record<string, CompanyDetail>;
@@ -27,6 +32,10 @@ type Fixture = {
   campaign: CampaignView;
   connection: ConnectionView;
   desk: unknown[];
+  candidates: CandidateView[];
+  jobs: JobView[];
+  capabilities: CapabilitiesView;
+  generations: Record<string, GenerationView[]>;
 };
 const base: Fixture = seed as Fixture;
 async function mock(page: Page, data: Fixture = structuredClone(base)) {
@@ -44,7 +53,7 @@ async function mock(page: Page, data: Fixture = structuredClone(base)) {
       path = new URL(req.url()).pathname.slice(5);
     const method = req.method();
     if (
-      /(\/send$|self-test|\/mailbox$|integrations\/gmail\/(connect|disconnect)|discover|actions)/.test(
+      /(\/send$|self-test|\/mailbox$|integrations\/gmail\/(connect|disconnect)|^discover$|actions)/.test(
         path,
       )
     ) {
@@ -57,7 +66,29 @@ async function mock(page: Page, data: Fixture = structuredClone(base)) {
     }
     if (method === "GET") reads.push(path);
     let payload: unknown;
-    if (path === "companies") payload = data.companies;
+    if (path === "discovery/candidates") payload = data.candidates;
+    else if (path === "intelligence/capabilities") payload = data.capabilities;
+    else if (path === "jobs") payload = data.jobs;
+    else if (path === "discovery/import") payload = data.jobs[0];
+    else if (path.startsWith("jobs/") && path.endsWith("/stop")) {
+      const job = data.jobs.find((j) => j.id === path.split("/")[1])!;
+      job.status = "blocked";
+      job.error = "Stopped by operator";
+      job.payload.stop_requested = true;
+      payload = job;
+    } else if (path.startsWith("discovery/candidates/") && method === "POST") {
+      const c = data.candidates.find((c) => c.id === path.split("/")[2])!;
+      if (path.endsWith("/accept")) {
+        c.status = "accepted";
+        c.company_id = "qa-company-2";
+        payload = data.companies[2];
+      } else {
+        c.status = "dismissed";
+        payload = c;
+      }
+    } else if (path.startsWith("companies/") && path.endsWith("/generations"))
+      payload = data.generations[path.split("/")[1]];
+    else if (path === "companies") payload = data.companies;
     else if (path.startsWith("companies/"))
       payload = data.details[path.slice(10) as keyof typeof data.details];
     else if (path === "integrations/gmail") payload = data.connection;
@@ -313,6 +344,7 @@ test("reply handling refreshes attention without sending or reading Gmail", asyn
 test("responsive flagship screenshots, contrast and semantic accessibility", async ({
   page,
 }) => {
+  test.setTimeout(90000); // Sixteen screenshot + axe scans, not an application response timeout.
   await mock(page);
   const errors: string[] = [];
   page.on("pageerror", (e) => errors.push(e.message));
@@ -402,4 +434,198 @@ test("resource reads are deduplicated and secondary screens retain the shared vi
       .analyze();
     expect(scan.violations).toEqual([]);
   }
+});
+
+test("discovery accepts candidates deliberately, retains URL filters and stops bounded work", async ({
+  page,
+}) => {
+  const fixture = await mock(page);
+  await page.goto("/?view=discovery");
+  await expect(
+    page.getByRole("heading", { name: "Find a team worth meeting." }),
+  ).toBeVisible();
+  await expect(
+    page.getByRole("button", { name: "Queue bounded search" }),
+  ).toBeDisabled();
+  await page.getByLabel("Search candidates").fill("Willow");
+  await page.reload();
+  await expect(page.getByLabel("Search candidates")).toHaveValue("Willow");
+  await expect(
+    page.getByRole("heading", { name: "Willow Robotics (Demo)" }),
+  ).toBeVisible();
+  await page
+    .getByRole("button", { name: "Accept Willow Robotics (Demo)" })
+    .click();
+  await expect(
+    page.getByText(
+      "Prospect accepted. Research and review still come before approval.",
+    ),
+  ).toBeVisible();
+  expect(fixture.data.candidates[0].status).toBe("accepted");
+  expect(fixture.data.outreach).toHaveLength(2);
+  await page
+    .getByRole("combobox", { name: "Candidate status" })
+    .selectOption("accepted");
+  await expect(
+    page.getByRole("link", { name: "Inspect prospect" }),
+  ).toBeVisible();
+  await page.getByRole("button", { name: "Stop research" }).click();
+  await expect(page.getByText("Stopped by operator")).toBeVisible();
+  expect(fixture.attempts).toEqual([]);
+});
+
+test("discovery failure, empty state and no-provider manual import keep user input", async ({
+  page,
+}) => {
+  await mock(page);
+  await page.goto("/?view=discovery");
+  await page
+    .getByLabel("Company name", { exact: true })
+    .fill("QA student company");
+  await page.getByLabel("Official website").fill("https://candidate.example");
+  await page.route("**/api/discovery/import", (route) =>
+    route.fulfill({
+      status: 503,
+      json: { detail: "Import temporarily unavailable" },
+    }),
+  );
+  await page.getByRole("button", { name: "Queue candidate import" }).click();
+  await expect(page.getByText("Import temporarily unavailable")).toBeVisible();
+  await expect(page.getByLabel("Company name", { exact: true })).toHaveValue(
+    "QA student company",
+  );
+  await page.getByLabel("Search candidates").fill("No matching fixture");
+  await expect(
+    page.getByRole("heading", { name: "No matching candidates" }),
+  ).toBeVisible();
+});
+
+test("discovery and intelligence provenance are accessible at laptop and phone sizes", async ({
+  page,
+}) => {
+  await mock(page);
+  mkdirSync("../docs/module4", { recursive: true });
+  for (const width of [1280, 390]) {
+    await page.setViewportSize({ width, height: 900 });
+    await page.goto("/?view=discovery");
+    await expect(
+      page.getByRole("heading", { name: "Company candidates" }),
+    ).toBeVisible();
+    await page.getByText("Inspect field sources").click();
+    expect(
+      await page.evaluate(
+        () => document.documentElement.scrollWidth <= innerWidth,
+      ),
+    ).toBe(true);
+    const results = await new AxeBuilder({ page })
+      .withTags(["wcag2a", "wcag2aa", "wcag21aa"])
+      .analyze();
+    expect(results.violations).toEqual([]);
+    await page.evaluate(() => {
+      if (document.activeElement instanceof HTMLElement)
+        document.activeElement.blur();
+      window.scrollTo(0, 0);
+    });
+    await page.screenshot({
+      path: `../docs/module4/discovery-${width}.png`,
+      fullPage: true,
+    });
+    await page.goto("/?view=prospects&company=qa-company-0");
+    await expect(
+      page.getByRole("heading", { name: "Build the evidence, then write." }),
+    ).toBeVisible();
+    await expect(
+      page.getByRole("button", { name: "Generate for review" }),
+    ).toBeDisabled();
+    expect(
+      await page.evaluate(
+        () => document.documentElement.scrollWidth <= innerWidth,
+      ),
+    ).toBe(true);
+    expect(
+      (
+        await new AxeBuilder({ page })
+          .withTags(["wcag2a", "wcag2aa", "wcag21aa"])
+          .analyze()
+      ).violations,
+    ).toEqual([]);
+    await page.evaluate(() => {
+      if (document.activeElement instanceof HTMLElement)
+        document.activeElement.blur();
+      window.scrollTo(0, 0);
+    });
+    await page.screenshot({
+      path: `../docs/module4/prospect-${width}.png`,
+      fullPage: true,
+    });
+  }
+});
+
+test("research failure keeps evidence inspectable and generation errors cannot be approved", async ({
+  page,
+}) => {
+  const d = structuredClone(base);
+  d.details["qa-company-0"].demo = false;
+  d.capabilities.paid_allowed = true;
+  d.capabilities.providers.forEach((p) => {
+    if (["research", "generate"].includes(p.id)) {
+      p.available = true;
+      p.configured = true;
+    }
+  });
+  await mock(page, d);
+  await page.route("**/api/companies/qa-company-0/actions/research", (route) =>
+    route.fulfill({
+      status: 409,
+      json: { detail: "Provider unavailable; partial evidence retained" },
+    }),
+  );
+  await page.goto("/?view=prospects&company=qa-company-0");
+  await page.getByRole("button", { name: "Queue research" }).click();
+  await expect(
+    page.getByText("Provider unavailable; partial evidence retained"),
+  ).toBeVisible();
+  await expect(
+    page.getByRole("heading", { name: "Evidence behind the introduction" }),
+  ).toBeVisible();
+  d.outreach[0].status = "rejected";
+  d.outreach[0].review.passed = false;
+  d.outreach[0].review.issues = ["Unsupported student fact reference"];
+  await page.goto("/?view=review&message=qa-message-0");
+  await expect(
+    page.getByText("Unsupported student fact reference"),
+  ).toBeVisible();
+  await expect(
+    page.getByRole("button", { name: "Approve saved draft" }),
+  ).toBeDisabled();
+});
+
+test("explicit regeneration queues a new version without changing saved content or sending", async ({
+  page,
+}) => {
+  const d = structuredClone(base);
+  d.details["qa-company-0"].demo = false;
+  d.capabilities.paid_allowed = true;
+  d.capabilities.providers.find((p) => p.id === "generate")!.available = true;
+  const fixture = await mock(page, d),
+    saved = d.outreach[0].body;
+  await page.route("**/api/outreach/qa-message-0/regenerate", (route) =>
+    route.fulfill({
+      status: 202,
+      json: {
+        ...d.jobs[0],
+        id: "qa-generation-job",
+        kind: "regenerate",
+        status: "queued",
+      },
+    }),
+  );
+  await page.goto("/?view=review&message=qa-message-0");
+  await page.getByRole("button", { name: "Regenerate for review" }).click();
+  await expect(
+    page.getByText(/Regeneration queued as a new version/),
+  ).toBeVisible();
+  await expect(page.getByLabel("Email body")).toHaveValue(saved);
+  expect(d.outreach[0].status).toBe("draft");
+  expect(fixture.attempts).toEqual([]);
 });

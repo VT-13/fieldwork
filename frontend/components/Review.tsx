@@ -93,7 +93,8 @@ function MessageEditor({
   profile?: ProfileInput;
   refresh: () => Promise<void>;
 }) {
-  const company = useResource(`companies/${m.company_id}`, "CompanyDetail");
+  const company = useResource(`companies/${m.company_id}`, "CompanyDetail"),
+    capabilities = useResource("intelligence/capabilities", "CapabilitiesView");
   const [subject, setSubject] = useState(m.subject),
     [body, setBody] = useState(m.body),
     [busy, setBusy] = useState(false),
@@ -136,7 +137,9 @@ function MessageEditor({
       setNotice(
         method === "PATCH"
           ? "Edits saved. Prior approval is cleared; quality review must run again before approval."
-          : "Review state updated. No email was sent.",
+          : path.endsWith("regenerate")
+            ? "Regeneration queued as a new version. The current message remains until it completes; no email was sent."
+            : "Review state updated. No email was sent.",
       );
     } catch (e) {
       setError(e instanceof Error ? e.message : "Could not update message");
@@ -195,8 +198,39 @@ function MessageEditor({
           ))}
         </div>
         <div className="review-actions">
+          {dirty && editable && (
+            <button
+              className="secondary"
+              disabled={busy}
+              onClick={() => {
+                if (
+                  window.confirm(
+                    "Discard local text and load the current saved version?",
+                  )
+                ) {
+                  setSubject(m.subject);
+                  setBody(m.body);
+                }
+              }}
+            >
+              Load current saved version
+            </button>
+          )}
           {editable && (
             <>
+              <button
+                className="secondary"
+                disabled={
+                  busy ||
+                  dirty ||
+                  company.data?.demo ||
+                  !capabilities.data?.providers.find((p) => p.id === "generate")
+                    ?.available
+                }
+                onClick={() => act(`outreach/${m.id}/regenerate`)}
+              >
+                Regenerate for review
+              </button>
               <button
                 className="primary"
                 disabled={

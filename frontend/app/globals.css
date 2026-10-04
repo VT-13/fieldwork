@@ -2231,3 +2231,42 @@ dialog::backdrop {
     display: block;
   }
 }
+
+/* Intelligence extends the existing notebook; no alternate surface system. */
+.discovery-context {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-6);
+}
+.candidate-row,
+.intelligence-job {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-5);
+  border-bottom: 1px solid var(--line);
+  padding: var(--space-5) 0;
+}
+.candidate-row > div {
+  min-width: 0;
+}
+.candidate-actions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  align-items: flex-start;
+}
+.generation-body {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  font: inherit;
+}
+@media (max-width: 800px) {
+  .discovery-context {
+    grid-template-columns: 1fr;
+    gap: var(--space-4);
+  }
+  .candidate-row,
+  .intelligence-job {
+    flex-direction: column;
+  }
+}

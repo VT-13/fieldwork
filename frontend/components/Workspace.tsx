@@ -16,6 +16,7 @@ import {
 import { useResource, request } from "../lib/api";
 import { Dialog, ErrorState, Header, Loading } from "./ui";
 import Dashboard from "./Dashboard";
+import Discovery from "./Discovery";
 import Prospects from "./Prospects";
 import Prospect from "./Prospect";
 import Campaign from "../app/Campaign";
@@ -27,6 +28,7 @@ import ReviewDesk from "../app/ReviewDesk";
 import type { CompanyView } from "../lib/contracts";
 export const navigation = [
   { id: "dashboard", label: "Overview", icon: LayoutDashboard },
+  { id: "discovery", label: "Discovery", icon: Search },
   { id: "prospects", label: "Prospects", icon: Compass },
   { id: "campaign", label: "Campaign", icon: Workflow },
   { id: "review", label: "Outreach review", icon: Mail },
@@ -184,6 +186,7 @@ export default function Workspace() {
                   campaign={campaign}
                 />
               )}
+              {view === "discovery" && <Discovery />}
               {view === "prospects" && (
                 <>
                   <Header

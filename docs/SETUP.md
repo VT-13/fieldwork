@@ -1,4 +1,4 @@
-# Personal-first setup (canonical Module 2 source; not yet deployed)
+# Personal-first setup (canonical source; not yet deployed)
 
 The installed app is deliberately unchanged. Follow MIGRATION_PLAN.md before replacing it. Current recurring outreach stays paused. No setup instruction is permission to send, purchase provider access or start a worker.
 
@@ -14,8 +14,12 @@ Frontend configuration only needs BACKEND_URL and APP_ORIGIN. It no longer needs
 
 Create a Google OAuth web client with the exact OAUTH_REDIRECT_URI registered. Set OAUTH_CLIENT_ID and OAUTH_CLIENT_SECRET externally. Verify the student profile and its own email, then Settings → Connect / reconnect Gmail. Browser consent opens Google's official page and returns through the authenticated callback. Default scopes are send and read-only; enable GMAIL_DRAFTS_ENABLED and reconnect only if own-account provider draft saving is desired. Tokens are stored encrypted in the database. SENDER_EMAIL, when configured, must agree with profile and provider identity. The existing connected identity cannot transfer silently.
 
-Disconnect removes local authorization immediately, attempts upstream revocation and preserves send history. Reconnect does not resume outreach. Old plaintext OAUTH_REFRESH_TOKEN files are preserved in the installed runtime until a separately authorized migration; the new Gmail implementation never reads them. Production rejects legacy refresh-token settings. For migration, pause, set up encryption/session secrets, run schema003 on a disposable backup first, then reconnect through the app; remove retired plaintext tokens only in that later controlled deployment. Do not run the old bootstrap or historical drivers.
+Disconnect removes local authorization immediately, attempts upstream revocation and preserves send history. Reconnect does not resume outreach. Old plaintext OAUTH_REFRESH_TOKEN files are preserved in the installed runtime until a separately authorized migration; the new Gmail implementation never reads them. Production rejects legacy refresh-token settings. For migration, pause, set up encryption/session secrets, run the current schema004 on a disposable backup first, then reconnect through the app; remove retired plaintext tokens only in that later controlled deployment. Do not run the old bootstrap or historical drivers.
 
 Google testing-mode expiration, app-verification requirements and restricted-scope approval remain provider-side requirements; a fake-provider test does not certify a real registration. Outlook remains a compatibility contract, with no production OAuth/send rollout in this module.
 
 Provider API keys remain optional and external. Manual mode and explicit paid-service prohibition block billed calls; no subscription-to-ChatGPT connection is implemented. For all quota/pause/dry-run distinctions read ARCHITECTURE.md. See SECURITY.md, DATA_LIFECYCLE.md and BACKUP_RESTORE.md for current implemented controls.
+
+## Bounded intelligence configuration
+
+Read module4/README.md for supported provider capabilities, the no-provider import path, explicit candidate acceptance, research/generation bounds and verification commands. Optional external keys: GOOGLE_MAPS_API_KEY, TAVILY_API_KEY, APOLLO_API_KEY, FIRECRAWL_API_KEY, HUNTER_API_KEY and OPENAI_API_KEY. Keys alone do not authorize paid calls: MANUAL_MODE and the persisted paid-services policy still govern them. `.env.example` lists model allowlists, page/request/time/token budgets, generation reservations and explicit retry ceilings. Generation always requires review regardless of legacy AUTO_APPROVE. A separately running authorized worker executes durable research/import jobs; merely opening the UI does not run them. No worker was installed or activated in Module4.

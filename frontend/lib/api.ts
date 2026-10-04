@@ -2,6 +2,10 @@
 import { useCallback, useEffect, useSyncExternalStore } from "react";
 import schemas from "./contracts.schema.json";
 import type {
+  CandidateView,
+  JobView,
+  CapabilitiesView,
+  GenerationView,
   PacketView,
   EmlView,
   SelfTestView,
@@ -17,6 +21,10 @@ import type {
 } from "./contracts";
 
 type Views = {
+  CandidateView: CandidateView;
+  JobView: JobView;
+  CapabilitiesView: CapabilitiesView;
+  GenerationView: GenerationView;
   PacketView: PacketView;
   EmlView: EmlView;
   SelfTestView: SelfTestView;
@@ -149,7 +157,12 @@ export async function request(
     );
   }
   if (method !== "GET") {
-    if (path === "profile") invalidate("profile", "outreach");
+    if (path.endsWith("/regenerate") || path.includes("/actions/"))
+      invalidate("jobs");
+    if (path.startsWith("discovery/") || path === "discover")
+      invalidate("discovery/candidates", "jobs", "companies");
+    else if (path.startsWith("jobs/")) invalidate("jobs");
+    else if (path === "profile") invalidate("profile", "outreach");
     else if (path.startsWith("outreach/")) invalidate("outreach");
     else if (path.startsWith("companies")) invalidate("companies", "metrics");
     else if (path === "outreach-policy" || path === "campaign/stop")

@@ -9,6 +9,7 @@ import type {
 } from "../lib/contracts";
 import { useResource, date, request, text } from "../lib/api";
 import { Empty, ErrorState, External, Header, Loading, Status } from "./ui";
+import IntelligenceActions from "./IntelligenceActions";
 export default function Prospect({
   id,
   messages,
@@ -94,9 +95,21 @@ export default function Prospect({
                         <span className="contact-address">{ct.email}</span>
                       </div>
                       <div>
-                        <Status value={ct.validation} />
+                        <span className="status">{ct.confidence}</span>
                         <small>Checked {date(ct.validated_at)}</small>
                         <small>Source: {ct.source || "Not recorded"}</small>
+                        <details className="inline-details">
+                          <summary>Role / identity observations</summary>
+                          {ct.observations.map((o) => (
+                            <p key={o.id}>
+                              {o.field}: {o.value} · {o.confidence} ·{" "}
+                              {date(o.retrieved_at)}{" "}
+                              {o.source_url && (
+                                <External href={o.source_url}>Source</External>
+                              )}
+                            </p>
+                          ))}
+                        </details>
                       </div>
                     </article>
                   ))
@@ -161,7 +174,9 @@ export default function Prospect({
                       </div>
                       <div>
                         <p className="eyebrow">
-                          {e.category} / COLLECTED {date(e.fetched_at)}
+                          {e.category} / COLLECTED {date(e.fetched_at)} ·{" "}
+                          {e.source_kind} · {e.confidence} ·{" "}
+                          {e.fresh ? "current" : "stale / unverified"}
                         </p>
                         <h3>{e.fact}</h3>
                         <blockquote>{e.quote}</blockquote>
@@ -176,6 +191,7 @@ export default function Prospect({
                   </Empty>
                 )}
               </section>
+              <IntelligenceActions id={id} demo={c.demo} />
               <section className="section">
                 <div className="section-heading">
                   <h2>Communication history</h2>

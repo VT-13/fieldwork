@@ -49,6 +49,8 @@ def company(db,row,at,mode="scheduled"):
  review=row.review
  if review.get('profile_hash')!=profile_fingerprint(profile.data):raise Blocked('Profile changed; regenerate the draft')
  if review.get('personalization_score',0)<=80 or not review.get('names_correct') or not review.get('non_spammy') or not review.get('passed') or not review.get('grounded') or not review.get('claims_supported') or not review.get('non_generic') or review.get('profile_hash')!=profile_fingerprint(profile.data):raise Blocked('Grounded quality review required')
+ from ..intelligence.personalization import assert_current
+ assert_current(db,row)
  if not row.evidence_ids or not row.subject or not row.body:raise Blocked('Email and evidence required')
  evidence=list(db.scalars(select(Evidence).where(Evidence.id.in_(row.evidence_ids),Evidence.company_id==c.id)))
  if len(evidence)!=len(set(row.evidence_ids)) or any(not e.fact or not e.url.startswith('https://') for e in evidence):raise Blocked('Actual company evidence required')

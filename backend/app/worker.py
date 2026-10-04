@@ -57,21 +57,13 @@ async def _execute(db,job):
     if settings().manual_mode and job.kind in {"discover","research","pipeline","generate","regenerate","verify","send"}:
         raise Blocked("Manual mode: use the personal review desk; paid calls and live sends are disabled")
     if job.kind=="discover":
-        async with asyncio.timeout(60):
+        async with asyncio.timeout(settings().discovery_seconds):
             rows=await discover(db,p)
-        inserted=0
-        for data in rows:
-            try:
-                domain=public_url(data["website"])
-            except Blocked:
-                continue
-            if not db.scalar(select(Company).where(Company.domain==domain)):
-                c=Company(domain=domain,**data)
-                db.add(c)
-                db.flush()
-                inserted+=1
-        db.commit()
-        return {"discovered":inserted,"candidates":len(rows)}
+        from .intelligence.discovery import ingest_candidates
+        return ingest_candidates(db,rows,p.get('context','Personal internship search'))
+    if job.kind=='candidate_import':
+        from .intelligence.discovery import ingest_candidates
+        return ingest_candidates(db,p['companies'],p.get('context','Personal internship search'))
     if job.kind=="mailbox_draft":
         from .draft_mail import save_mailbox_draft
         return await save_mailbox_draft(db,p["id"],p["draft_hash"])
@@ -83,7 +75,7 @@ async def _execute(db,job):
             raise Blocked("Draft cannot be regenerated")
         company=db.get(Company,row.company_id)
         seq=row.sequence
-        generated=await generate(db,company,seq,replace=True)
+        generated=await generate(db,company,seq,replace=True,job_id=job.id)
         return {"draft_id":generated.id}
     if job.kind=="send":
         await send_one(db,db.get(Outreach,p["id"]))
@@ -94,14 +86,14 @@ async def _execute(db,job):
     if not company:
         raise Blocked("Company no longer exists")
     if job.kind in {"research","pipeline"}:
-        await research(db,company)
+        research_result=await research(db,company)
     if job.kind in {"generate","pipeline"}:
-        row=await generate(db,company,p.get("sequence",0))
+        row=await generate(db,company,p.get("sequence",0),job_id=job.id)
         contact=db.get(Contact,row.contact_id)
         if settings().hunter_api_key and contact.validation!="valid":
             await verify(db,contact)
         return {"draft_id":row.id,"status":row.status}
-    return {"stage":company.stage}
+    return {"stage":company.stage,**(research_result if job.kind=="research" else {})}
 
 async def execute(db,job):
     if not job.id:  # Unsaved callers can validate, but cannot create a durable job execution.
@@ -113,9 +105,20 @@ async def execute(db,job):
     attempt,replay=ledger.claim(db,'job:'+job.id,'job:'+job.kind,'local',authorize,entity_id=job.id,job_id=job.id,retry=True)
     if replay:return attempt.receipt
     try:
-        result=await _execute(db,job)
+        from .intelligence.bounds import scope
+        with scope(db,job.id) as bounds:
+            result=await _execute(db,job)
+            if job.kind in ('discover','candidate_import','research','pipeline','generate','regenerate','verify'):
+                result={**job.result,**(result or {}),**bounds.summary()}
+                attempt.network_units=bounds.requests
     except Exception as exc:
-        db.rollback();ledger.finish(db,attempt,'failed',reason='job_blocked' if isinstance(exc,Blocked) else 'job_failed')
+        db.rollback()
+        if 'bounds' in locals():
+            attempt.network_units=bounds.requests
+            job.result={**job.result,**bounds.summary()}
+            from .intelligence.bounds import IntelligenceFailure
+            if isinstance(exc,IntelligenceFailure):job.result={**job.result,'failure':{'code':exc.code,'retryable':exc.retryable}}
+        ledger.finish(db,attempt,'failed',reason='job_blocked' if isinstance(exc,Blocked) else 'job_failed',receipt=bounds.summary() if 'bounds' in locals() else {})
         raise
     ledger.finish(db,attempt,'succeeded',receipt=result or {})
     return result

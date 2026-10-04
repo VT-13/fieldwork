@@ -45,6 +45,8 @@ def test_migration_schema_matches_current_model(tmp_path):
         v1.create_all(c);upgrade(c)
         expected=MetaData()
         for name,table in Base.metadata.tables.items():
-            if name not in {'operator_sessions','integrations','oauth_grants','rate_buckets'}:table.to_metadata(expected)
+            if name not in {'operator_sessions','integrations','oauth_grants','rate_buckets','candidates','contact_observations','student_facts','generations'}:table.to_metadata(expected)
+        for table,columns in [('evidence',['source_kind','confidence','content_hash','verified_at']),('usage',['details'])]:
+            for column in columns:expected.tables[table]._columns.remove(expected.tables[table].c[column])
         assert compare_metadata(MigrationContext.configure(c),expected)==[]
     engine.dispose()

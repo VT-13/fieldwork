@@ -28,7 +28,9 @@
       "stage": "drafted",
       "demo": true,
       "created_at": "2026-10-03T10:00:00Z",
-      "researched_at": "2026-10-03T10:00:00Z"
+      "researched_at": "2026-10-03T10:00:00Z",
+      "evidence_quality": "unknown",
+      "contact_confidence": "unknown"
     },
     {
       "id": "qa-company-1",
@@ -58,7 +60,9 @@
       "stage": "replied",
       "demo": true,
       "created_at": "2026-10-03T10:00:00Z",
-      "researched_at": "2026-10-03T10:00:00Z"
+      "researched_at": "2026-10-03T10:00:00Z",
+      "evidence_quality": "unknown",
+      "contact_confidence": "unknown"
     },
     {
       "id": "qa-company-2",
@@ -88,7 +92,9 @@
       "stage": "researched",
       "demo": true,
       "created_at": "2026-10-03T10:00:00Z",
-      "researched_at": "2026-10-03T10:00:00Z"
+      "researched_at": "2026-10-03T10:00:00Z",
+      "evidence_quality": "unknown",
+      "contact_confidence": "unknown"
     },
     {
       "id": "qa-company-3",
@@ -118,7 +124,9 @@
       "stage": "discovered",
       "demo": true,
       "created_at": "2026-10-03T10:00:00Z",
-      "researched_at": null
+      "researched_at": null,
+      "evidence_quality": "unknown",
+      "contact_confidence": "unknown"
     },
     {
       "id": "qa-company-4",
@@ -148,7 +156,9 @@
       "stage": "discovered",
       "demo": true,
       "created_at": "2026-10-03T10:00:00Z",
-      "researched_at": null
+      "researched_at": null,
+      "evidence_quality": "unknown",
+      "contact_confidence": "unknown"
     }
   ],
   "details": {
@@ -181,6 +191,8 @@
       "demo": true,
       "created_at": "2026-10-03T10:00:00Z",
       "researched_at": "2026-10-03T10:00:00Z",
+      "evidence_quality": "unknown",
+      "contact_confidence": "unknown",
       "contacts": [
         {
           "id": "qa-contact-0",
@@ -190,7 +202,9 @@
           "title": "Founder",
           "source": "https://company-0.example/team",
           "validation": "valid",
-          "validated_at": "2026-10-03T10:00:00Z"
+          "validated_at": "2026-10-03T10:00:00Z",
+          "confidence": "unknown",
+          "observations": []
         }
       ],
       "evidence": [
@@ -201,7 +215,12 @@
           "quote": "Our vision dashboard gives operators a clearer view of each system. (Fictional fixture quotation.)",
           "url": "https://company-0.example/products",
           "category": "product",
-          "fetched_at": "2026-10-03T10:00:00Z"
+          "fetched_at": "2026-10-03T10:00:00Z",
+          "source_kind": "unknown",
+          "confidence": "unknown",
+          "content_hash": "",
+          "verified_at": null,
+          "fresh": false
         }
       ],
       "events": []
@@ -235,6 +254,8 @@
       "demo": true,
       "created_at": "2026-10-03T10:00:00Z",
       "researched_at": "2026-10-03T10:00:00Z",
+      "evidence_quality": "unknown",
+      "contact_confidence": "unknown",
       "contacts": [
         {
           "id": "qa-contact-1",
@@ -244,7 +265,9 @@
           "title": "Founder",
           "source": "https://company-1.example/team",
           "validation": "valid",
-          "validated_at": "2026-10-03T10:00:00Z"
+          "validated_at": "2026-10-03T10:00:00Z",
+          "confidence": "unknown",
+          "observations": []
         }
       ],
       "evidence": [
@@ -255,7 +278,12 @@
           "quote": "Our vision dashboard gives operators a clearer view of each system. (Fictional fixture quotation.)",
           "url": "https://company-1.example/products",
           "category": "product",
-          "fetched_at": "2026-10-03T10:00:00Z"
+          "fetched_at": "2026-10-03T10:00:00Z",
+          "source_kind": "unknown",
+          "confidence": "unknown",
+          "content_hash": "",
+          "verified_at": null,
+          "fresh": false
         }
       ],
       "events": []
@@ -289,6 +317,8 @@
       "demo": true,
       "created_at": "2026-10-03T10:00:00Z",
       "researched_at": "2026-10-03T10:00:00Z",
+      "evidence_quality": "unknown",
+      "contact_confidence": "unknown",
       "contacts": [
         {
           "id": "qa-contact-2",
@@ -298,7 +328,9 @@
           "title": "Founder",
           "source": "https://company-2.example/team",
           "validation": "valid",
-          "validated_at": "2026-10-03T10:00:00Z"
+          "validated_at": "2026-10-03T10:00:00Z",
+          "confidence": "unknown",
+          "observations": []
         }
       ],
       "evidence": [
@@ -309,7 +341,12 @@
           "quote": "Our vision dashboard gives operators a clearer view of each system. (Fictional fixture quotation.)",
           "url": "https://company-2.example/products",
           "category": "product",
-          "fetched_at": "2026-10-03T10:00:00Z"
+          "fetched_at": "2026-10-03T10:00:00Z",
+          "source_kind": "unknown",
+          "confidence": "unknown",
+          "content_hash": "",
+          "verified_at": null,
+          "fresh": false
         }
       ],
       "events": []
@@ -343,6 +380,8 @@
       "demo": true,
       "created_at": "2026-10-03T10:00:00Z",
       "researched_at": null,
+      "evidence_quality": "unknown",
+      "contact_confidence": "unknown",
       "contacts": [
         {
           "id": "qa-contact-3",
@@ -352,7 +391,9 @@
           "title": "Founder",
           "source": "https://company-3.example/team",
           "validation": "valid",
-          "validated_at": "2026-10-03T10:00:00Z"
+          "validated_at": "2026-10-03T10:00:00Z",
+          "confidence": "unknown",
+          "observations": []
         }
       ],
       "evidence": [
@@ -363,7 +404,12 @@
           "quote": "Our vision dashboard gives operators a clearer view of each system. (Fictional fixture quotation.)",
           "url": "https://company-3.example/products",
           "category": "product",
-          "fetched_at": "2026-10-03T10:00:00Z"
+          "fetched_at": "2026-10-03T10:00:00Z",
+          "source_kind": "unknown",
+          "confidence": "unknown",
+          "content_hash": "",
+          "verified_at": null,
+          "fresh": false
         }
       ],
       "events": []
@@ -397,6 +443,8 @@
       "demo": true,
       "created_at": "2026-10-03T10:00:00Z",
       "researched_at": null,
+      "evidence_quality": "unknown",
+      "contact_confidence": "unknown",
       "contacts": [
         {
           "id": "qa-contact-4",
@@ -406,7 +454,9 @@
           "title": "Founder",
           "source": "https://company-4.example/team",
           "validation": "valid",
-          "validated_at": "2026-10-03T10:00:00Z"
+          "validated_at": "2026-10-03T10:00:00Z",
+          "confidence": "unknown",
+          "observations": []
         }
       ],
       "evidence": [
@@ -417,7 +467,12 @@
           "quote": "Our vision dashboard gives operators a clearer view of each system. (Fictional fixture quotation.)",
           "url": "https://company-4.example/products",
           "category": "product",
-          "fetched_at": "2026-10-03T10:00:00Z"
+          "fetched_at": "2026-10-03T10:00:00Z",
+          "source_kind": "unknown",
+          "confidence": "unknown",
+          "content_hash": "",
+          "verified_at": null,
+          "fresh": false
         }
       ],
       "events": []
@@ -591,5 +646,115 @@
     "email": "",
     "connected": false
   },
-  "desk": []
+  "desk": [],
+  "candidates": [
+    {
+      "id": "qa-candidate",
+      "domain": "candidate.example",
+      "name": "Willow Robotics (Demo)",
+      "website": "https://candidate.example",
+      "industry": "Robotics",
+      "distance_miles": null,
+      "status": "candidate",
+      "company_id": null,
+      "observations": [
+        {
+          "field": "name",
+          "value": "Willow Robotics (Demo)",
+          "provider": "manual",
+          "external_id": "",
+          "source_url": "https://candidate.example/about",
+          "retrieved_at": "2026-10-03T10:00:00Z",
+          "verified_at": null,
+          "confidence": "unknown"
+        }
+      ],
+      "contexts": [
+        "Personal internship search"
+      ],
+      "updated_at": "2026-10-03T10:00:00Z"
+    }
+  ],
+  "capabilities": {
+    "paid_allowed": false,
+    "providers": [
+      {
+        "id": "maps",
+        "configured": false,
+        "available": false,
+        "reason": "Paid calls disabled by mode/policy"
+      },
+      {
+        "id": "tavily",
+        "configured": false,
+        "available": false,
+        "reason": "Paid calls disabled by mode/policy"
+      },
+      {
+        "id": "apollo",
+        "configured": false,
+        "available": false,
+        "reason": "Paid calls disabled by mode/policy"
+      },
+      {
+        "id": "research",
+        "configured": false,
+        "available": false,
+        "reason": "Paid calls disabled by mode/policy"
+      },
+      {
+        "id": "generate",
+        "configured": false,
+        "available": false,
+        "reason": "Paid calls disabled by mode/policy"
+      },
+      {
+        "id": "contacts",
+        "configured": false,
+        "available": false,
+        "reason": "Paid calls disabled by mode/policy"
+      }
+    ],
+    "manual_import": true,
+    "limits": {
+      "companies": 30.0,
+      "contacts": 5.0,
+      "pages": 5.0,
+      "requests": 16.0,
+      "ai_calls": 7.0,
+      "generation_attempts": 2.0,
+      "job_tokens": 24000.0,
+      "daily_tokens": 60000.0,
+      "discovery_seconds": 60.0,
+      "research_seconds": 120.0
+    },
+    "worker_note": "Queued work needs the existing worker process. This phase does not install or start it."
+  },
+  "jobs": [
+    {
+      "id": "qa-job",
+      "kind": "research",
+      "payload": {
+        "id": "qa-company-0"
+      },
+      "dedupe_key": "fixture-job",
+      "status": "running",
+      "error": "",
+      "result": {
+        "facts": 2,
+        "pages": 1,
+        "provider_requests": 2
+      },
+      "created_at": "2026-10-03T10:00:00Z",
+      "started_at": "2026-10-03T10:00:00Z",
+      "finished_at": null
+    }
+  ],
+  "generations": {
+    "qa-company-0": [],
+    "qa-company-1": [],
+    "qa-company-2": [],
+    "qa-company-3": [],
+    "qa-company-4": []
+  }
 }

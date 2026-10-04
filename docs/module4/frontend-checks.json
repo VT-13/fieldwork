@@ -1,0 +1,53 @@
+{
+  "temporary_root": "/var/folders/9s/w0n67fhn557gd3bp17pkk9q80000gn/T/fieldwork-module4-ui-5_4pdh0o",
+  "checks": {
+    "frontend-lint": {
+      "command": [
+        "npm",
+        "run",
+        "lint"
+      ],
+      "exit_code": 0,
+      "seconds": 5.48
+    },
+    "frontend-typecheck": {
+      "command": [
+        "npm",
+        "run",
+        "typecheck"
+      ],
+      "exit_code": 0,
+      "seconds": 5.37
+    },
+    "frontend-format": {
+      "command": [
+        "npm",
+        "run",
+        "format:check"
+      ],
+      "exit_code": 0,
+      "seconds": 1.38
+    },
+    "frontend-build": {
+      "command": [
+        "npm",
+        "run",
+        "build"
+      ],
+      "exit_code": 0,
+      "seconds": 14.41
+    },
+    "browser": {
+      "command": [
+        "npm",
+        "exec",
+        "--",
+        "playwright",
+        "test",
+        "--reporter=json"
+      ],
+      "exit_code": 0,
+      "seconds": 51.71
+    }
+  }
+}

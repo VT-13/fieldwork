@@ -6,7 +6,12 @@ export default defineConfig({
   retries: 0,
   reporter: [
     ["list"],
-    ["json", { outputFile: "../docs/module3/browser-results.json" }],
+    [
+      "json",
+      {
+        outputFile: `${process.env.FIELDWORK_BROWSER_ARTIFACT_DIR || "../docs/module3"}/browser-results.json`,
+      },
+    ],
   ],
   use: {
     baseURL: "http://localhost:13030",

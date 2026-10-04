@@ -224,6 +224,16 @@
             }
           ],
           "title": "Researched At"
+        },
+        "evidence_quality": {
+          "default": "unknown",
+          "title": "Evidence Quality",
+          "type": "string"
+        },
+        "contact_confidence": {
+          "default": "unknown",
+          "title": "Contact Confidence",
+          "type": "string"
         }
       },
       "required": [
@@ -241,9 +251,83 @@
         "stage",
         "demo",
         "created_at",
-        "researched_at"
+        "researched_at",
+        "evidence_quality",
+        "contact_confidence"
       ],
       "title": "CompanyView",
+      "type": "object"
+    },
+    "ContactObservationView": {
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "company_id": {
+          "title": "Company Id",
+          "type": "string"
+        },
+        "contact_id": {
+          "title": "Contact Id",
+          "type": "string"
+        },
+        "field": {
+          "title": "Field",
+          "type": "string"
+        },
+        "value": {
+          "title": "Value",
+          "type": "string"
+        },
+        "provider": {
+          "title": "Provider",
+          "type": "string"
+        },
+        "external_id": {
+          "title": "External Id",
+          "type": "string"
+        },
+        "source_url": {
+          "title": "Source Url",
+          "type": "string"
+        },
+        "confidence": {
+          "title": "Confidence",
+          "type": "string"
+        },
+        "retrieved_at": {
+          "format": "date-time",
+          "title": "Retrieved At",
+          "type": "string"
+        },
+        "verified_at": {
+          "anyOf": [
+            {
+              "format": "date-time",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Verified At"
+        }
+      },
+      "required": [
+        "id",
+        "company_id",
+        "contact_id",
+        "field",
+        "value",
+        "provider",
+        "external_id",
+        "source_url",
+        "confidence",
+        "retrieved_at",
+        "verified_at"
+      ],
+      "title": "ContactObservationView",
       "type": "object"
     },
     "ContactView": {
@@ -287,6 +371,19 @@
             }
           ],
           "title": "Validated At"
+        },
+        "confidence": {
+          "default": "unknown",
+          "title": "Confidence",
+          "type": "string"
+        },
+        "observations": {
+          "default": [],
+          "items": {
+            "$ref": "#/$defs/ContactObservationView"
+          },
+          "title": "Observations",
+          "type": "array"
         }
       },
       "required": [
@@ -297,7 +394,9 @@
         "title",
         "source",
         "validation",
-        "validated_at"
+        "validated_at",
+        "confidence",
+        "observations"
       ],
       "title": "ContactView",
       "type": "object"
@@ -371,6 +470,39 @@
           "format": "date-time",
           "title": "Fetched At",
           "type": "string"
+        },
+        "source_kind": {
+          "default": "unknown",
+          "title": "Source Kind",
+          "type": "string"
+        },
+        "confidence": {
+          "default": "unknown",
+          "title": "Confidence",
+          "type": "string"
+        },
+        "content_hash": {
+          "default": "",
+          "title": "Content Hash",
+          "type": "string"
+        },
+        "verified_at": {
+          "anyOf": [
+            {
+              "format": "date-time",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Verified At"
+        },
+        "fresh": {
+          "default": false,
+          "title": "Fresh",
+          "type": "boolean"
         }
       },
       "required": [
@@ -380,7 +512,12 @@
         "quote",
         "url",
         "category",
-        "fetched_at"
+        "fetched_at",
+        "source_kind",
+        "confidence",
+        "content_hash",
+        "verified_at",
+        "fresh"
       ],
       "title": "EvidenceView",
       "type": "object"
@@ -467,6 +604,16 @@
           ],
           "title": "Researched At"
         },
+        "evidence_quality": {
+          "default": "unknown",
+          "title": "Evidence Quality",
+          "type": "string"
+        },
+        "contact_confidence": {
+          "default": "unknown",
+          "title": "Contact Confidence",
+          "type": "string"
+        },
         "contacts": {
           "items": {
             "$ref": "#/$defs/ContactView"
@@ -505,6 +652,8 @@
         "demo",
         "created_at",
         "researched_at",
+        "evidence_quality",
+        "contact_confidence",
         "contacts",
         "evidence",
         "events"
@@ -1407,6 +1556,415 @@
         "to"
       ],
       "title": "SelfTestView",
+      "type": "object"
+    },
+    "Observation": {
+      "additionalProperties": false,
+      "properties": {
+        "field": {
+          "maxLength": 40,
+          "title": "Field",
+          "type": "string"
+        },
+        "value": {
+          "maxLength": 500,
+          "title": "Value",
+          "type": "string"
+        },
+        "provider": {
+          "maxLength": 30,
+          "title": "Provider",
+          "type": "string"
+        },
+        "external_id": {
+          "default": "",
+          "maxLength": 255,
+          "title": "External Id",
+          "type": "string"
+        },
+        "source_url": {
+          "default": "",
+          "maxLength": 2000,
+          "title": "Source Url",
+          "type": "string"
+        },
+        "retrieved_at": {
+          "format": "date-time",
+          "title": "Retrieved At",
+          "type": "string"
+        },
+        "verified_at": {
+          "anyOf": [
+            {
+              "format": "date-time",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Verified At"
+        },
+        "confidence": {
+          "default": "unknown",
+          "enum": [
+            "provider-confirmed",
+            "source-observed",
+            "inferred",
+            "unknown",
+            "stale",
+            "conflicting"
+          ],
+          "title": "Confidence",
+          "type": "string"
+        }
+      },
+      "required": [
+        "field",
+        "value",
+        "provider",
+        "external_id",
+        "source_url",
+        "retrieved_at",
+        "verified_at",
+        "confidence"
+      ],
+      "title": "Observation",
+      "type": "object"
+    },
+    "CandidateView": {
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "domain": {
+          "title": "Domain",
+          "type": "string"
+        },
+        "name": {
+          "title": "Name",
+          "type": "string"
+        },
+        "website": {
+          "title": "Website",
+          "type": "string"
+        },
+        "industry": {
+          "title": "Industry",
+          "type": "string"
+        },
+        "distance_miles": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Distance Miles"
+        },
+        "status": {
+          "title": "Status",
+          "type": "string"
+        },
+        "company_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Company Id"
+        },
+        "observations": {
+          "items": {
+            "$ref": "#/$defs/Observation"
+          },
+          "title": "Observations",
+          "type": "array"
+        },
+        "contexts": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Contexts",
+          "type": "array"
+        },
+        "updated_at": {
+          "format": "date-time",
+          "title": "Updated At",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "domain",
+        "name",
+        "website",
+        "industry",
+        "distance_miles",
+        "status",
+        "company_id",
+        "observations",
+        "contexts",
+        "updated_at"
+      ],
+      "title": "CandidateView",
+      "type": "object"
+    },
+    "JobView": {
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "kind": {
+          "title": "Kind",
+          "type": "string"
+        },
+        "payload": {
+          "additionalProperties": true,
+          "title": "Payload",
+          "type": "object"
+        },
+        "dedupe_key": {
+          "title": "Dedupe Key",
+          "type": "string"
+        },
+        "status": {
+          "title": "Status",
+          "type": "string"
+        },
+        "error": {
+          "title": "Error",
+          "type": "string"
+        },
+        "result": {
+          "additionalProperties": true,
+          "title": "Result",
+          "type": "object"
+        },
+        "created_at": {
+          "format": "date-time",
+          "title": "Created At",
+          "type": "string"
+        },
+        "started_at": {
+          "anyOf": [
+            {
+              "format": "date-time",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Started At"
+        },
+        "finished_at": {
+          "anyOf": [
+            {
+              "format": "date-time",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Finished At"
+        }
+      },
+      "required": [
+        "id",
+        "kind",
+        "payload",
+        "dedupe_key",
+        "status",
+        "error",
+        "result",
+        "created_at",
+        "started_at",
+        "finished_at"
+      ],
+      "title": "JobView",
+      "type": "object"
+    },
+    "CapabilityView": {
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "configured": {
+          "title": "Configured",
+          "type": "boolean"
+        },
+        "available": {
+          "title": "Available",
+          "type": "boolean"
+        },
+        "reason": {
+          "title": "Reason",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "configured",
+        "available",
+        "reason"
+      ],
+      "title": "CapabilityView",
+      "type": "object"
+    },
+    "CapabilitiesView": {
+      "properties": {
+        "paid_allowed": {
+          "title": "Paid Allowed",
+          "type": "boolean"
+        },
+        "providers": {
+          "items": {
+            "$ref": "#/$defs/CapabilityView"
+          },
+          "title": "Providers",
+          "type": "array"
+        },
+        "manual_import": {
+          "title": "Manual Import",
+          "type": "boolean"
+        },
+        "limits": {
+          "additionalProperties": {
+            "type": "number"
+          },
+          "title": "Limits",
+          "type": "object"
+        },
+        "worker_note": {
+          "title": "Worker Note",
+          "type": "string"
+        }
+      },
+      "required": [
+        "paid_allowed",
+        "providers",
+        "manual_import",
+        "limits",
+        "worker_note"
+      ],
+      "title": "CapabilitiesView",
+      "type": "object"
+    },
+    "GenerationView": {
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "company_id": {
+          "title": "Company Id",
+          "type": "string"
+        },
+        "outreach_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Outreach Id"
+        },
+        "job_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Job Id"
+        },
+        "prompt_version": {
+          "title": "Prompt Version",
+          "type": "string"
+        },
+        "provider": {
+          "title": "Provider",
+          "type": "string"
+        },
+        "model": {
+          "title": "Model",
+          "type": "string"
+        },
+        "settings": {
+          "additionalProperties": true,
+          "title": "Settings",
+          "type": "object"
+        },
+        "input_hash": {
+          "title": "Input Hash",
+          "type": "string"
+        },
+        "evidence_ids": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Evidence Ids",
+          "type": "array"
+        },
+        "student_fact_ids": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Student Fact Ids",
+          "type": "array"
+        },
+        "subject": {
+          "title": "Subject",
+          "type": "string"
+        },
+        "body": {
+          "title": "Body",
+          "type": "string"
+        },
+        "review": {
+          "additionalProperties": true,
+          "title": "Review",
+          "type": "object"
+        },
+        "created_at": {
+          "format": "date-time",
+          "title": "Created At",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "company_id",
+        "outreach_id",
+        "job_id",
+        "prompt_version",
+        "provider",
+        "model",
+        "settings",
+        "input_hash",
+        "evidence_ids",
+        "student_fact_ids",
+        "subject",
+        "body",
+        "review",
+        "created_at"
+      ],
+      "title": "GenerationView",
       "type": "object"
     }
   }

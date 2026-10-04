@@ -8,9 +8,9 @@ from .domain.states import transition
 
 def export(db):
     # No sessions, OAuth verifier/tokens, credentials or security rate state.
-    from .models import Company,Contact,Evidence,Suppression,Usage
+    from .models import Company,Contact,Evidence,Suppression,Usage,Candidate,ContactObservation,StudentFact,Generation
     output={}
-    for model in (Profile,Company,Contact,Evidence,Outreach,Event,Job,Operation,ActionAttempt,DomainTransition,Suppression,Usage):
+    for model in (Profile,Company,Contact,Evidence,Outreach,Event,Job,Operation,ActionAttempt,DomainTransition,Suppression,Usage,Candidate,ContactObservation,StudentFact,Generation):
         output[model.__tablename__]=[{c.name:getattr(r,c.name) for c in model.__table__.columns} for r in db.scalars(select(model))]
     output['state']=[{'key':r.key,'value':r.value} for r in db.scalars(select(State)) if r.key in ('outreach_policy','manual_batch','manual_batch_progress','automation') or r.key.startswith(('desk:','response:','self-test:'))]
     return output
@@ -42,6 +42,10 @@ def remove(db,scope,confirmation):
     if ledger.unresolved(db) or db.scalar(select(Outreach.id).where(Outreach.status.in_(['sending','unknown'])).limit(1)):
         db.rollback();raise Blocked('Resolve in-flight or uncertain delivery before deleting content')
     pause(db);profile=db.get(Profile,1)
+    from .models import StudentFact,Generation
+    for fact in db.scalars(select(StudentFact)):fact.text=''
+    for generation in db.scalars(select(Generation)):
+        generation.subject='';generation.body='';generation.review={'content_erased':True}
     if scope=='resume':
         if profile:profile.data={**profile.data,'resume':'','cover_letter_snippets':[],'verified':False}
         invalidate_messages(db)

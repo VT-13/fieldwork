@@ -27,6 +27,7 @@ class Settings(BaseSettings):
     send_interval_seconds: int = Field(120, ge=60)
     timezone: str = "America/Los_Angeles"
     daily_budget_usd: float = Field(5, gt=0)
+    daily_generation_budget_usd: float = Field(3, gt=0)
     company_budget_usd: float = Field(.75, gt=0)
     # Conservative per-call reservations, NOT provider invoice estimates.
     search_reserve_usd: float = Field(.03, gt=0)
@@ -38,6 +39,18 @@ class Settings(BaseSettings):
     max_pages: int = Field(5, ge=1, le=10)
     research_seconds: int = Field(120, ge=20, le=300)
     max_llm_calls: int = Field(7, ge=3, le=10)
+    discovery_seconds: int = Field(60, ge=10, le=60)
+    max_contacts: int = Field(5, ge=1, le=10)
+    max_provider_requests: int = Field(16, ge=1, le=30)
+    max_job_tokens: int = Field(24000, ge=2000, le=40000)
+    max_input_chars: int = Field(12000, ge=2000, le=20000)
+    max_output_tokens: int = Field(1800, ge=500, le=2400)
+    daily_token_limit: int = Field(60000, ge=2000, le=200000)
+    max_generation_attempts: int = Field(2, ge=1, le=2)
+    max_job_retries: int = Field(2, ge=0, le=2)
+    model_allowlist: list[str] = ['gpt-4.1-mini','gpt-4.1']
+    discovery_batch_limit: int = Field(30, ge=1, le=50)
+    company_size_preference: list[str] = ['1-10','11-50','51-200']
     search_cooldown_days: int = 14
     openai_api_key: str = Field("", repr=False)
     cheap_model: str = "gpt-4.1-mini"
@@ -56,6 +69,8 @@ class Settings(BaseSettings):
     microsoft_tenant: str = "common"
     @model_validator(mode="after")
     def production(self):
+        if any(m not in self.model_allowlist for m in (self.cheap_model,self.writing_model,self.review_model)):
+            raise ValueError('Extraction, writing and review models must be in MODEL_ALLOWLIST')
         from pathlib import Path
         env=Path('.env')
         if env.exists() and (env.is_symlink() or env.stat().st_mode&0o077):

@@ -1,0 +1,175 @@
+{
+  "module": 4,
+  "status": "COMPLETE",
+  "scope": "Canonical source only, undeployed",
+  "recorded_at": "2026-10-04T00:16:46.698526+00:00",
+  "baseline_commit": "f35b9a4",
+  "backend": {
+    "passed": 175,
+    "failed": 0,
+    "skipped": 0,
+    "warnings": 2,
+    "evidence": "backend-checks.json / backend-tests.log",
+    "runner": "FIELDWORK_DISPOSABLE_POSTGRES_URL=postgresql+psycopg://fieldwork_test@127.0.0.1:55432/postgres /private/tmp/fieldwork-module2-venv/bin/python scripts/module4_check.py",
+    "database": "Disposable PostgreSQL16.2 plus disposable SQLite; no personal DB fixture",
+    "checks": {
+      "contract-check": {
+        "command": [
+          "/private/tmp/fieldwork-module2-venv/bin/python",
+          "scripts/frontend_contracts.py",
+          "--check"
+        ],
+        "exit_code": 0,
+        "seconds": 0.22
+      },
+      "fixture-check": {
+        "command": [
+          "/private/tmp/fieldwork-module2-venv/bin/python",
+          "scripts/module3_fixture.py",
+          "--check"
+        ],
+        "exit_code": 0,
+        "seconds": 0.15
+      },
+      "backend-tests": {
+        "command": [
+          "/private/tmp/fieldwork-module2-venv/bin/python",
+          "-m",
+          "pytest",
+          "-q",
+          "-ra"
+        ],
+        "exit_code": 0,
+        "seconds": 7.55
+      },
+      "backend-lint": {
+        "command": [
+          "/private/tmp/fieldwork-module2-venv/bin/python",
+          "-m",
+          "ruff",
+          "check",
+          "app",
+          "scripts",
+          "tests"
+        ],
+        "exit_code": 0,
+        "seconds": 0.05
+      }
+    }
+  },
+  "frontend": {
+    "runner": "/private/tmp/fieldwork-module2-venv/bin/python scripts/module4_frontend_check.py",
+    "checks": {
+      "frontend-lint": {
+        "command": [
+          "npm",
+          "run",
+          "lint"
+        ],
+        "exit_code": 0,
+        "seconds": 5.48
+      },
+      "frontend-typecheck": {
+        "command": [
+          "npm",
+          "run",
+          "typecheck"
+        ],
+        "exit_code": 0,
+        "seconds": 5.37
+      },
+      "frontend-format": {
+        "command": [
+          "npm",
+          "run",
+          "format:check"
+        ],
+        "exit_code": 0,
+        "seconds": 1.38
+      },
+      "frontend-build": {
+        "command": [
+          "npm",
+          "run",
+          "build"
+        ],
+        "exit_code": 0,
+        "seconds": 14.41
+      },
+      "browser": {
+        "command": [
+          "npm",
+          "exec",
+          "--",
+          "playwright",
+          "test",
+          "--reporter=json"
+        ],
+        "exit_code": 0,
+        "seconds": 51.71
+      }
+    },
+    "browser": {
+      "startTime": "2026-10-03T23:57:35.866Z",
+      "duration": 50196.483,
+      "expected": 17,
+      "skipped": 0,
+      "unexpected": 0,
+      "flaky": 0
+    },
+    "scope": "Existing standalone Next fixture server; intercepted fictional APIs and Chrome; not live E2E",
+    "visual_qa": "Rendered discovery and prospect detail inspected at laptop and phone sizes; existing four flagship responsive/axe gates retained",
+    "environment_note": "Isolated source copy avoids repeated identical generated .next/types/* 2.ts files in original Mac build output; no source typecheck exclusions added"
+  },
+  "coverage": [
+    "candidate explicit acceptance/deduplication/ambiguity",
+    "contact identity/conflicting values/freshness/role suitability",
+    "exact quote/URL/company/profile ownership",
+    "unsupported model prose/references/tasks/claims",
+    "injection attempts cannot alter recipient/policy/profile/actions",
+    "stop/deadline/outage preserves partial evidence",
+    "source/cache original retrieval dates",
+    "explicit employee size and early-stop founder suitability",
+    "hard provider/network/model/token/cost/manual-policy ceilings",
+    "unique generations/history and mid-flight currentness checks",
+    "authenticated API states/jobs/stop/retry",
+    "SQLite/PostgreSQL additive migration metadata and preserved legacy records",
+    "existing security/delivery uncertainty/concurrency/backup-restore regressions",
+    "browser failed/empty/unavailable/queued/regeneration states"
+  ],
+  "dependencies_changed": false,
+  "dependency_note": "No new audit claimed; Module3 development-only braces advisory remains recorded in BUG_AUDIT.md",
+  "preservation": {
+    "comparison": "48 installed source file hashes, policy hash and counts; read-only observation, not a fresh full historical-row audit",
+    "unchanged": true,
+    "counts": {
+      "companies": 46,
+      "outreach": 46,
+      "events": 6
+    },
+    "recurring_enabled": false,
+    "evidence": "preservation-before.json / preservation.json"
+  },
+  "production_mutations": {
+    "deployed": false,
+    "outreach_sent": 0,
+    "recurring_pause_changed": false,
+    "real_oauth_changed": false,
+    "paid_providers_called": false,
+    "installed_worker_activated": false,
+    "live_database_migrated": false
+  },
+  "limitations": [
+    "Actual provider plans/credentials/health and API credits not tested",
+    "No Safari, Docker, maintained PostgreSQL17/TLS or hosted deployment validation in this module",
+    "No live OAuth or mail-delivery validation",
+    "No implemented Gemini, ChatGPT subscription adapter or detector automation",
+    "Constrained task catalog and attributed quotations prioritize deterministic grounding over unlimited prose variation",
+    "Unknown contacts or third-party redirected claims remain held",
+    "Permanent job execution, delivery/reply/scheduling integration and rollout remain later phases"
+  ],
+  "remaining_applicable_p0_p1": [
+    "FW-005 permanent runtime/scheduling/delivery integration belongs to Module5; no open Module4 intelligence P0/P1"
+  ],
+  "module5_readiness": "READY; outputs remain review-gated and feed the existing guarded boundary; Module5 not started"
+}

@@ -20,7 +20,9 @@ export default function Prospects({
     router = useRouter();
   const query = params.get("q") || "",
     stage = params.get("stage") || "all",
-    sort = params.get("sort") || "fit";
+    sort = params.get("sort") || "fit",
+    quality = params.get("quality") || "all",
+    confidence = params.get("confidence") || "all";
   function update(key: string, value: string) {
     const next = new URLSearchParams(params);
     next.set(key, value);
@@ -30,6 +32,8 @@ export default function Prospects({
     .filter(
       (c) =>
         `${c.name} ${c.industry}`.toLowerCase().includes(query.toLowerCase()) &&
+        (quality === "all" || c.evidence_quality === quality) &&
+        (confidence === "all" || c.contact_confidence === confidence) &&
         (stage === "all" ||
           (stage === "review"
             ? c.stage === "drafted"
@@ -69,6 +73,40 @@ export default function Prospects({
             <option value="discovered">Discovered</option>
             <option value="researched">Researched</option>
             <option value="bounce">Bounced</option>
+          </select>
+        </label>
+        <label className="compact-field">
+          Evidence
+          <select
+            value={quality}
+            onChange={(e) => update("quality", e.target.value)}
+          >
+            {["all", "strong", "partial", "unknown"].map((v) => (
+              <option key={v} value={v}>
+                {v === "all" ? "All evidence" : v}
+              </option>
+            ))}
+          </select>
+        </label>
+        <label className="compact-field">
+          Contact confidence
+          <select
+            value={confidence}
+            onChange={(e) => update("confidence", e.target.value)}
+          >
+            {[
+              "all",
+              "provider-confirmed",
+              "source-observed",
+              "inferred",
+              "unknown",
+              "stale",
+              "conflicting",
+            ].map((v) => (
+              <option key={v} value={v}>
+                {v === "all" ? "All contacts" : v}
+              </option>
+            ))}
           </select>
         </label>
         <label className="compact-field">

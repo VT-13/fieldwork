@@ -24,13 +24,13 @@ class CompanyInput(BaseModel):
     website: HttpUrl
     industry: str = Field("Unknown", max_length=100)
     distance_miles: float | None = Field(None, ge=0)
-    source: str = "manual"
+    source: str = Field("manual",max_length=2000)
 
 class ContactInput(BaseModel):
     email: EmailStr
     name: str = Field("", max_length=255)
     title: str = Field("", max_length=255)
-    source: str = "manual"
+    source: str = Field("manual",max_length=2000)
 
 class DiscoveryInput(BaseModel):
     area: str = Field("Rocklin / Roseville, California", max_length=120)
@@ -66,7 +66,7 @@ class DraftResult(Strict):
     evidence_ids: list[str]
     strategy: Literal["project-match", "product-curiosity", "practical-help"]
 class ReviewResult(Strict):
-    personalization_score: int
+    personalization_score: int = Field(ge=0,le=100)
     grounded: bool
     names_correct: bool
     claims_supported: bool

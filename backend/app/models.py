@@ -42,6 +42,10 @@ class Evidence(Base):
     fact: Mapped[str] = mapped_column(Text)
     category: Mapped[str] = mapped_column(String(60))
     fetched_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=now)
+    source_kind: Mapped[str] = mapped_column(String(30), default='unknown')
+    confidence: Mapped[str] = mapped_column(String(30), default='unknown')
+    content_hash: Mapped[str] = mapped_column(String(64), default='')
+    verified_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
 
 class Contact(Base):
     __tablename__ = "contacts"
@@ -110,6 +114,7 @@ class Usage(Base):
     service: Mapped[str] = mapped_column(String(80))
     reserved_usd: Mapped[float]
     tokens: Mapped[int] = mapped_column(default=0)
+    details: Mapped[dict] = mapped_column(JSON, default=dict)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=now, index=True)
 
 class Cache(Base):
@@ -212,3 +217,58 @@ class RateBucket(Base):
     key: Mapped[str] = mapped_column(String(64), primary_key=True)
     window_start: Mapped[datetime] = mapped_column(DateTime(timezone=True))
     count: Mapped[int] = mapped_column(default=0)
+
+class Candidate(Base):
+    __tablename__ = 'candidates'
+    id: Mapped[str] = mapped_column(String(36), primary_key=True, default=uid)
+    domain: Mapped[str] = mapped_column(String(255), unique=True)
+    name: Mapped[str] = mapped_column(String(255))
+    website: Mapped[str] = mapped_column(Text)
+    industry: Mapped[str] = mapped_column(String(100), default='Unknown')
+    distance_miles: Mapped[float | None]
+    status: Mapped[str] = mapped_column(String(30), default='candidate')
+    company_id: Mapped[str | None] = mapped_column(ForeignKey('companies.id'))
+    observations: Mapped[list] = mapped_column(JSON, default=list)
+    contexts: Mapped[list] = mapped_column(JSON, default=list)
+    updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=now)
+
+class ContactObservation(Base):
+    __tablename__ = 'contact_observations'
+    id: Mapped[str] = mapped_column(String(36), primary_key=True, default=uid)
+    company_id: Mapped[str] = mapped_column(ForeignKey('companies.id'), index=True)
+    contact_id: Mapped[str] = mapped_column(ForeignKey('contacts.id'), index=True)
+    field: Mapped[str] = mapped_column(String(40))
+    value: Mapped[str] = mapped_column(Text)
+    provider: Mapped[str] = mapped_column(String(30))
+    external_id: Mapped[str] = mapped_column(String(255), default='')
+    source_url: Mapped[str] = mapped_column(Text, default='')
+    confidence: Mapped[str] = mapped_column(String(30), default='unknown')
+    retrieved_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=now)
+    verified_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+
+class StudentFact(Base):
+    __tablename__ = 'student_facts'
+    id: Mapped[str] = mapped_column(String(64), primary_key=True)
+    profile_id: Mapped[int] = mapped_column(ForeignKey('profiles.id'))
+    profile_hash: Mapped[str] = mapped_column(String(64), index=True)
+    field: Mapped[str] = mapped_column(String(40))
+    text: Mapped[str] = mapped_column(Text)
+    verified_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=now)
+
+class Generation(Base):
+    __tablename__ = 'generations'
+    id: Mapped[str] = mapped_column(String(36), primary_key=True, default=uid)
+    company_id: Mapped[str] = mapped_column(ForeignKey('companies.id'), index=True)
+    outreach_id: Mapped[str | None] = mapped_column(ForeignKey('outreach.id'), index=True)
+    job_id: Mapped[str | None] = mapped_column(ForeignKey('jobs.id'))
+    prompt_version: Mapped[str] = mapped_column(String(100))
+    provider: Mapped[str] = mapped_column(String(40))
+    model: Mapped[str] = mapped_column(String(80))
+    settings: Mapped[dict] = mapped_column(JSON, default=dict)
+    input_hash: Mapped[str] = mapped_column(String(64), index=True)
+    evidence_ids: Mapped[list] = mapped_column(JSON, default=list)
+    student_fact_ids: Mapped[list] = mapped_column(JSON, default=list)
+    subject: Mapped[str] = mapped_column(String(200), default='')
+    body: Mapped[str] = mapped_column(Text, default='')
+    review: Mapped[dict] = mapped_column(JSON, default=dict)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=now)

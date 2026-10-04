@@ -28,3 +28,7 @@ Personal operator authentication, encrypted Gmail lifecycle, ingress/rate contro
 ## Module 3 handoff
 
 The final field-notebook design system, four flagship surfaces and consistent secondary views are implemented and browser-tested in canonical source. Shared Pydantic/generated TypeScript+runtime contracts, deduplicated resources and comprehensive frontend lint/browser CI resolve FW-009. See `docs/module3/README.md`, `critique.md` and verification artifacts. The installed runtime and pause remain preserved. Module 4 is ready to consume the stable prospect/evidence/review patterns, but has not started and requires the user's prompt.
+
+## Module 4 handoff
+
+Bounded company candidates/contact provenance, first-class current evidence, transparent research ranking, strict supported-fact/task generation and private UX are implemented in canonical source. Read docs/module4/README.md and its verification before Module5. Continue using the same Job/Operation/ActionAttempt/Usage, generated contracts, resource client and notebook primitives. Delivery/reply/follow-up scheduling and permanent runtime rollout remain Module5/later release work; this phase does not enable them or deploy source. The recurring pause and installed historical records remain authoritative.

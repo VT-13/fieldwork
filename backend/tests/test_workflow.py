@@ -7,6 +7,7 @@ from app.core import profile_fingerprint,Blocked,public_url,distance,reserve,cac
 from app.models import Outreach,Event,Suppression,Contact,Usage,now,Profile,Company,Evidence,Job,State
 from app import mail,pipeline,providers
 from app.schemas import DraftResult,ReviewResult
+from app.intelligence.schemas import GeneratedClaims,Plan
 from app.worker import enqueue
 
 @pytest.mark.parametrize("url",["http://example.com","https://localhost","https://127.0.0.1","https://169.254.169.254/latest","https://internal.local","https://user:pass@example.com","https://example.com:8443"])
@@ -118,16 +119,16 @@ async def test_dsn_matches_message_not_random_bounce(db,ready,live):
 async def test_regeneration_is_bounded_and_bad_evidence_rejected(db,ready,monkeypatch):
     c,contact,row=ready
     db.delete(row)
-    db.add_all([Evidence(company_id=c.id,url=c.website,quote="fact one",fact="fact one",category="product"),Evidence(company_id=c.id,url=c.website,quote="fact two",fact="fact two",category="service")]);db.commit()
+    db.add_all([Evidence(company_id=c.id,url=c.website,quote="Our robotics service",fact="Our robotics service",category="product",source_kind="official",confidence="source-observed",content_hash="fixture"),Evidence(company_id=c.id,url=c.website,quote="Robot logs and data",fact="Robot logs and data",category="service",source_kind="official",confidence="source-observed",content_hash="fixture")]);db.commit()
     calls=[]
     async def fake(db,cid,schema,instruction,data,purpose="extract"):
         calls.append(purpose)
-        if purpose=="generate": return DraftResult(subject="Project",body=" ".join(["hello"]*100),evidence_ids=["invented-id"],strategy="project-match")
+        if purpose=="generate": return GeneratedClaims(plan=Plan(evidence_ids=["invented-id"],student_fact_ids=[data["student_facts"][0]["id"]],proposal_id="robotics",voice="direct"))
         return ReviewResult(personalization_score=95,grounded=True,names_correct=True,claims_supported=True,non_generic=True,non_spammy=True,adds_new_value=True,issues=[])
     monkeypatch.setattr(providers,"llm",fake)
     draft=await pipeline.generate(db,c)
     assert draft.status=="rejected"
-    assert calls==["generate","review","generate","review"]
+    assert calls==["generate","generate"]  # Invalid IDs fail before paying for review.
     assert "Missing or invalid evidence references" in draft.review["issues"]
 
 def test_job_deduplication(db):
@@ -147,7 +148,9 @@ async def test_profile_change_blocks_old_approved_email(db,ready,live):
     assert box.sent==0
 
 async def test_expired_research_cache_skips_all_provider_calls(db,ready,monkeypatch):
-    ready[0].researched_at=now()
+    ready[0].researched_at=now();ready[0].description='Robotics'
+    for i in range(2):db.add(Evidence(company_id=ready[0].id,url=ready[0].website,quote='Sourced robot observation '+str(i),fact='Robot tools',category='product',source_kind='official',confidence='source-observed',content_hash='fixture'))
+    db.commit()
     async def fail(*args,**kwargs): raise AssertionError("Should not rescrape")
     monkeypatch.setattr(providers,"scrape",fail)
     await pipeline.research(db,ready[0])

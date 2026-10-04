@@ -7,6 +7,7 @@ from typing import Any
 from pydantic import BaseModel, ConfigDict, Field
 from .domain.states import MessageState
 from .schemas import ProfileInput
+from .intelligence.schemas import Observation
 
 class CompanyView(BaseModel):
     id: str
@@ -24,6 +25,8 @@ class CompanyView(BaseModel):
     demo: bool
     created_at: datetime
     researched_at: datetime | None
+    evidence_quality: str = 'unknown'
+    contact_confidence: str = 'unknown'
 
 class ContactView(BaseModel):
     id: str
@@ -34,6 +37,8 @@ class ContactView(BaseModel):
     source: str
     validation: str
     validated_at: datetime | None
+    confidence: str = 'unknown'
+    observations: list['ContactObservationView'] = []
 
 class EvidenceView(BaseModel):
     id: str
@@ -43,6 +48,79 @@ class EvidenceView(BaseModel):
     url: str
     category: str
     fetched_at: datetime
+    source_kind: str = 'unknown'
+    confidence: str = 'unknown'
+    content_hash: str = ''
+    verified_at: datetime | None = None
+    fresh: bool = False
+
+class ContactObservationView(BaseModel):
+    id: str
+    company_id: str
+    contact_id: str
+    field: str
+    value: str
+    provider: str
+    external_id: str
+    source_url: str
+    confidence: str
+    retrieved_at: datetime
+    verified_at: datetime | None
+
+class CandidateView(BaseModel):
+    id: str
+    domain: str
+    name: str
+    website: str
+    industry: str
+    distance_miles: float | None
+    status: str
+    company_id: str | None
+    observations: list[Observation]
+    contexts: list[str]
+    updated_at: datetime
+
+class JobView(BaseModel):
+    id: str
+    kind: str
+    payload: dict[str, Any]
+    dedupe_key: str
+    status: str
+    error: str
+    result: dict[str, Any]
+    created_at: datetime
+    started_at: datetime | None
+    finished_at: datetime | None
+
+class CapabilityView(BaseModel):
+    id: str
+    configured: bool
+    available: bool
+    reason: str
+
+class CapabilitiesView(BaseModel):
+    paid_allowed: bool
+    providers: list[CapabilityView]
+    manual_import: bool
+    limits: dict[str, float]
+    worker_note: str
+
+class GenerationView(BaseModel):
+    id: str
+    company_id: str
+    outreach_id: str | None
+    job_id: str | None
+    prompt_version: str
+    provider: str
+    model: str
+    settings: dict[str, Any]
+    input_hash: str
+    evidence_ids: list[str]
+    student_fact_ids: list[str]
+    subject: str
+    body: str
+    review: dict[str, Any]
+    created_at: datetime
 
 class EventView(BaseModel):
     id: str
@@ -218,4 +296,5 @@ class SelfTestView(BaseModel):
     to: str
 
 CONTRACTS = [ProfileInput, CompanyView, CompanyDetail, OutreachView, CampaignView,
-             InboxView, MetricsView, SettingsView, ConnectionView, OutreachEdit, PacketView, EmlView, SelfTestView]
+             InboxView, MetricsView, SettingsView, ConnectionView, OutreachEdit, PacketView, EmlView, SelfTestView,
+             CandidateView,JobView,CapabilitiesView,GenerationView]

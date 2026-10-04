@@ -16,6 +16,35 @@ export type CampaignView = {
   "ongoing_policy": PolicyView;
 };
 
+export type CandidateView = {
+  "id": string;
+  "domain": string;
+  "name": string;
+  "website": string;
+  "industry": string;
+  "distance_miles": number | null;
+  "status": string;
+  "company_id": string | null;
+  "observations": (Observation)[];
+  "contexts": (string)[];
+  "updated_at": string;
+};
+
+export type CapabilitiesView = {
+  "paid_allowed": boolean;
+  "providers": (CapabilityView)[];
+  "manual_import": boolean;
+  "limits": Record<string, number>;
+  "worker_note": string;
+};
+
+export type CapabilityView = {
+  "id": string;
+  "configured": boolean;
+  "available": boolean;
+  "reason": string;
+};
+
 export type CompanyDetail = {
   "id": string;
   "name": string;
@@ -32,6 +61,8 @@ export type CompanyDetail = {
   "demo": boolean;
   "created_at": string;
   "researched_at": string | null;
+  "evidence_quality": string;
+  "contact_confidence": string;
   "contacts": (ContactView)[];
   "evidence": (EvidenceView)[];
   "events": (EventView)[];
@@ -53,12 +84,28 @@ export type CompanyView = {
   "demo": boolean;
   "created_at": string;
   "researched_at": string | null;
+  "evidence_quality": string;
+  "contact_confidence": string;
 };
 
 export type ConnectionView = {
   "status": string;
   "email": string;
   "connected": boolean;
+};
+
+export type ContactObservationView = {
+  "id": string;
+  "company_id": string;
+  "contact_id": string;
+  "field": string;
+  "value": string;
+  "provider": string;
+  "external_id": string;
+  "source_url": string;
+  "confidence": string;
+  "retrieved_at": string;
+  "verified_at": string | null;
 };
 
 export type ContactView = {
@@ -70,6 +117,8 @@ export type ContactView = {
   "source": string;
   "validation": string;
   "validated_at": string | null;
+  "confidence": string;
+  "observations": (ContactObservationView)[];
 };
 
 export type DetectorView = {
@@ -102,6 +151,29 @@ export type EvidenceView = {
   "url": string;
   "category": string;
   "fetched_at": string;
+  "source_kind": string;
+  "confidence": string;
+  "content_hash": string;
+  "verified_at": string | null;
+  "fresh": boolean;
+};
+
+export type GenerationView = {
+  "id": string;
+  "company_id": string;
+  "outreach_id": string | null;
+  "job_id": string | null;
+  "prompt_version": string;
+  "provider": string;
+  "model": string;
+  "settings": Record<string, unknown>;
+  "input_hash": string;
+  "evidence_ids": (string)[];
+  "student_fact_ids": (string)[];
+  "subject": string;
+  "body": string;
+  "review": Record<string, unknown>;
+  "created_at": string;
 };
 
 export type InboxView = {
@@ -109,6 +181,19 @@ export type InboxView = {
   "needs_attention": number;
   "responses": (ReplyView)[];
   "sync": SyncView;
+};
+
+export type JobView = {
+  "id": string;
+  "kind": string;
+  "payload": Record<string, unknown>;
+  "dedupe_key": string;
+  "status": string;
+  "error": string;
+  "result": Record<string, unknown>;
+  "created_at": string;
+  "started_at": string | null;
+  "finished_at": string | null;
 };
 
 export type MailboxDraftView = {
@@ -130,6 +215,17 @@ export type MetricsView = {
   "conversion_rate": number;
   "sent_today": number;
   "learning": (Record<string, unknown>)[];
+};
+
+export type Observation = {
+  "field": string;
+  "value": string;
+  "provider": string;
+  "external_id": string;
+  "source_url": string;
+  "retrieved_at": string;
+  "verified_at": string | null;
+  "confidence": "provider-confirmed" | "source-observed" | "inferred" | "unknown" | "stale" | "conflicting";
 };
 
 export type OutreachEdit = {

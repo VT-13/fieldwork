@@ -13,3 +13,7 @@ Use search → targeted read → decision → patch → verification. Keep provi
 ## Module 3 handoff
 
 Use the final product-design reference, frontend-quality skill and `docs/module3/README.md`. Four flagship views, generated/validated API contracts and lint/typecheck/build/browser gates are implemented. The installed runtime remains intentionally undeployed and recurring outreach paused. Module 4 needs a separate user prompt; it should build against these existing UI/policy/security patterns rather than start another audit or design system.
+
+## Module 4 handoff
+
+Module4 is implemented and verified in canonical source only. Read docs/module4/README.md and verification.json for bounded candidate/research/evidence/ranking/generation ownership and limits. Keep the shared job/operation/usage/policy boundaries, deliberate candidate acceptance, exact evidence/profile references, review gate and immutable history. The installed personal runtime, receipts and recurring pause are unchanged. Module5 requires its own user prompt; Module4 does not authorize deployment, real provider calls, worker activation or mail.
