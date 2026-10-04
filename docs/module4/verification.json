@@ -171,5 +171,6 @@
   "remaining_applicable_p0_p1": [
     "FW-005 permanent runtime/scheduling/delivery integration belongs to Module5; no open Module4 intelligence P0/P1"
   ],
-  "module5_readiness": "READY; outputs remain review-gated and feed the existing guarded boundary; Module5 not started"
+  "module5_readiness": "READY; outputs remain review-gated and feed the existing guarded boundary; Module5 not started",
+  "artifact_note": "Human-readable logs and generated documentation SQL have trailing whitespace normalized; reported commands/results are unchanged."
 }
