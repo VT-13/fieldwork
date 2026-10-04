@@ -1,5 +1,9 @@
 # Fieldwork deployment
 
+> PRODUCTION CUTOVER PAUSED: Package 6E passed. Package 6F is intentionally paused because the current Railway plan cannot provision the full production architecture. Before public/always-on production deployment, upgrade Railway and resume Package 6F from docs/PRODUCTION_CUTOVER_PAUSED.md.
+
+See [pause checkpoint](docs/PRODUCTION_CUTOVER_PAUSED.md).
+
 The canonical personal release uses PostgreSQL17, a private FastAPI process, a production Next.js server and one dedicated worker with its integrated scheduler. Personal production deployment has **not** occurred; Package6E verifies the release **READY for a separately authorized production cutover**. Isolated Railway staging is now provisioned.
 
 Follow [the deployment guide](docs/DEPLOYMENT.md), [operational runbook](docs/RUNBOOK.md) and [release checklist](docs/RELEASE_CHECKLIST.md). FW-026 is resolved by Package6A and the runtime-container gate passes Package6B. Package6C hosted HTTPS/private staging and Package6D scoped live Google gates pass; see docs/package6e/verification.json for current final verification. Source/template availability is not an installed desktop service or an always-on hosted deployment.

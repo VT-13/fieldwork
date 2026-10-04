@@ -1,5 +1,9 @@
 # Fieldwork operations — paused personal release candidate
 
+> PRODUCTION CUTOVER PAUSED: Package 6E passed. Package 6F is intentionally paused because the current Railway plan cannot provision the full production architecture. Before public/always-on production deployment, upgrade Railway and resume Package 6F from docs/PRODUCTION_CUTOVER_PAUSED.md.
+
+See [pause checkpoint](PRODUCTION_CUTOVER_PAUSED.md).
+
 Release verification decision: **READY for a separate production cutover package** (Package6E). Read RELEASE_CHECKLIST.md and RELEASE_CANDIDATE.md before any cutover. These instructions do not authorize deployment, provider access or communication. Keep the installed system unchanged and paused until a separately authorized rollout passes every gate.
 
 ## Processes and signals
