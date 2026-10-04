@@ -421,5 +421,14 @@
     "hosted_checks_executed": true,
     "production_mutated": false,
     "package6d_readiness": "READY"
+  },
+  "current_live_google_gate": "BLOCKED",
+  "package6d": {
+    "result": "BLOCKED",
+    "verification": "docs/package6d/verification.json",
+    "reason": "Awaiting explicit staging test-account identity/authorization",
+    "live_provider_checks_executed": false,
+    "production_mutated": false,
+    "package6e_readiness": "NOT READY"
   }
 }

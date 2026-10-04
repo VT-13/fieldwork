@@ -1,0 +1,60 @@
+{
+  "package": "FIELDWORK 6D",
+  "live_google_gate": "BLOCKED",
+  "timestamp_utc": "2026-10-04T06:25:39.588867+00:00",
+  "environment": "Railway fieldwork-staging/staging",
+  "staging_url": "https://fieldwork-staging.up.railway.app",
+  "callback_url": "https://fieldwork-staging.up.railway.app/api/integrations/gmail/callback",
+  "prerequisite_hosted_tls": "PASS",
+  "blocker": "No explicitly designated staging test mailbox identity supplied. Existing Cloud project/client belongs to historical production outreach and was not reused or changed.",
+  "required_input": "Email address of the authorized staging test mailbox and a separately authorized test reply sender; no passwords/tokens.",
+  "preflight": {
+    "services_online": true,
+    "source_manifest_verified": true,
+    "oauth_configured": false,
+    "draft_compose_enabled": false,
+    "dry_run": true,
+    "manual_mode": true,
+    "polling_enabled": false,
+    "auto_approve": false,
+    "production_mode": true,
+    "existing_cloud_project_inspected_read_only": true
+  },
+  "live_checks": {
+    "oauth_consent": "NOT RUN",
+    "token_exchange": "NOT RUN",
+    "identity": "NOT RUN",
+    "token_refresh": "NOT RUN",
+    "draft": "NOT RUN",
+    "own_account_send": "NOT RUN",
+    "rfc_message_id": "NOT RUN",
+    "thread_id": "NOT RUN",
+    "sent_reconciliation": "NOT RUN",
+    "controlled_reply": "NOT RUN",
+    "history_checkpoint": "NOT RUN",
+    "sync_restart": "NOT RUN",
+    "disconnect_reconnect": "NOT RUN"
+  },
+  "research_findings": {
+    "compose_scope_required_for_draft": true,
+    "self_test_recipient_own_account_only": true,
+    "self_test_uses_saved_desk_operation_not_outreach": true,
+    "scanner_ignores_own_sender": true,
+    "reply_test_requires_separately_authorized_sender": true,
+    "bounded_initial_backfill_can_touch_recent_mail_metadata": "Use designated test mailbox or explicitly scoped current-history boundary before controlled tests; do not scan unrelated personal contents."
+  },
+  "mutations": {
+    "staging_oauth_changed": false,
+    "google_project_created": false,
+    "google_client_created": false,
+    "production_changed": false,
+    "company_emails_sent": 0,
+    "self_test_emails_sent": 0,
+    "drafts_created": 0,
+    "paid_provider_calls": 0,
+    "production_recurring_pause_changed": false
+  },
+  "production_preservation_unchanged": true,
+  "code_changes": false,
+  "package6e_readiness": "NOT READY"
+}

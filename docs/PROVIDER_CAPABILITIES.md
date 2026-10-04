@@ -1,4 +1,4 @@
-# Actual communication capabilities — canonical schema005 source, undeployed
+# Actual communication capabilities — canonical schema006, paused staging
 
 SUPPORTED means implemented and regression-tested with fakes; it does not imply live registration, mailbox delivery or hosted readiness.
 
@@ -19,3 +19,7 @@ Gmail capabilities use the authenticated connected identity, not a plaintext tok
 API behavior is based on Google's primary [history synchronization](https://developers.google.com/workspace/gmail/api/guides/sync), [message search](https://developers.google.com/workspace/gmail/api/reference/rest/v1/users.messages/list) and [threading requirements](https://developers.google.com/workspace/gmail/api/guides/threads). Live OAuth, actual API plans, throttling and Gmail's retention of a supplied RFC identifier still require release verification. Bounded backfill intentionally does not claim full historical-mailbox coverage.
 
 Module6 proved the full authenticated production-build/actual-worker workflow with a fake transport on PostgreSQL17.11, including self-tests, thread continuity, reply cancellation, exact Sent reconciliation, shared quota and rollover. Direct simulated401/403/429/500/503 responses map to safe failures;403 is conservatively treated as authorization rejection. The native soak was181 seconds, not proof of long-term hosting or delivery. **OAuth, own-account draft/send, real Google RFC retention/thread behavior and live history remain NOT VERIFIED LIVE.** Existing installed plaintext authorization was deliberately not reused or changed. Container/platform and lossless installed-data migration gates remain open. No deliverability/inbox-placement claim follows from these tests.
+
+## Package6D live-validation preflight
+
+Hosted Package6C passes, but all Gmail live statuses above remain NOT VERIFIED LIVE. Package6D is awaiting explicit staging test-account designation; no OAuth/client/credential/mail operation occurred. See package6d/verification.json. Existing production OAuth was neither reused nor changed. Draft compose permission and a separate controlled reply identity are needed to test those capabilities honestly; self-tests themselves do not create Outreach records. Outlook status is unchanged.

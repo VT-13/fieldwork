@@ -1,0 +1,9 @@
+# Package6D — awaiting test-account authorization
+
+Package6C PASS is confirmed. All four Railway staging services are online; source manifest passes. API/worker remain production mode with dry-run/manual safeguards, polling and auto-approval off, recurring paused, OAuth/real provider credentials unconfigured. Read-only installed source/schema/counts/credentials/services/pause comparison is unchanged.
+
+Google Cloud's existing historical internship outreach project and one web client were inspected read-only. Neither was modified/reused, and no new client/project/grant/token was created. No Gmail mailbox content was read. The operator must explicitly designate the staging test mailbox before any live consent, draft, send, sync or disconnect. Do not paste passwords/tokens into chat.
+
+Canonical code review confirms explicit compose scope is needed for drafts. Own-account self-test sends one saved desk version through the ledger, but creates no Outreach record; scanner intentionally ignores the connected sender. Controlled reply correlation therefore needs a separately authorized test reply identity and isolated synthetic test linkage, without weakening production send/reply guards. A same-account self-reply cannot be honestly counted as a detected external reply. For a mailbox with unrelated mail, initialize an explicitly authorized current history boundary before the controlled event; do not run the default recent backfill indiscriminately.
+
+Next: designate test mailbox/reply sender, configure a separate staging Google web client with exact hosted callback, then obtain real Google consent at the action point. Keep secrets external/server-side. Aim for one draft, one own-account send and one controlled reply; stop on uncertainty and never resend. No integration defect/code change was assumed from source review. Real Google tests and Package6E have not begun. verification.json contains sanitized preflight status only.
