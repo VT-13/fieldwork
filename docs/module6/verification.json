@@ -1,0 +1,396 @@
+{
+  "release_decision": "NOT READY",
+  "release_candidate_ref": "fieldwork-module6-rc1",
+  "application_commit": "b3b23f6e9336c32286ff92a6af6bd6ad5202a666",
+  "baseline_commit": "cc43165f19db95d5f64d95ba1237490afb0019c5",
+  "timestamp_utc": "2026-10-04T02:53:47.864019+00:00",
+  "schema": "005",
+  "migration_head": "005",
+  "configuration_version": "personal-v2",
+  "environment": {
+    "native_python": "Python 3.13.3",
+    "node": "v24.18.0",
+    "npm": "11.16.0",
+    "postgres": "postgres (PostgreSQL) 17.11",
+    "pg_source_checksum_match": true,
+    "docker_available": false,
+    "container_verified": false,
+    "native_production_dependencies_only": true,
+    "frontend_build_id": "3W_xTGOAvedGHON6GFX9O",
+    "frontend_secret_matches": [],
+    "private_inputs_never_copied_to_build": true,
+    "hosted_tls_verified": false,
+    "local_tls_scope": "Ephemeral isolated CA, explicitly trusted client, production Next proxy/API; no system trust change",
+    "architecture": "one API, one Next server, dedicated deterministic worker with integrated scheduler; external PostgreSQL"
+  },
+  "backend": {
+    "passed": 250,
+    "skipped": 0,
+    "deprecation_warnings": 2,
+    "checks": {
+      "contract-check": {
+        "command": [
+          "/private/tmp/fieldwork-module6/venv/bin/python",
+          "scripts/frontend_contracts.py",
+          "--check"
+        ],
+        "exit_code": 0,
+        "seconds": 0.21
+      },
+      "fixture-check": {
+        "command": [
+          "/private/tmp/fieldwork-module6/venv/bin/python",
+          "scripts/module3_fixture.py",
+          "--check"
+        ],
+        "exit_code": 0,
+        "seconds": 0.16
+      },
+      "backend-tests": {
+        "command": [
+          "/private/tmp/fieldwork-module6/venv/bin/python",
+          "-m",
+          "pytest",
+          "-q",
+          "-ra"
+        ],
+        "exit_code": 0,
+        "seconds": 14.45
+      },
+      "backend-lint": {
+        "command": [
+          "/private/tmp/fieldwork-module6/venv/bin/python",
+          "-m",
+          "ruff",
+          "check",
+          "app",
+          "scripts",
+          "tests"
+        ],
+        "exit_code": 0,
+        "seconds": 0.1
+      }
+    }
+  },
+  "frontend": {
+    "clean_install": true,
+    "lint": true,
+    "typecheck": true,
+    "format": true,
+    "production_build": true,
+    "build_id": "3W_xTGOAvedGHON6GFX9O",
+    "browser_counts": {
+      "chromium": 20,
+      "webkit": 20,
+      "firefox": 20
+    },
+    "stats": {
+      "startTime": "2026-10-04T02:29:27.950Z",
+      "duration": 94046.578,
+      "expected": 60,
+      "skipped": 0,
+      "unexpected": 0,
+      "flaky": 0
+    },
+    "axe_scope": "Four flagship screens at1728/1280/768/390; automated axe+keyboard+forms; not WCAG/physical-Safari certification"
+  },
+  "dependencies": {
+    "python_known_vulnerabilities": 0,
+    "node_production_known_vulnerabilities": 0,
+    "node_all_reported": {
+      "info": 0,
+      "low": 0,
+      "moderate": 0,
+      "high": 5,
+      "critical": 0,
+      "total": 5
+    },
+    "classification": "Five high dev-tool entries represent existing braces lint chain, repository-owned patterns; P2/no runtime reachability",
+    "locks_sha256": {
+      "backend/requirements.lock.txt": "2100fda8383d1d02feeaebe5bac849748423916cb6879d77c0607c53972def25",
+      "backend/requirements.runtime.lock.txt": "34706cfbd999de1f757bcc7c73584759c4a63e234456a269dbd4333c532955df",
+      "frontend/package-lock.json": "eeda194be26a9c8968adc4ad914cbc1eac4f387c9b41596fe249792a490ce02b"
+    }
+  },
+  "postgresql": {
+    "version": "postgres (PostgreSQL) 17.11",
+    "fresh_forward_schema_constraints_indexes_concurrency": true,
+    "isolated_target": true,
+    "source_checksum_verified": true,
+    "server_tls_tested": false
+  },
+  "migration": {
+    "result": "passed",
+    "source_revision": "001",
+    "target_revision": "005",
+    "transport": "typed frozen-schema SQLite -> PG17 transaction",
+    "old_record_counts": {
+      "cache": 0,
+      "companies": 1,
+      "jobs": 1,
+      "profiles": 1,
+      "state": 3,
+      "suppressions": 1,
+      "contacts": 1,
+      "events": 1,
+      "evidence": 0,
+      "usage": 0,
+      "outreach": 2
+    },
+    "old_backup_private": true,
+    "pg17_backup_private": true,
+    "restore_old_records_equal": true,
+    "integration_metadata_restored": true,
+    "unknown_preserved": true,
+    "repeat_refused": true,
+    "source_unchanged": true
+  },
+  "installed_preflight": {
+    "result": "BLOCKED",
+    "installed_revision": "001",
+    "state_keys_exceeding_pg_limit": 1,
+    "private_keys_or_values_exported": false,
+    "source_mutated": false,
+    "reason": "SQLite accepts State key longer than varchar(100); exact-preservation PG transfer refuses before writes",
+    "required": "A versioned, lossless identifier/alias migration must be designed and rehearsed; do not truncate, rename blindly, delete history, or rewrite frozen schema005"
+  },
+  "e2e": {
+    "scope": "Real TLS HTTP -> production Next proxy -> authenticated API -> actual worker process -> disposable PG17; fake provider seams only",
+    "production_mutations": false,
+    "scenarios": {
+      "initial_followup_reply": {
+        "passed": true,
+        "transmissions": 2,
+        "operator_review_before_each_send": true,
+        "same_subject_thread": true,
+        "replay_no_duplicate": true,
+        "reply_linkage_and_cancellation": true
+      },
+      "forced_crash_uncertain_reconciliation": {
+        "passed": true,
+        "no_evidence_held": true,
+        "exact_evidence_sent": true,
+        "no_resend": true,
+        "transmissions": 1
+      },
+      "shared_daily_quota": {
+        "passed": true,
+        "cap": 4,
+        "types": [
+          "followup",
+          "uncertain_initial",
+          "self_test",
+          "initial"
+        ],
+        "overflow_calls": 0,
+        "unknown_counted": true
+      },
+      "timezone_rollover_no_catchup": {
+        "passed": true,
+        "timezone": "America/Los_Angeles",
+        "new_day_attempts": 0
+      },
+      "due_followup_reply_race": {
+        "passed": true,
+        "reserved_transmissions": 0,
+        "pending_message_cancelled": true
+      }
+    },
+    "soak": {
+      "seconds": 181.3,
+      "samples": 60,
+      "rss_first_kib": 43376,
+      "rss_last_kib": 39664,
+      "rss_max_kib": 51760,
+      "max_cpu_percent": 6.9,
+      "job_growth": 3,
+      "extra_transmissions": 0,
+      "scope": "Bounded native fake-provider soak, not long-term hosted reliability"
+    },
+    "result": "passed"
+  },
+  "worker_lifecycle": {
+    "actual_process": true,
+    "sigterm_sigint_restart_duplicate_leader_stale_lease": "Full test_runtime.py on PG17",
+    "forced_crash_no_resend": true,
+    "soak": {
+      "seconds": 181.3,
+      "samples": 60,
+      "rss_first_kib": 43376,
+      "rss_last_kib": 39664,
+      "rss_max_kib": 51760,
+      "max_cpu_percent": 6.9,
+      "job_growth": 3,
+      "extra_transmissions": 0,
+      "scope": "Bounded native fake-provider soak, not long-term hosted reliability"
+    },
+    "long_term_host_reliability_verified": false
+  },
+  "gmail": {
+    "status": "NOT VERIFIED LIVE",
+    "real_oauth_mutated": false,
+    "own_account_provider_send_draft_verified": false,
+    "rfc_sent_thread_history_live_verified": false,
+    "fake_error_codes": [
+      401,
+      403,
+      429,
+      500,
+      503
+    ],
+    "provider_accepted_not_inbox_placement": true
+  },
+  "security": {
+    "applicable_unresolved_p0": [],
+    "applicable_unresolved_p1": [
+      "FW-026"
+    ],
+    "multi_user_scope": "Excluded personal-only; no public signup",
+    "startup_schema_config_fail_closed": true,
+    "request_operation_logs_allowlisted": true,
+    "private_traceback_handler_test": true,
+    "privacy_rotation_security_suite_passed": true
+  },
+  "performance": {
+    "backend": {
+      "outreach500": {
+        "samples_ms": [
+          80.5,
+          73.55,
+          69.84,
+          70.67,
+          69.0
+        ],
+        "query_counts": [
+          501,
+          501,
+          501,
+          501,
+          501
+        ],
+        "median_ms": 70.67
+      },
+      "private_runtime": {
+        "samples_ms": [
+          14.5,
+          6.65,
+          6.25,
+          5.55,
+          8.06
+        ],
+        "query_counts": [
+          18,
+          18,
+          18,
+          18,
+          18
+        ],
+        "median_ms": 6.65
+      }
+    },
+    "frontend": {
+      "scope": "Production Next build, 500 fictional companies, intercepted API, local unthrottled Chromium; not hosted Lighthouse",
+      "samples": [
+        {
+          "ready_ms": 342.84,
+          "dom_content_loaded_ms": 52.2,
+          "long_tasks_ms": [],
+          "cls": 0.0020493120829264324,
+          "js_encoded_bytes": 166914,
+          "api_reads": {
+            "companies": 1,
+            "profile": 1,
+            "campaign": 1,
+            "outreach": 1,
+            "settings": 1
+          }
+        },
+        {
+          "ready_ms": 149.16,
+          "dom_content_loaded_ms": 43.2,
+          "long_tasks_ms": [],
+          "cls": 0.002049345906575521,
+          "js_encoded_bytes": 166914,
+          "api_reads": {
+            "companies": 1,
+            "profile": 1,
+            "campaign": 1,
+            "outreach": 1,
+            "settings": 1
+          }
+        },
+        {
+          "ready_ms": 135.34,
+          "dom_content_loaded_ms": 33.3,
+          "long_tasks_ms": [],
+          "cls": 0.002049345906575521,
+          "js_encoded_bytes": 166914,
+          "api_reads": {
+            "companies": 1,
+            "profile": 1,
+            "campaign": 1,
+            "outreach": 1,
+            "settings": 1
+          }
+        }
+      ]
+    },
+    "lighthouse_hosted_score": "NOT RUN; native PerformanceObserver equivalent scope only"
+  },
+  "runtime_gates": {
+    "native_production_build_actual_worker": true,
+    "docker_images_built": false,
+    "docker_runtime_verified": false,
+    "node22_linux_container_tested": false,
+    "hosted_trusted_tls_verified": false,
+    "local_explicit_test_ca_tls_passed": true,
+    "ci_remote_executed": false
+  },
+  "production_mutations": {
+    "deployed": false,
+    "live_db_migrated": false,
+    "old_sender_changed": false,
+    "installed_worker_activated": false,
+    "real_company_outreach_sent": false,
+    "recurring_pause_changed": false,
+    "real_oauth_changed": false,
+    "paid_provider_calls": false,
+    "services_purchased": false
+  },
+  "preservation": {
+    "unchanged": true,
+    "schema": "001",
+    "counts": {
+      "companies": 46,
+      "outreach": 46,
+      "events": 6
+    },
+    "extended_counts": {
+      "contacts": 46,
+      "suppressions": 2,
+      "jobs": 1
+    },
+    "recurring_enabled": false
+  },
+  "remaining_conditions": [
+    {
+      "id": "FW-026",
+      "severity": "P1",
+      "condition": "Versioned lossless migration/rehearsal for installed over-width State identifier; current transfer refuses before writes"
+    },
+    {
+      "id": "runtime-container",
+      "condition": "Execute declared Python3.13/Node22/Linux/PG17 images and separate worker/health/env/nonroot/persistence in Docker-enabled staging"
+    },
+    {
+      "id": "hosted-tls",
+      "condition": "Verify intended private hosted trusted certificate, ingress/network/host/header/cookie/callback behavior"
+    },
+    {
+      "id": "live-google",
+      "condition": "Separately authorized encrypted test-account OAuth and own-account RFC/Sent/thread/history/draft/self-test validation"
+    }
+  ],
+  "cutover_authorized": false,
+  "cutover_ready": false
+}

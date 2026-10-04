@@ -20,4 +20,3 @@ syncing data to disk ... ok
 Success. You can now start the database server using:
 
     /private/tmp/fieldwork-module6/pg17/install/bin/pg_ctl -D /private/tmp/fieldwork-module6/pg17/data-utf8 -l logfile start
-
