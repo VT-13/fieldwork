@@ -1,5 +1,5 @@
 {
-  "release_decision": "NOT READY",
+  "release_decision": "READY",
   "release_candidate_ref": "fieldwork-module6-rc1",
   "application_commit": "b3b23f6e9336c32286ff92a6af6bd6ad5202a666",
   "baseline_commit": "cc43165f19db95d5f64d95ba1237490afb0019c5",
@@ -376,12 +376,12 @@
   },
   "remaining_conditions": [
     {
-      "id": "package6e",
-      "condition": "Separately requested final release verification; production cutover remains unauthorized and unperformed"
+      "id": "separate-production-cutover",
+      "condition": "Explicit separate authorization and concrete production environment/target/origin/secrets; verification READY does not perform cutover"
     }
   ],
   "cutover_authorized": false,
-  "cutover_ready": false,
+  "cutover_ready": true,
   "source_verification": {
     "command": "python scripts/source_manifest.py verify; python scripts/source_manifest.py bundle --output <private test bundle>; extract and verify same manifest",
     "passed": true,
@@ -430,12 +430,23 @@
     "live_provider_checks_executed": true,
     "production_mutated": false,
     "package6e_readiness": "READY",
-    "package6e_started": false
+    "package6e_started": true
   },
   "historical_remaining_conditions": [
     {
       "id": "live-google",
       "condition": "Separately authorized encrypted test-account OAuth and own-account RFC/Sent/thread/history/draft/self-test validation"
     }
-  ]
+  ],
+  "current_final_release_gate": "PASS",
+  "package6e": {
+    "result": "READY",
+    "verification": "docs/package6e/verification.json",
+    "verified_application_commit": "b02457c",
+    "backend_passed": 291,
+    "failed": 0,
+    "skipped": 0,
+    "production_mutated": false,
+    "production_cutover_performed": false
+  }
 }

@@ -58,3 +58,7 @@ Runtime reads expose safe job/status timestamps, not ownership tokens or provide
 ## Package6C hosted verification
 
 Actual Railway staging passes trusted TLS/Host/forwarding/session/expiry/logout/Origin/CORS/public-header/private-network checks and Chromium/WebKit/Firefox flows on schema006. Public ingress policies match the API. No CSP or session-IP binding is claimed. Logs/assets show no staging secret matches; production and real providers remain untouched. See docs/package6c/verification.json. Live Google/cutover remain separate gates.
+
+## Package6D/6E superseding live security evidence
+
+Dedicated Railway staging passes actual OAuth/state/PKCE/identity/encryption/natural refresh/disconnect/reconnect and final hosted session/auth/origin/private-network/log/asset/source checks. No personal production grant was reused or changed. The optional expiring exact-packet A/B validation scope is staging-only; production cutover configuration must leave LIVE_GMAIL_VALIDATION_ENABLED=false. Company confirmation/reconciliation accepts a provider RFC alias only through its exact durable accepted message/thread receipt and matching authenticated Sent envelope/body/time; original reservation is retained and uncertain sends never gain retry permission. See package6e/verification.json. Historical Module2/5 fake-only statements remain descriptions of their original tests.

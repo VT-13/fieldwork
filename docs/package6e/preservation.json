@@ -1,0 +1,10 @@
+{
+  "read_only_comparison": "PASS",
+  "installed_personal_state_unchanged": true,
+  "live_db_migrated": false,
+  "production_worker_activated": false,
+  "old_sender_changed": false,
+  "production_oauth_changed": false,
+  "recurring_pause_changed": false,
+  "real_company_mail": 0
+}

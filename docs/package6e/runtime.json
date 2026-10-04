@@ -1,0 +1,23 @@
+{
+  "python": "3.13.16",
+  "postgresql": "17.11 (Debian 17.11-1.pgdg13+2)",
+  "schema": "006",
+  "heartbeat_current": true,
+  "duplicate_leader_rejected": true,
+  "recurring_paused": true,
+  "queued_communication": 0,
+  "unknown_retry_activity": 0,
+  "company_transmissions": 0,
+  "test_transmissions": 1,
+  "test_reply_events": 1,
+  "additional_transmissions": 0,
+  "gmail_identity_matches": true,
+  "gmail_authenticated": true,
+  "history_checkpoint_valid": true,
+  "new_shared_normalization_read_only_live_probe": "PASS",
+  "deployed_backend_source_matches": true,
+  "frontend_node": "22.23.3",
+  "worker_health": "PASS",
+  "scheduler_health": "PASS",
+  "gmail_sync_stale": false
+}

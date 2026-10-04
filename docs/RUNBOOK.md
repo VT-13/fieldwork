@@ -1,6 +1,6 @@
 # Fieldwork operations — paused personal release candidate
 
-Release decision: **NOT READY**. Read RELEASE_CHECKLIST.md and RELEASE_CANDIDATE.md before any cutover. These instructions do not authorize deployment, provider access or communication. Keep the installed system unchanged and paused until a separately authorized rollout passes every gate.
+Release verification decision: **READY for a separate production cutover package** (Package6E). Read RELEASE_CHECKLIST.md and RELEASE_CANDIDATE.md before any cutover. These instructions do not authorize deployment, provider access or communication. Keep the installed system unchanged and paused until a separately authorized rollout passes every gate.
 
 ## Processes and signals
 
@@ -71,3 +71,9 @@ Isolated staging provisioning is READY; see [setup evidence](railway-staging/REA
 ## Package6C hosted handoff
 
 Railway hosted TLS gate PASS; see package6c/README.md and verification.json for actual commands and limits. Keep `fieldwork-staging/staging` isolated with no live credentials, DRY_RUN/manual on, policy paused/stopped and paid permission false. Worker restart recovered heartbeats with zero transmissions and durable synthetic records. Public ingress now includes one-year HSTS and restricted Permissions-Policy. Detailed runtime remains authenticated; `/api/health` is minimal. Exact future callback: https://fieldwork-staging.up.railway.app/api/integrations/gmail/callback. Do not start Google authorization or production activation from this handoff.
+
+## Current Package6E handoff
+
+Packages6A–6D and final6E verification pass; historical blocked/no-provider paragraphs above describe prior checkpoints and are superseded by package6e/verification.json. Current staging is schema006, PG17.11, Python3.13/Node22, Gmail connected and recurring paused. No personal deployment, migration, service/OAuth/sender/pause change or company communication occurred. docs/DEPLOYMENT.md's separate production cutover prerequisites identify the target/configuration/hostname/OAuth/private backup/transfer/worker/health/rollback/smoke sequence. All target values and owner authorizations must be recorded before any production write. READY is permission to assess a separately requested cutover, not to perform it or activate communication.
+
+For accepted Gmail messages, canonical confirmation now verifies exact API ID/thread and full Sent envelope/body/time rather than only its label. A provider RFC rewrite preserves reserved_message_id in the receipt and stores actual message_id for original/follow-up threading. Unknown attempts without accepted receipts stay held under strict reserved-ID matching. Never update or reset identifiers manually to force reconciliation; use the canonical read-only path.

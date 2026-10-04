@@ -1,6 +1,6 @@
-# Personal release checklist — NOT READY
+# Personal release checklist — READY for separate cutover
 
-Checked entries have executed evidence. Unchecked gates block cutover or need separately authorized provider/production action.
+Checked entries have executed evidence. Historical entries retain their original scope. Production activation below remains a separate authorization, not an unfinished verification gate.
 
 - [x] **Source:** baseline cc43165 manifest verified from an isolated committed archive (`module6/source-baseline.json`); Module6 changes classified in BUG_AUDIT.md; final committed manifest/bundle gate recorded in verification.json.
 - [x] **Dependencies:** clean backend/test and separate runtime-only installs, pip check, clean frontend npm ci (`module6/*clean-install.log`, runtime-pip-check.log).
@@ -43,3 +43,13 @@ The previous access blocker is resolved and actual hosted gate PASS. Package6D i
 ## Package6D superseding evidence
 
 Live Google gate PASS on the existing dedicated staging client and designated A/B identities.167 targeted regressions pass, privacy/source/preservation checks pass, and all four staging services are online on schema006 with Gmail connected and recurring paused. Live synthetic communication totals remain one unsent draft, one initial self-test and one owner reply, with no duplicate transmissions/events or company sends. Package6E is READY for a separate request and remains unstarted; production activation/cutover remains unchecked.
+
+## Package6E final superseding evidence
+
+Release READY for personal-first/single operator, with no P0/P1. See [current evidence](package6e/README.md) and [verification](package6e/verification.json). Final full backend291 passed/0 failed/0 skipped;210 affected plus9 new RFC cases; contracts/fixtures/Ruff and clean frontend install/lint/type/format/build pass. Real hosted Chromium representative routes, actual staging source/schema006/health, current Gmail history/read sync, secret/config/security and zero-runtime-vulnerability audits pass. Five existing dev lint advisories remain P2. Prior6A–6D migration/container/hosted/live-provider evidence is retained; historical unverified statements above are superseded only within each package's actual scope.
+
+- [x] Final release verification and documentation consistency.
+- [x] Separate cutover procedure identifies production target/origin/secrets/OAuth/backup/migration/paused worker/smoke/rollback; no action performed.
+- [ ] Production cutover/activation: requires separate explicit package; READY does not authorize it.
+
+Recurring outreach stays PAUSED; company mail during6E0; installed production DB/services/OAuth/sender/pause unchanged.

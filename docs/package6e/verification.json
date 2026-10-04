@@ -1,0 +1,142 @@
+{
+  "release_decision": "READY",
+  "release_scope": "personal-first / single operator",
+  "timestamp_utc": "2026-10-04T17:10:25.230895+00:00",
+  "repository": "VT-13/fieldwork",
+  "branch": "main",
+  "baseline_commit": "66f4fbb84b7664b4b7fb59d9484b4b542d8a2043",
+  "verified_application_commit": "b02457c",
+  "schema_head": "006",
+  "staging_schema": "006",
+  "staging": "Railway fieldwork-staging/staging",
+  "public_origin": "https://fieldwork-staging.up.railway.app",
+  "backend": {
+    "passed": 291,
+    "failed": 0,
+    "skipped": 0,
+    "baseline_passed": 282,
+    "affected_passed": 210,
+    "new_rfc_tests": 9,
+    "lint": "PASS",
+    "contracts": "PASS",
+    "fixtures": "PASS",
+    "separate_typechecker_or_formatter": "not configured",
+    "upstream_deprecation_warnings": 2,
+    "checks": "backend-checks.json"
+  },
+  "frontend": {
+    "clean_install": "PASS",
+    "lint": "PASS",
+    "typecheck": "PASS",
+    "format": "PASS",
+    "production_build": "PASS",
+    "local_node": "24.18.0",
+    "deployed_node": "22.23.3",
+    "production_node22_build_evidence": "../package6b/verification.json; unchanged frontend source through 6E",
+    "checks": "frontend-checks.json"
+  },
+  "hosted_smoke": {
+    "result": "PASS",
+    "browser": "Chromium",
+    "real_hosted_api": true,
+    "tls_verification": true,
+    "mocked_api": false,
+    "profile_or_communication_mutation": false,
+    "evidence": "browser-chromium.json"
+  },
+  "runtime": {
+    "python": "3.13.16",
+    "postgresql": "17.11 (Debian 17.11-1.pgdg13+2)",
+    "schema": "006",
+    "heartbeat_current": true,
+    "duplicate_leader_rejected": true,
+    "recurring_paused": true,
+    "queued_communication": 0,
+    "unknown_retry_activity": 0,
+    "company_transmissions": 0,
+    "test_transmissions": 1,
+    "test_reply_events": 1,
+    "additional_transmissions": 0,
+    "gmail_identity_matches": true,
+    "gmail_authenticated": true,
+    "history_checkpoint_valid": true,
+    "new_shared_normalization_read_only_live_probe": "PASS",
+    "deployed_backend_source_matches": true,
+    "frontend_node": "22.23.3",
+    "worker_health": "PASS",
+    "scheduler_health": "PASS",
+    "gmail_sync_stale": false
+  },
+  "gmail": {
+    "prior_live_protocol": "../package6d/verification.json",
+    "current_identity_and_authentication": "PASS",
+    "valid_history_checkpoint": true,
+    "bounded_incremental_sync": "gmail-current-sync.json",
+    "total_test_sends": 1,
+    "total_unsent_test_drafts": 1,
+    "total_owner_replies": 1,
+    "additional_transmissions": 0,
+    "duplicate_reply_events": 0,
+    "recurring_mailbox_polling": false,
+    "new_shared_rfc_probe": "read-only existing accepted message; PASS"
+  },
+  "security": {
+    "result": "PASS",
+    "configuration_and_http": "security.json",
+    "logs_and_browser_assets": "privacy.json",
+    "tracked_secret_scan": "PASS"
+  },
+  "dependencies": {
+    "runtime_python_known_vulnerabilities": 0,
+    "runtime_node_known_vulnerabilities": 0,
+    "dev_only_high_entries": 5,
+    "classification": "Existing braces/micromatch/fast-glob/Next lint chain; repository-controlled patterns, excluded from runtime; P2",
+    "audits": [
+      "python-audit.json",
+      "frontend-audit-production.json",
+      "frontend-audit-all.json"
+    ]
+  },
+  "migration_recovery": {
+    "fresh_current_head": "PASS",
+    "forward_001_to_006": "PASS",
+    "full_record_backup_restore": "PASS",
+    "representative_evidence": "migration-rehearsal.json",
+    "installed_read_only_preflight": "../package6a/installed-migration-preflight.json",
+    "linux_restart_persistence": "../package6b/verification.json",
+    "hosted_restart_persistence": "../package6d/verification.json",
+    "affected_duplicate_send_recovery": "210 affected tests plus final full suite; no uncertain resend"
+  },
+  "source_fix": {
+    "issue": "FW-030 company-path accepted RFC normalization",
+    "design": "Require durable accepted API ID/thread and exact full SENT envelope; preserve reserved ID in receipt, use provider RFC ID for threading; ambiguous/unknown evidence held without resend",
+    "schema_change": false,
+    "live_company_validation": false,
+    "tests": "9 new, 210 affected, 291 full; shared helper read-only verification on existing 6D message"
+  },
+  "blockers": {
+    "P0": [],
+    "P1": [],
+    "P2": [
+      "FW-028 bounded N+1",
+      "Five existing dev-tool-only high advisory entries"
+    ],
+    "P3": [
+      "Two upstream TestClient deprecation warnings"
+    ]
+  },
+  "production_preservation": {
+    "unchanged": true,
+    "live_personal_db_migrated": false,
+    "production_worker_activated": false,
+    "old_sender_changed": false,
+    "production_oauth_changed": false,
+    "real_company_outreach_sent": 0,
+    "recurring_pause_changed": false
+  },
+  "recurring_outreach": "PAUSED",
+  "production_cutover_readiness": "READY",
+  "production_cutover_authorized": false,
+  "production_cutover_performed": false,
+  "source_manifest": "PASS; final evidence-only commit recorded by Git, deployed application files match b02457c"
+}

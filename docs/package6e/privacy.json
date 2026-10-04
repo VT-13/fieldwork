@@ -1,0 +1,13 @@
+{
+  "staging_logs_scanned": [
+    "frontend",
+    "api",
+    "worker"
+  ],
+  "credential_values_in_logs": false,
+  "authorization_headers_in_logs": false,
+  "browser_assets_scanned": 7,
+  "credential_values_in_browser_assets": false,
+  "frontend_online": true,
+  "tracked_source_and_artifacts_secret_check": "PASS"
+}

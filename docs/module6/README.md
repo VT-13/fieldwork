@@ -1,4 +1,10 @@
-# Module6 production verification — NOT READY
+# Current release — READY for separate production cutover
+
+Package6E is complete: [current verification](../package6e/README.md), [artifact](../package6e/verification.json). Final application b02457c passes291 full backend tests/0 failures/0 skips; staging schema006 and actual Python3.13/Node22/PG17 health, focused hosted Chromium, current Gmail read-only health, clean frontend and security/source audits pass. All6A–6D gates remain valid. No P0/P1; production runtime/schema001/OAuth/services/pause unchanged. Cutover and activation remain separately authorized and unperformed.
+
+The following original Module6 report and numerical fields in its artifact are historical evidence; current_* and package6e fields supersede its then-open gates.
+
+# Historical Module6 production verification — then NOT READY
 
 Canonical implementation remains undeployed. The installed schema001 personal app, credentials, LaunchAgent definitions, receipts, CRM counts and recurring pause are unchanged. Source baseline cc43165 verifies from an isolated committed archive; the new candidate's source is verified and bundled using the same manifest tooling. Git/application revision, schema005, build ID, UTC timestamp and configuration identity are in RELEASE_CANDIDATE.md and verification.json.
 

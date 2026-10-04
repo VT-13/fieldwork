@@ -1,3 +1,9 @@
+# Current Fieldwork personal-first candidate — READY
+
+Application source: b02457c on canonical VT-13/fieldwork main, pushed and deployed only to existing Railway staging API/worker. Final evidence-only commit follows it; exact checkout/remote identity is in Git. Canonical/staging head006. Current verification: docs/package6e/verification.json. No P0/P1 remains; READY is for a separate production cutover package. Installed production/schema001 remains unchanged and communication paused. Production rollout, migration, OAuth and worker/recurring activation are not authorized here.
+
+## Historical candidate identities
+
 # Fieldwork Module6 candidate — NOT READY
 
 Identifier: `fieldwork-module6-rc1` (local Git reference; no remote publication).
