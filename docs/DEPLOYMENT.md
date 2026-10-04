@@ -1,58 +1,39 @@
-> Historical MVP instructions. Current security/OAuth setup is in [SETUP.md](SETUP.md) and [../SECURITY.md](../SECURITY.md); release ordering is in [MIGRATION_PLAN.md](MIGRATION_PLAN.md). Basic authentication, browser bearer forwarding and plaintext Gmail bootstrap described below are retired in canonical source. No deployment is authorized by this document.
+# Private deployment runbook — source only, rollout not performed
 
-# Deployment guide
+One operator, one profile, one Gmail account, one PostgreSQL database, one API, one Next.js server and one dedicated deterministic worker. Module 5 implements the runtime; Module 6 owns release verification and separately authorized rollout. The installed Mac services/database/pause/credentials remain unchanged. Old Basic Auth, browser bearer forwarding, plaintext Gmail bootstrap, scheduled AI prompts, 30-message ceilings and automatic send retry instructions are retired.
 
-The repository is ready to configure for deployment, but no hosted resources or mail credentials are provisioned. Use one PostgreSQL database, one API service, one persistent worker, and one Next.js service. A browser-only static export cannot run this system.
+## Process commands
 
-## Railway
+- Migration, stopped senders, explicit staged target: from `backend`, `alembic upgrade head` (schema005).
+- API: `uvicorn app.main:app --host 127.0.0.1 --port 8000 --no-access-log` locally; bind the private container interface/port only behind its configured HTTPS ingress.
+- Worker plus scheduler: from `backend`, `python -m app.worker`. No separate cron, agent, LLM scheduler, response-loop service or API background scanner. The API's privacy retention task remains independent.
+- Worker health: `python -m app.worker --health`; exits nonzero when schema/current worker heartbeat is unavailable. Does no provider I/O and prints no bodies/tokens.
+- Web: from `frontend`, `npm run build` then `npm run start`; server-side `BACKEND_URL`, matching `APP_ORIGIN`. No browser-forwarded API_KEY/DASHBOARD_PASSWORD. Sign in through the private operator session.
 
-1. Create a project and a PostgreSQL service with private networking, backups and an appropriate region.
-2. Add an API service from this repository, root directory `backend`, Dockerfile `Dockerfile`. Configure the production environment variables from `.env.example`, using Railway's PostgreSQL credentials and the `postgresql+psycopg://` scheme. Set `ENVIRONMENT=production`.
-3. Configure a pre-deploy command `alembic upgrade head`. Start the API using `uvicorn app.main:app --host 0.0.0.0 --port $PORT` (Railway shell command setting, not JSON exec). Health path `/health`.
-4. Add a separate worker service from `backend`, same secrets/database, start `python -m app.worker`. Keep it running; serverless request-only functions cannot run the scheduler.
-5. Deploy the Next.js frontend on Railway (`frontend` root, included Dockerfile) or Vercel. Set `BACKEND_URL` to the API address reachable from the frontend server, the same `API_KEY`, a separate `DASHBOARD_PASSWORD`, and `APP_ORIGIN` equal to the HTTPS dashboard origin.
-6. Test authentication and origin checks on the actual hosted domain, then follow the acceptance checks below.
+Use Python3.11+, pinned backend locks, Node22+ and maintained PostgreSQL17 for release. Private operator/encryption/OAuth configuration and exact origins are defined in SETUP.md and SECURITY.md. Provider keys are optional; configuration alone is neither health nor permission. Worker sees the same external secrets/database configuration as API. Keep `.env` owner-only, and credentials/keys outside source/bundles/backups of application rows. Never log or shell-print secrets.
 
-## Render
+`compose.yaml` provides PostgreSQL17, migrations, API, web and an opt-in `worker` profile with restart policy, worker health check and a 16-minute graceful stop allowance. Source exists; Compose images and hosted runtime were not executed in Module 5. A later rollout may use one Railway/Render dedicated background worker with the same command and private database/secrets. Vercel can serve Next.js; request-only/serverless web processes cannot replace the persistent worker. Verify provider/platform requirements during release rather than assuming a free always-on plan.
 
-1. Provision managed PostgreSQL with backups enabled.
-2. Add a Docker web service rooted at `backend`. Environment and pre-deploy migration command as above. Start command `uvicorn app.main:app --host 0.0.0.0 --port $PORT`; health path `/health`.
-3. Add a background worker from the same backend with `python -m app.worker`, sharing the database and secrets. Choose a plan that runs continuously; a suspended free web instance cannot provide autonomous follow-ups.
-4. Use a second Docker web service for Next.js or Vercel for the frontend. Keep API access private where possible; otherwise require HTTPS and the bearer key.
+## State and availability
 
-## Vercel frontend
+Worker ticks every15 seconds, owns the personal PostgreSQL advisory leader while processing, atomically claims one Job through ExecutionLock, renews a 120-second database lease every40 seconds and bounds a job to 600 seconds. SIGINT/SIGTERM stops new claims and lets the bounded in-flight job finish. Forced shutdown never grants retransmission permission. Supervisor kill allowance should exceed configured JOB_TIMEOUT_SECONDS (maximum 900 seconds). Lease/token fences prevent a stale claimant authorizing a send.
 
-- Import `frontend` as the project root. Install `npm ci`, build `npm run build`.
-- Configure `BACKEND_URL`, `API_KEY`, `DASHBOARD_PASSWORD`, `APP_ORIGIN` as server-side variables. Never use `NEXT_PUBLIC_` for these.
-- The API proxy only performs short CRUD/enqueue calls. All long-running research, LLM and email work stays on the persistent Python worker.
-- Set the exact production origin before enabling forms. Preview domains need their own matching origin/environment and should connect to a separate test backend/database.
-- Do not enable `ALLOW_LOCAL_NO_AUTH` on a hosted deployment. Prefer an identity-aware proxy / MFA in addition to Basic Auth for Internet-facing access.
+Authenticated `/runtime` distinguishes web/database/schema, worker heartbeat, scheduler heartbeat, Gmail integration state, stale sync and communication holds. A long job can make scheduler status `waiting_for_current_job`; last schedule time remains truthful. `/health` is only database/API liveness. Health never claims live Gmail delivery merely from a stored connection. Structured logs contain IDs/kind/status/category, not message bodies or provider payloads. Host services can collect stderr/journald; the optional Mac template names a private log path. Monitor offline worker, old sync, blocked/interrupted jobs, unresolved sends and reconnect state.
 
-## Release and operation
+Local/private Mac deployment needs login, awake hardware and network. Sleep/offline means no job execution. Restart schedules only the current bucket/day; no missed-day discovery or send quota is accumulated. Due messages remain review/policy/currentness constrained. Reliable 24/7 work requires an always-on authorized runtime; no power/security setting or launch agent is changed by this build.
 
-1. Build and test a pinned revision. `package-lock.json` pins Node packages; `requirements.lock.txt` records the tested Python dependency set.
-2. Back up the database before migrations. Apply migrations once before starting new workers.
-3. Keep automation paused and `DRY_RUN=true` during initial release.
-4. Review `/health`, Settings integration configuration, a successful inbox sync and worker job completion. Credential presence is not a live service health check.
-5. Complete your profile and verify one real company's sources and recipient manually.
-6. In a **separate sandbox mailbox and database**, enable live sending and send one message to another mailbox you control. Confirm the provider accepted it, it appears in Sent, the recipient receives it, and replying prevents a follow-up.
-7. Test a rejection/opt-out outcome and uncertain delivery handling. Never reset an unknown email to approved just because it does not immediately appear in Sent.
-8. Only then configure production live sending and automation. Keep the cap at 20–25 initially; the hard ceiling is 30 total messages/day.
+## Recovery
 
-### Monitoring
+- Safe read sync/reconciliation jobs with expired leases can recover at most twice with 30/60-second delay. Interrupted paid research/generation requires explicit bounded retry; cached/committed partial results remain. Failed jobs retain sanitized categories. Sync failure backoff is saved and bounded up to an hour.
+- Reserved/sending company mail becomes uncertain on interruption or ambiguous transport failure. There is no automatic company-send retry. Exact positive Gmail Sent evidence can reconcile it; an absent or ambiguous search stays held. Definite provider rejection is Failed, retaining quota/attempt history; it does not silently become an approved retry.
+- A blocked, still-approved, never-attempted delivery can be deliberately requeued with fresh policy checks and bounded retry linkage. Once an external attempt exists, retry controls fail closed. Reply/opt-out/bounce cancellation is terminal; a new campaign cannot remove suppression.
+- Pause blocks pending company sends/preparation, while reply sync/reconciliation and authorized research may continue. Requeue paused work deliberately after resolving policy, never by resetting an unknown row. Campaign STOP additionally prevents continuing campaign work. A reservation committed before a pause or reply may complete; current reply/suppression/CRM state is preserved.
+- Reconcile historical receipt files via the existing validate-first importer; never replay scripts/receipts or rebuild historical batches. Confirm Gmail identity only through existing connection lifecycle.
 
-Monitor API availability, worker process restarts, job error counts, `unknown` / `failed` outreach, mailbox authorization failures, and budget consumption. A scheduled discovery job is deduplicated daily and identical query results stay cached for the cooldown. A blocked company moves to `needs_attention` so the next company can proceed. Some states intentionally require manual intervention rather than generating API charges forever.
+## Release sequence
 
-Use provider-side cost caps and alerts. Reservations are approximate. Back up PostgreSQL daily and rehearse restore. Restrict database/network access and encrypt storage. Avoid logging message bodies, access tokens, refresh tokens, or contact lists in centralized logs. Configure reverse-proxy rate limits for sign-in attempts. Use distinct secrets across development and production.
+Follow MIGRATION_PLAN.md: backup → stop old senders/external automation → verify manifest/paused policy → rehearse schema005 on restored disposable data → install staged source/worker → verify health without company mail → reconcile receipts → verify account → run release gates → enable communication only under explicit release authorization. Preserve uncertain attempts, suppressions and the paused policy throughout. BACKUP_RESTORE.md defines restore fencing and external key rotation; after restore, run `post_restore_safety.py` before startup. Do not roll back and erase attempts made since a backup.
 
-### Recovery
+## Provider and bounds
 
-- **Research/LLM/provider failure:** inspect sanitized job error and provider console. Fix configuration; use Settings → Retry. No autonomous infinite job retries.
-- **429 sending rejection:** bounded retry after 15 minutes, maximum three attempts on that outreach. Other 4xx errors are failed and require review.
-- **Timeout/5xx/worker crash while sending:** status is unknown. Queue an inbox sync. An exact RFC Message-ID match in Sent reconciles it to sent. If missing, check the provider manually; absence alone is not proof of non-delivery. This release intentionally exposes no one-click unknown resend.
-- **Mailbox backlog exceeds polling page limit:** sync blocks sending. Narrow the mailbox backlog or extend the implementation with provider-specific persistent pagination/delta cursors before live use. Do not skip the unread interval.
-- **Rollback:** stop the worker, deploy the previous compatible build, restore a tested backup if needed. Do not erase the outbox to clear failures; it carries deduplication history.
-
-## Runtime acceptance still required
-
-This build was tested locally with SQLite and mocked external adapters. Docker/PostgreSQL and live cloud resources were not available in the build environment. Execute Compose and the PostgreSQL-specific test on your deployment environment before calling the deployment production-verified. Verify current plan restrictions, OAuth app permissions and model availability with your own accounts.
+Read PROVIDER_CAPABILITIES.md and module5/README.md. Shared total cap 25 includes self-tests and unknown sends; recurring introductions max10 per weekday; one follow-up after at least 168 hours; two daily bounces stop company sends. America/Los_Angeles is the default explicit policy timezone. Independent scoped manual initial-only batches retain their canonical narrower exception. Gmail Sent confirmation is distinct from inbox delivery/readership. No autonomous response sending, mailbox read-state changes, Outlook production transmission, paid validation calls or detector automation are added.

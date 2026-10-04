@@ -1,0 +1,19 @@
+# Actual communication capabilities — canonical schema005 source, undeployed
+
+SUPPORTED means implemented and regression-tested with fakes; it does not imply live registration, mailbox delivery or hosted readiness.
+
+| Capability | Gmail | Outlook / Graph | SMTP |
+|---|---|---|---|
+| OAuth/account identity | SUPPORTED encrypted personal account lifecycle; NOT VERIFIED LIVE here | PARTIAL legacy development credential path only; no production account lifecycle | NOT IMPLEMENTED |
+| Company send | SUPPORTED sole guarded delivery service, durable reservation/receipts; NOT VERIFIED LIVE | NOT IMPLEMENTED; transport mutations that could send are fenced | NOT IMPLEMENTED |
+| Own-account self-test | SUPPORTED, explicit saved-version idempotency/shared total quota; NOT VERIFIED LIVE | NOT IMPLEMENTED | NOT IMPLEMENTED |
+| Own-account drafts | SUPPORTED with explicit compose scope; no send receipt/quota; NOT VERIFIED LIVE | PARTIAL existing development draft contract, durable reservation; not supported in production configuration or verified live | NOT IMPLEMENTED |
+| RFC/thread IDs | SUPPORTED RFC Message-ID, original thread/subject, References/In-Reply-To | PARTIAL draft/MIME compatibility; no company-send receipt/thread rollout | NOT IMPLEMENTED |
+| Reply/bounce/opt-out sync | SUPPORTED bounded history/checkpoints/recovery and deterministic correlation; NOT VERIFIED LIVE | NOT IMPLEMENTED | NOT IMPLEMENTED |
+| Send reconciliation | SUPPORTED unique exact positive Sent evidence; absence stays held; NOT VERIFIED LIVE | NOT IMPLEMENTED | NOT IMPLEMENTED |
+| Follow-ups | SUPPORTED deterministic168-hour preparation, review, policy/preflight, cancellation; NOT VERIFIED LIVE | NOT IMPLEMENTED | NOT IMPLEMENTED |
+| Watch/webhooks/push | NOT IMPLEMENTED; bounded polling/history is used | NOT IMPLEMENTED | NOT IMPLEMENTED |
+
+Gmail capabilities use the authenticated connected identity, not a plaintext token setting. Provider acceptance is not guaranteed inbox delivery. No read/label mutation, automatic reply, calibrated sentiment/hiring classifier or AI-detector integration is introduced. Historical Graph sending helpers are not a supported release path and cannot transmit through the canonical Mailbox transport, including query-suffixed send URLs.
+
+API behavior is based on Google's primary [history synchronization](https://developers.google.com/workspace/gmail/api/guides/sync), [message search](https://developers.google.com/workspace/gmail/api/reference/rest/v1/users.messages/list) and [threading requirements](https://developers.google.com/workspace/gmail/api/guides/threads). Live OAuth, actual API plans, throttling and Gmail's retention of a supplied RFC identifier still require release verification. Bounded backfill intentionally does not claim full historical-mailbox coverage.

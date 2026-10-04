@@ -8,7 +8,7 @@ Only the authenticated operator can export or delete application data. These ope
 | Generated unsent messages and desk copies | Outreach / State | Scope `generated`, confirmation `DELETE GENERATED DATA`, cancels pending messages, erases unsent content, deletes desk artifacts and cached content; accepted receipt rows remain |
 | Personal content | Profile, sent/unsent bodies, response previews, derived cache/desk | Scope `personal`, confirmation `DELETE PERSONAL CONTENT`, erases student profile and message bodies, clears previews, removes local OAuth access, revokes browser sessions and pauses all queued communication |
 | OAuth credentials/verifiers | Encrypted Integration/OAuthGrant | Disconnect deletes local tokens and outstanding grants; expired grants pruned; upstream revocation attempted and failure reported |
-| Inbound previews | State response record, at most 3000 characters | Hourly maintenance clears preview/subject after RESPONSE_PREVIEW_RETENTION_DAYS (default30, maximum90); no mailbox labels/read status are changed |
+| Inbound previews | State response record, at most 3000 characters | Hourly maintenance clears preview/subject after RESPONSE_PREVIEW_RETENTION_DAYS (default 30, maximum 90); no mailbox labels/read status are changed |
 | Cache | Bounded provider data | Hourly maintenance deletes expired entries; personal/generated deletion clears all caches |
 | Sessions/rate state | Hashed tokens and minimal counters | Expired grants/sessions and old rate buckets are pruned; logout/password change invalidate authorization |
 | Research/contact data | Company/Contact/Evidence provenance | Retained for the active opportunity history; deleting generated messages does not erase company/contact records |
@@ -27,3 +27,10 @@ Immutable historical receipt files and minimal campaign-progress State are prese
 Candidate observations and ContactObservation rows retain reported values, provider/source provenance, retrieval times and conflicts; accepted candidates link to canonical companies. Evidence stores short source quotations, dates, quality and hashes, rather than whole web pages. The existing bounded provider cache can contain transient page text and follows the cache retention/deletion rules above.
 
 StudentFact text and Generation exact subject/body/review are personal derived content. Export includes these records; generated/personal deletion erases their content while preserving minimal generation/reference/linkage metadata. Resume deletion marks facts unverified; current-profile-hash validation prevents prior facts approving new messages. No third-party detector export is added. Historical provider receipts, suppressions and uncertain-delivery holds remain intact.
+
+
+## Module 5 communication metadata
+
+Event adds optional contact/outreach foreign keys and the personal campaign ID; historical links remain null rather than inferred. Gmail source IDs, provider/thread/RFC receipt identifiers, operation/outreach/account identity and timestamps are minimal durable evidence. Reconciliation appends verification metadata without replacing conflicting recorded provider identity. These records, suppression and uncertain holds survive content deletion/disconnect; mailbox messages are not deleted.
+
+Response sync State contains account fence, history/page checkpoints, bounded pending provider IDs, safe error/backoff and a temporary lease. It contains no tokens or raw mail. Job stores due/lease/owner state and minimal payload links; ownership tokens are excluded from public job views. Existing privacy export includes private operational metadata but never integration ciphertext/session credentials. Preview/body retention and explicit content deletion remain the existing controls. Completed jobs/checkpoints retain operational history for this personal release; no new automatic purge erases audit identity.

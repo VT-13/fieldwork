@@ -41,7 +41,7 @@ class Bounds:
     def check(self):
         if self.job_id:
             job = self.db.get(Job, self.job_id, populate_existing=True)
-            if not job or job.payload.get("stop_requested"):
+            if not job or job.status=="cancelled" or job.payload.get("stop_requested"):
                 raise IntelligenceFailure("stopped")
 
     def request(self, *, ai=False, input_chars=0):

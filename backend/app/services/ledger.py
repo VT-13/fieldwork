@@ -94,17 +94,26 @@ def usage(db, since, kind=None):
     return db.scalar(q)
 
 
-def reconcile_sent(db,row,provider_id,thread_id,message_id):
+def reconcile_sent(db,row,provider_id,thread_id,message_id,*,account=None):
     """Only use after a provider Sent record matched the original RFC Message-ID."""
     if not provider_id or not message_id or message_id!=row.message_id:
         raise Blocked('Reconciliation requires matching provider Sent evidence')
     lock(db)
+    from ..models import Outreach
+    row=db.get(Outreach,row.id)
+    if (row.provider_id and row.provider_id!=provider_id) or (row.thread_id and row.thread_id!=thread_id):
+        db.rollback();raise Blocked('Sent evidence conflicts with recorded provider receipt; investigate')
     op=operation(db,'send:'+row.id)
     if op and op.status in {'running','unknown','succeeded'}:
         attempt=latest(db,op)
         if op.status!='succeeded':transition(db,op,'succeeded',domain='operation',reason='sent_reconciled')
         attempt.status='succeeded';attempt.finished_at=now()
-        attempt.receipt={**attempt.receipt,'provider_id':provider_id,'thread_id':thread_id,'message_id':message_id,'sent_verified':True,'confirmation_pending':False}
+        attempt.receipt={**attempt.receipt,'provider_id':provider_id,'thread_id':thread_id,'message_id':message_id,'sent_verified':True,'confirmation_pending':False,'operation_id':op.id,'outreach_id':row.id,'reconciled_at':now().isoformat()}
+        if account:attempt.receipt={**attempt.receipt,'account':account.lower()}
     if row.status in {'sending','unknown'}:transition(db,row,'sent',reason='sent_reconciled')
     row.provider_id=provider_id;row.thread_id=thread_id
+    from ..models import Company
+    from ..core import STOP_STAGES
+    company=db.get(Company,row.company_id)
+    if company and company.stage not in STOP_STAGES:company.stage='contacted'
     db.commit()

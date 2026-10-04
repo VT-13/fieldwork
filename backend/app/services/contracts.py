@@ -39,3 +39,12 @@ class ProspectProvider(Protocol):
 
 class IntelligenceProvider(ResearchProvider, LLMProvider, Protocol):
     async def verify(self, db, contact) -> str: ...
+
+
+class MailboxFailure(Exception):
+    """Safe provider category; never carries raw payloads or credentials."""
+    def __init__(self, code, *, definite=False, retryable=False):
+        self.code = code
+        self.definite = definite
+        self.retryable = retryable
+        super().__init__('Mailbox '+code.replace('_', ' '))

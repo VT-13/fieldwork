@@ -500,6 +500,9 @@
       },
       "strategy": "practical-help",
       "status": "draft",
+      "confirmation_pending": false,
+      "sent_verified": null,
+      "delivery_reason": "",
       "due_at": "2026-10-03T10:00:00Z",
       "sent_at": null,
       "provider_id": "",
@@ -529,6 +532,9 @@
       },
       "strategy": "practical-help",
       "status": "sent",
+      "confirmation_pending": false,
+      "sent_verified": null,
+      "delivery_reason": "",
       "due_at": "2026-10-03T10:00:00Z",
       "sent_at": "2026-10-03T10:00:00Z",
       "provider_id": "fixture-receipt",
@@ -576,6 +582,11 @@
     "needs_attention": 1,
     "responses": [
       {
+        "contact_id": null,
+        "outreach_id": null,
+        "campaign_id": "personal",
+        "thread_id": "",
+        "followup_stopped": true,
         "id": "qa-reply",
         "company_id": "qa-company-1",
         "company": "Northline Software (Demo)",
@@ -732,12 +743,15 @@
   },
   "jobs": [
     {
+      "can_retry": false,
       "id": "qa-job",
       "kind": "research",
       "payload": {
         "id": "qa-company-0"
       },
       "dedupe_key": "fixture-job",
+      "available_at": null,
+      "lease_until": null,
       "status": "running",
       "error": "",
       "result": {
@@ -750,6 +764,19 @@
       "finished_at": null
     }
   ],
+  "runtime": {
+    "database": "reachable",
+    "schema_version": "005",
+    "worker": "offline",
+    "worker_at": null,
+    "scheduler": "offline",
+    "scheduler_at": null,
+    "gmail": "disconnected",
+    "unresolved": 0,
+    "sync_stale": true,
+    "recurring_paused": true,
+    "communication_jobs": []
+  },
   "generations": {
     "qa-company-0": [],
     "qa-company-1": [],

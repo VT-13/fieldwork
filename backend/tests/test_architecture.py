@@ -125,13 +125,13 @@ async def test_fresh_unthreaded_reply_blocks_followup(db,ready,monkeypatch):
     from app.services.delivery import send_company
     from test_workflow import FakeMailbox
     monkeypatch.setenv('DRY_RUN','false');monkeypatch.setenv('SENDER_EMAIL','student@example.com')
-    c,ct,first=ready;first.status='sent';first.sent_at=now()-timedelta(days=8);first.thread_id='original';first.message_id='<original>'
-    follow=Outreach(company_id=c.id,contact_id=ct.id,sequence=1,status='approved',subject='Re: idea',body='New useful idea',evidence_ids=first.evidence_ids,review={**first.review,'adds_new_value':True})
+    c,ct,first=ready;first.provider_id='original-id';first.status='sent';first.sent_at=now()-timedelta(days=8);first.thread_id='original';first.message_id='<original>'
+    follow=Outreach(company_id=c.id,contact_id=ct.id,sequence=1,status='approved',subject=first.subject,body='New useful idea',evidence_ids=first.evidence_ids,review={**first.review,'adds_new_value':True})
     db.add(follow);db.commit()
     class ReplyBox(FakeMailbox):
         async def call(self,method,url,**kwargs):
             q=kwargs.get('params',{}).get('q','')
-            return {'messages':[{'id':'unthreaded'}]} if q==f'in:anywhere from:{ct.email}' else {'messages':[]}
+            return {'messages':[{'id':'unthreaded'}]} if q==f'in:anywhere from:{ct.email}' else await super().call(method,url,**kwargs)
     box=ReplyBox()
     with pytest.raises(Blocked,match='reply'):await send_company(db,follow.id,mode='worker',provider=MailboxProvider(box))
     assert box.sent==0
@@ -165,7 +165,7 @@ async def test_confirmation_failure_retains_acceptance_and_prevents_resend(db,re
     p=Provider();result=await send_company(db,ready[2].id,mode='worker',provider=p)
     assert result['provider_id']=='provider-id' and result['confirmation_pending']
     assert ledger.unresolved(db)
-    with pytest.raises(Blocked):await send_company(db,ready[2].id,mode='worker',provider=p)
+    assert (await send_company(db,ready[2].id,mode='worker',provider=p))['confirmation_pending']
     assert p.sent==1
     ledger.reconcile_sent(db,ready[2],'provider-id','thread-id',ready[2].message_id)
     assert not ledger.unresolved(db)

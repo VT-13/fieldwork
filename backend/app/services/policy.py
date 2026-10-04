@@ -7,7 +7,7 @@ from ..config import settings
 from ..core import Blocked,aware,profile_fingerprint,STOP_STAGES
 from . import ledger
 STOP=STOP_STAGES
-VERSION='personal-v1'
+VERSION='personal-v2'
 
 def send_usage(db,start,initial_only=False):
  # Legacy rows not yet represented in the ledger count too. Never double count.
@@ -34,16 +34,21 @@ def company(db,row,at,mode="scheduled"):
  batch=db.get(State,'manual_batch');b=batch.value if batch else {}
  if row and row.id in b.get('outreach_ids',[]) and b.get('stop_requested'):raise Blocked('Manual batch stopped by user')
  manual=bool(row and row.id in b.get('outreach_ids',[]) and b.get('enabled') and at<datetime.fromisoformat(b['expires_at']) and row.sequence==0)
+ if p.get('stop_requested'):raise Blocked('Campaign stopped')
  if not p.get('enabled') and not manual:raise Blocked('Scheduled outreach is paused')
- local=at.astimezone(ZoneInfo('America/Los_Angeles'))
- if mode=='scheduled' and not manual and (local.weekday()>4 or not 9<=local.hour<17):raise Blocked('Weekday business hours only')
+ local=at.astimezone(ZoneInfo(settings().timezone))
+ if (mode=='scheduled' or settings().environment=='production') and not manual and (local.weekday()>4 or not 9<=local.hour<17):raise Blocked('Weekday business hours only')
  if not row or row.status!='approved' or row.attempts:raise Blocked('Only reviewed, unattempted approved rows may send')
  c=db.get(Company,row.company_id);ct=db.get(Contact,row.contact_id);profile=db.get(Profile,1)
  if not c or not ct or ct.company_id!=c.id:raise Blocked('Invalid company/contact linkage')
- if mode=='worker' and row.sequence and c.research.get('followups') is False:raise Blocked('Follow-ups are disabled for this company')
+ if row.sequence and c.research.get('followups') is False:raise Blocked('Follow-ups are disabled for this company')
+ if db.scalar(select(Event.id).where(Event.company_id==c.id,Event.kind.in_(['reply','auto_reply','bounce','opt_out','negative','closed']))):raise Blocked('Existing response stops conversation')
  if c.demo or c.stage in STOP or db.get(Suppression,ct.email.lower()):raise Blocked('Demo or company/contact is stopped')
  allowed=p.get('allowed_cities',['Rocklin'])
  if c.research.get('city') not in allowed:raise Blocked('Authorized local city evidence required')
+ from pydantic import TypeAdapter,EmailStr,ValidationError
+ try:TypeAdapter(EmailStr).validate_python(ct.email)
+ except ValidationError:raise Blocked('Valid recipient email required') from None
  if not ct.source.startswith('https://') or ct.validation not in {'valid','public_source_dns'} or not ct.validated_at or aware(ct.validated_at)<at-timedelta(days=7):raise Blocked('Fresh official-source contact validation required')
  if not profile or not profile.data.get('verified'):raise Blocked('Verified profile required')
  review=row.review
@@ -59,15 +64,16 @@ def company(db,row,at,mode="scheduled"):
  used=send_usage(db,start)
  if used>=min(25,settings().daily_send_limit,p.get('daily_total_attempt_limit',25)):raise Blocked('Daily total cap reached')
  bounces=set(db.scalars(select(Event.company_id).where(Event.kind=='bounce',Event.created_at>=start)))
- if len(bounces)>=p.get('stop_after_bounces_per_day',2):raise Blocked('Daily bounce stop reached')
+ if len(bounces)>=min(2,p.get('stop_after_bounces_per_day',2)):raise Blocked('Daily bounce stop reached')
  if ledger.unresolved(db) or db.scalar(select(Outreach.id).where(Outreach.status.in_(['unknown','sending'])).limit(1)):raise Blocked('Uncertain delivery exists; reconcile before further communication')
  last=db.scalar(select(func.max(Outreach.sent_at)))
- if last and (at-aware(last)).total_seconds()<max(60,p.get('send_interval_seconds',60)):raise Blocked('Minimum send interval not elapsed')
+ if last and (at-aware(last)).total_seconds()<max(60,settings().send_interval_seconds,p.get('send_interval_seconds',60)):raise Blocked('Minimum send interval not elapsed')
  original=None
  if row.sequence:
   if row.sequence!=1 or p.get('max_followups_per_company')!=1:raise Blocked('Only one follow-up is authorized')
   original=db.scalar(select(Outreach).where(Outreach.company_id==c.id,Outreach.sequence==0))
-  if not original or original.status!='sent' or not original.thread_id or not original.message_id or not original.sent_at:raise Blocked('Confirmed original thread required')
+  followup(db,original,at)
+  if row.subject!=original.subject:raise Blocked('Follow-up must retain original subject')
   if at<aware(original.sent_at)+timedelta(days=7):raise Blocked('Seven full days have not elapsed')
   if not review.get('adds_new_value'):raise Blocked('Follow-up must add a concrete new contribution')
  else:
@@ -93,14 +99,41 @@ def set_paused(db,enabled):
  before='active' if row.value.get('enabled') else 'paused'
  after='active' if enabled else 'paused'
  row.value={**row.value,'enabled':enabled}
+ if not enabled:
+  from ..models import Job
+  from ..domain.states import transition
+  for job in db.scalars(select(Job).where(Job.kind.in_(['send','followup_prepare']),Job.status=='queued')):
+   transition(db,job,'blocked',domain='job',reason='campaign_paused')
+   job.error='Campaign paused; deliberate requeue required'
+   job.finished_at=now()
  if before!=after:db.add(DomainTransition(domain='campaign',entity_id='personal',from_state=before,to_state=after,reason='operator_policy_change'))
  db.commit()
  return row.value
 
 
 def background(db,kind):
- paid={'discover','research','pipeline','generate','regenerate','verify','paid_provider'}
+ paid={'discover','research','pipeline','generate','regenerate','verify','followup_prepare','paid_provider'}
  p=db.get(State,'outreach_policy')
  if kind in paid and (settings().manual_mode or (p and p.value.get('paid_services_authorized') is False)):
   raise Blocked('Manual mode / policy: paid API calls are disabled')
  return snapshot(db,'background:'+kind)
+
+
+def followup(db, original, at):
+ """Shared preparation/delivery eligibility; it never approves a new message."""
+ if original and original.sent_at and at<aware(original.sent_at)+timedelta(hours=168):raise Blocked('Seven full days have not elapsed')
+ if not original or original.status!='sent' or not original.provider_id or not original.thread_id or not original.message_id or not original.sent_at:
+  raise Blocked('Confirmed original thread required')
+ op=ledger.operation(db,'send:'+original.id)
+ if op and (op.status!='succeeded' or ledger.latest(db,op).receipt.get('sent_verified') is not True):raise Blocked('Original confirmation pending')
+ p=db.get(State,'outreach_policy');value=p.value if p else {}
+ if not value.get('enabled') or value.get('stop_requested'):raise Blocked('Campaign paused or stopped')
+ if value.get('max_followups_per_company')!=1:raise Blocked('Only one follow-up permitted')
+ if at<aware(original.sent_at)+timedelta(hours=168):raise Blocked('Seven full days have not elapsed')
+ c=db.get(Company,original.company_id);ct=db.get(Contact,original.contact_id)
+ if not c or not ct or c.demo or c.stage in STOP or c.research.get('followups') is False or db.get(Suppression,ct.email.lower()):raise Blocked('Conversation stopped or follow-ups disabled')
+ if db.scalar(select(Event.id).where(Event.company_id==c.id,Event.kind.in_(['reply','auto_reply','bounce','opt_out','negative','closed']))):raise Blocked('Existing response stops follow-up')
+ from ..intelligence.discovery import best_contact
+ if best_contact(db,c) is not ct:raise Blocked('Current suitable contact required; research again')
+ if ledger.unresolved(db):raise Blocked('Uncertain delivery exists')
+ return c,ct

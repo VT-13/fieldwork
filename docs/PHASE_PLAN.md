@@ -4,12 +4,12 @@ Phase 0 complete after baseline evidence and skill validation are recorded. **Do
 
 | Phase | Focus | Entry conditions | Exit conditions |
 |---|---|---|---|
-| 1 | Source reconciliation and architecture | Read map, decisions, baseline, drift hashes and P1s; preserve active DB/receipts/credentials/pause; determine personal-first release boundary. | Runtime behavior reconciled into versioned source; provider/service boundaries and explicit state machines defined; single policy/attempt ledger designed and tested; migration/deploy plan; FW-001 resolved. |
+| 1 | Source reconciliation and architecture | Read map, decisions, baseline, drift hashes and P1 s; preserve active DB/receipts/credentials/pause; determine personal-first release boundary. | Runtime behavior reconciled into versioned source; provider/service boundaries and explicit state machines defined; single policy/attempt ledger designed and tested; migration/deploy plan; FW-001 resolved. |
 | 2 | Security, accounts and persistence | Phase 1 source and ownership decision accepted; disposable DB available. | OAuth/secret storage and revocation flow; tested auth/ownership for chosen scope; ingress/rate limits; privacy lifecycle; safe migrations/backups; dependencies reviewed/patched; no unresolved applicable P0. |
 | 3 | Product design and frontend foundation | Stable contracts/mode semantics from 1–2; product-design skill/reference loaded. | Final design system stored in skill reference; reusable accessible components, responsive task flows, typed API boundary; lint/typecheck/build and desktop/mobile/keyboard QA pass. |
 | 4 | Discovery, evidence and bounded personalization | Provider contracts and permitted costs defined; secrets handled; UI foundation ready. | Cached bounded discovery/research, contact provenance and scoring; evidence-grounded writing/review with real profile; early stop/call limits; detector claims honest; no unsupported provider/subscription promises. |
 | 5 | Unified delivery, responses and scheduling | Previous phases pass; delivery policy and provider mocks complete. | All send paths enforce authorization, caps, dedupe and uncertainty; durable jobs/follow-ups; fresh threaded/unthreaded reply checks; suppression/cancellation; Gmail/Outlook capabilities explicit; legacy contradictions retired; FW-002–005 addressed. |
-| 6 | Production verification and release readiness | Core product coherent; applicable P0/P1s fixed or explicitly excluded by accepted scope; disposable PostgreSQL/container environment available. | Meaningful unit/integration/provider/browser/E2E regressions; accessibility/visual QA; failure/crash/concurrency tests; restore/rollback and credential rotation verified; operational metrics; accurate deployment/runbook and release evidence. Any requested publish/deploy uses established authorization. |
+| 6 | Production verification and release readiness | Core product coherent; applicable P0/P1 s fixed or explicitly excluded by accepted scope; disposable PostgreSQL/container environment available. | Meaningful unit/integration/provider/browser/E2E regressions; accessibility/visual QA; failure/crash/concurrency tests; restore/rollback and credential rotation verified; operational metrics; accurate deployment/runbook and release evidence. Any requested publish/deploy uses established authorization. |
 
 ## Next phase input
 
@@ -23,7 +23,7 @@ Architecture and reconciliation implementation completed in canonical source, wi
 
 ## Module 2 handoff
 
-Personal operator authentication, encrypted Gmail lifecycle, ingress/rate controls, privacy and PostgreSQL semantics are implemented and tested in canonical source. No deployment/live OAuth/outreach occurred. Module3 must preserve these API/provider/policy contracts; no frontend bearer fallback or unauthenticated local shortcut may return. Follow SECURITY.md, DATA_LIFECYCLE.md and MIGRATION_PLAN.md; this handoff does not start Module3.
+Personal operator authentication, encrypted Gmail lifecycle, ingress/rate controls, privacy and PostgreSQL semantics are implemented and tested in canonical source. No deployment/live OAuth/outreach occurred. Module 3 must preserve these API/provider/policy contracts; no frontend bearer fallback or unauthenticated local shortcut may return. Follow SECURITY.md, DATA_LIFECYCLE.md and MIGRATION_PLAN.md; this handoff does not start Module 3.
 
 ## Module 3 handoff
 
@@ -31,4 +31,9 @@ The final field-notebook design system, four flagship surfaces and consistent se
 
 ## Module 4 handoff
 
-Bounded company candidates/contact provenance, first-class current evidence, transparent research ranking, strict supported-fact/task generation and private UX are implemented in canonical source. Read docs/module4/README.md and its verification before Module5. Continue using the same Job/Operation/ActionAttempt/Usage, generated contracts, resource client and notebook primitives. Delivery/reply/follow-up scheduling and permanent runtime rollout remain Module5/later release work; this phase does not enable them or deploy source. The recurring pause and installed historical records remain authoritative.
+Bounded company candidates/contact provenance, first-class current evidence, transparent research ranking, strict supported-fact/task generation and private UX are implemented in canonical source. Read docs/module4/README.md and its verification before Module 5. Continue using the same Job/Operation/ActionAttempt/Usage, generated contracts, resource client and notebook primitives. Delivery/reply/follow-up scheduling and permanent runtime rollout remain Module 5/later release work; this phase does not enable them or deploy source. The recurring pause and installed historical records remain authoritative.
+
+
+## Module 5 handoff
+
+Canonical delivery/ledger, one bounded Gmail scanner, durable reply cancellation, one reviewed168 h follow-up, deterministic scheduler/worker ownership/recovery/health and source service configuration are implemented and verified with isolated regressions and disposable PostgreSQL. See module5/README.md and verification.json. The installed source/schema/OAuth/pause remain unchanged; no company mail or paid calls occurred. Module 6 is ready for separately requested release verification, not automatically started or authorized to deploy. Follow the schema005 migration/release ordering and explicit provider limits; do not repeat the repository audit or replace this queue/policy design.

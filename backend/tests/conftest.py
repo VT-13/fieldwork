@@ -43,7 +43,7 @@ def ready(db):
     db.add(Profile(id=1,data=p.model_dump()))
     c=Company(name="Example Robotics",domain="example.com",website="https://example.com",distance_miles=12,stage="drafted")
     db.add(c);db.flush()
-    contact=Contact(company_id=c.id,email="founder@example.com",validation="valid",validated_at=now())
+    contact=Contact(company_id=c.id,title="Engineering Lead",email="founder@example.com",validation="valid",validated_at=now())
     db.add(contact);db.flush()
     from app.core import profile_fingerprint
     row=Outreach(company_id=c.id,contact_id=contact.id,subject="Robotics project idea",body="Example draft",status="approved",review={"passed":True,"personalization_score":91,"profile_hash":profile_fingerprint(p.model_dump())})
@@ -53,4 +53,7 @@ def ready(db):
     row.review={**row.review,'grounded':True,'claims_supported':True,'non_generic':True,'names_correct':True,'non_spammy':True}
     db.add(State(key='outreach_policy',value={'enabled':True,'max_followups_per_company':1}))
     db.add(row);db.commit()
+    from app.intelligence.discovery import ingest_contact
+    from app.intelligence.schemas import ContactRecord
+    ingest_contact(db,c,ContactRecord(email=contact.email,title=contact.title,source_url=contact.source,confidence='source-observed').model_dump());db.commit()
     return c,contact,row

@@ -1,17 +1,24 @@
 "use client";
+import Link from "next/link";
+import RuntimeStatus from "../components/RuntimeStatus";
 import { useState } from "react";
 import { RefreshCw } from "lucide-react";
-import { useResource, request, date } from "../lib/api";
+import { useResource, request, date, decode } from "../lib/api";
 import { Empty, ErrorState, External, Loading, Status } from "../components/ui";
 export default function ResponseInbox() {
   const inbox = useResource("responses", "InboxView", false, 30000);
   const [busy, setBusy] = useState(false),
-    [error, setError] = useState("");
+    [error, setError] = useState(""),
+    [notice, setNotice] = useState("");
   async function action(path: string, method: string, body?: unknown) {
     setBusy(true);
     setError("");
     try {
-      await request(path, method, body);
+      const result = await request(path, method, body);
+      if (path === "responses/sync")
+        setNotice(
+          `Mailbox check · ${decode("JobView", result).status}. A running worker processes this request.`,
+        );
       await inbox.reload();
     } catch (e) {
       setError(e instanceof Error ? e.message : "Reply update failed");
@@ -32,7 +39,7 @@ export default function ResponseInbox() {
               ? `Gmail last checked ${date(inbox.data.sync.last_success)}`
               : "No completed inbox check recorded."}{" "}
             {inbox.data?.enabled
-              ? "Server polling is enabled while it runs."
+              ? "Mailbox jobs are scheduled while the worker runs."
               : "Automatic checking is disabled."}
           </p>
         </div>
@@ -47,6 +54,8 @@ export default function ResponseInbox() {
             : "Check Gmail"}
         </button>
       </div>
+      {notice && <p role="status">{notice}</p>}
+      <RuntimeStatus />
       <ErrorState
         error={error || inbox.error || inbox.data?.sync.error || undefined}
         retry={inbox.reload}
@@ -69,8 +78,22 @@ export default function ResponseInbox() {
                     <Status value={r.kind} />
                   </div>
                   <h4>{r.subject}</h4>
+                  {r.followup_stopped && (
+                    <p className="quiet-note">
+                      Future follow-up stopped.{" "}
+                      {r.kind === "auto_reply"
+                        ? "Acknowledgment held for your review."
+                        : "Choose the next step yourself."}
+                    </p>
+                  )}
                   <p className="reply-preview">{r.preview}</p>
                   <div className="buttons">
+                    <Link
+                      className="text-button"
+                      href={`/?view=prospect&company=${encodeURIComponent(r.company_id)}`}
+                    >
+                      Open prospect
+                    </Link>
                     <External href={r.gmail_url}>Open in Gmail</External>
                     {r.kind === "reply" && (
                       <button

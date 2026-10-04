@@ -25,9 +25,11 @@ async def test_blocked_company_does_not_starve_next(db,ready,monkeypatch):
     monkeypatch.setattr(worker,'execute',blocked)
     await worker.tick()
     assert c.stage=='needs_attention' and job.status=='blocked'
+    import app.intelligence.capabilities as caps
+    monkeypatch.setattr(caps,'capabilities',lambda db:{'providers':[{'id':'research','available':True},{'id':'generate','available':True}]})
     await worker.tick()
-    pending=db.scalar(select(Job).where(Job.status=='queued'))
-    assert pending and pending.payload['id']==another.id
+    pending=db.scalar(select(Job).where(Job.kind=='pipeline',Job.dedupe_key=='pipeline:'+another.id))
+    assert pending and pending.status=='blocked' and another.stage=='needs_attention'
 
 async def test_day7_followup_is_deduplicated(db,ready,monkeypatch):
     patch_worker(db,monkeypatch)
@@ -35,12 +37,12 @@ async def test_day7_followup_is_deduplicated(db,ready,monkeypatch):
     c.stage='contacted';initial.status='sent';initial.sent_at=now()-timedelta(days=7,minutes=1)
     db.add(State(key='automation',value={'enabled':True}));db.commit()
     await worker.tick()
-    pending=list(db.scalars(select(Job).where(Job.kind=='generate')))
-    assert len(pending)==1 and pending[0].payload['sequence']==1
+    pending=list(db.scalars(select(Job).where(Job.kind=='followup_prepare')))
+    assert len(pending)==1 and pending[0].payload['id']==initial.id
     # Existing dedupe key remains unique on another schedule evaluation.
     pending[0].status='blocked';db.commit()
     await worker.tick()
-    assert len(list(db.scalars(select(Job).where(Job.kind=='generate'))))==1
+    assert len(list(db.scalars(select(Job).where(Job.kind=='followup_prepare'))))==1
 
 async def test_long_outage_does_not_queue_three_followups(db,ready,monkeypatch):
     patch_worker(db,monkeypatch)
@@ -49,7 +51,7 @@ async def test_long_outage_does_not_queue_three_followups(db,ready,monkeypatch):
     recent=Outreach(company_id=c.id,contact_id=contact.id,sequence=1,status='sent',sent_at=now()-timedelta(hours=1))
     db.add_all([recent,State(key='automation',value={'enabled':True})]);db.commit()
     await worker.tick()
-    assert not db.scalar(select(Job).where(Job.kind=='generate'))
+    assert not db.scalar(select(Job).where(Job.kind=='followup_prepare'))
 
 async def test_crash_marks_sending_unknown_without_resend(db,ready,monkeypatch):
     patch_worker(db,monkeypatch)
@@ -66,4 +68,4 @@ async def test_company_no_followup_policy_survives_automation_enable(db,ready,mo
     company.stage='contacted';initial.status='sent';initial.sent_at=now()-timedelta(days=40)
     db.add(State(key='automation',value={'enabled':True}));db.commit()
     await worker.tick()
-    assert not db.scalar(select(Job).where(Job.kind=='generate'))
+    assert not db.scalar(select(Job).where(Job.kind=='followup_prepare'))

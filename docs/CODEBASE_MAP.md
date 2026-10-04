@@ -1,4 +1,6 @@
-# Fieldwork codebase map — Phase 0, October 3, 2026
+# Fieldwork codebase map — Phase 0 baseline with canonical module handoffs
+
+The early sections preserve historical audit evidence; canonical Modules 1–5 updates below supersede their implementation descriptions. Current operation/setup are in module5/README.md, SETUP.md and DEPLOYMENT.md. The installed runtime remains deliberately unchanged.
 
 ## Source and runtime
 
@@ -74,3 +76,14 @@ backend/app/{auth,credentials,gmail_oauth,ingress,privacy,redaction,url_safety}.
 - `main.py`: private candidate/capability/import/accept/dismiss/history/stop APIs; unavailable expensive actions fail before queueing; jobs stay with existing worker and operation ledger.
 - `frontend/components/{Discovery,IntelligenceJobs,IntelligenceActions}.tsx`: notebook discovery/work controls and actual state/counts. Prospect evidence/confidence, register filters and review regeneration extend the existing flagship surfaces/client/contracts.
 - `backend/tests/test_intelligence.py`, existing PostgreSQL/security suites and `frontend/tests/workspace.spec.ts`: fictional provider/ownership/claims/injection/limits/failure/browser regressions. `scripts/module4_check.py`, `module4_frontend_check.py`, `module4_preserve.py`, `docs/module4/`: isolated proof and installed-state preservation.
+
+
+## Module 5 current communication map (canonical, undeployed)
+
+- `services/{jobs,scheduler,runtime}.py`: existing queue ownership, due time, retry/recovery, bounded deterministic scheduling and safe status reads. `worker.py`: one leader, one claim/tick, lease renewal, bounded execution and graceful signals/health. No scheduling AI prompt or API reply loop.
+- `services/{delivery,ledger,envelope,reconciliation}.py`: sole company-send lifecycle, MIME binding, shared reservation/quotas and exact positive Sent reconciliation. `mail.py` fences raw/Graph send bypasses; scheduled/self-test/draft compatibility retains narrow ledger contracts.
+- `responses.py` + `core.record_event`: one bounded incremental Gmail reader, durable cursor/lease, deterministic correlated events and cancellation/suppression. `policy.py`: current profile/evidence/contact/account, stop/pause, quota and follow-up eligibility boundary.
+- `alembic/versions/005_runtime.py`: additive Job lease/due and Event links; old records preserved. `ui_contracts.py` adds validated RuntimeView and communication metadata; generated frontend contracts remain authoritative.
+- `frontend/components/RuntimeStatus.tsx`, Prospect and ResponseInbox: real queued/running/blocked/interrupted status, worker/offline/stale-sync/uncertainty copy, safe explicit retry and evidence-only Sent check. No broad resume or autonomous inbound reply.
+- `backend/tests/test_runtime.py`: crash windows, exact transport/reconciliation scope, responses, scheduling, follow-ups, subprocess restart and disposable PostgreSQL competitors. `scripts/module5_*`, `docs/module5/`: sanitized gates, screenshots, preservation and handoff.
+- `compose.yaml` and optional desktop worker plist template: source-only persistent service configuration. Current actual capabilities in PROVIDER_CAPABILITIES.md. Installed worker remains inactive and old external automation is not part of the canonical production path.

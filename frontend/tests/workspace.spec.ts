@@ -2,6 +2,7 @@ import { test, expect, type Page } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
 import seed from "./fixture.json";
 import type {
+  RuntimeView,
   CandidateView,
   JobView,
   CapabilitiesView,
@@ -22,6 +23,7 @@ import { mkdirSync } from "node:fs";
 const artifact =
   process.env.FIELDWORK_BROWSER_ARTIFACT_DIR || "../docs/module3";
 type Fixture = {
+  runtime: RuntimeView;
   companies: CompanyView[];
   details: Record<string, CompanyDetail>;
   outreach: OutreachView[];
@@ -66,7 +68,12 @@ async function mock(page: Page, data: Fixture = structuredClone(base)) {
     }
     if (method === "GET") reads.push(path);
     let payload: unknown;
-    if (path === "discovery/candidates") payload = data.candidates;
+    if (path === "runtime") payload = data.runtime;
+    else if (path.startsWith("outreach/") && path.endsWith("/reconcile"))
+      payload = { ...data.jobs[0], kind: "reconcile", status: "queued" };
+    else if (path === "responses/sync")
+      payload = { ...data.jobs[0], kind: "sync", status: "queued" };
+    else if (path === "discovery/candidates") payload = data.candidates;
     else if (path === "intelligence/capabilities") payload = data.capabilities;
     else if (path === "jobs") payload = data.jobs;
     else if (path === "discovery/import") payload = data.jobs[0];
@@ -629,3 +636,78 @@ test("explicit regeneration queues a new version without changing saved content 
   expect(d.outreach[0].status).toBe("draft");
   expect(fixture.attempts).toEqual([]);
 });
+
+test("response context queues a durable check and shows offline/stale processing", async ({
+  page,
+}) => {
+  const data = structuredClone(base);
+  data.responses.responses[0].outreach_id = "qa-message-1";
+  data.responses.responses[0].contact_id = "qa-contact-1";
+  const { reads, attempts } = await mock(page, data);
+  await page.goto("/?view=responses");
+  await expect(
+    page.getByText("Worker offline", { exact: false }),
+  ).toBeVisible();
+  await expect(
+    page.getByText("Future follow-up stopped.", { exact: false }),
+  ).toBeVisible();
+  await page.getByRole("button", { name: "Check Gmail", exact: true }).click();
+  await expect(
+    page.getByText("Mailbox check · queued.", { exact: false }),
+  ).toBeVisible();
+  await page.getByRole("link", { name: "Open prospect", exact: true }).click();
+  await expect(
+    page.getByRole("heading", { name: "Northline Software (Demo)" }),
+  ).toBeVisible();
+  expect(reads.filter((r) => r === "responses/sync")).toHaveLength(0);
+  expect(attempts).toEqual([]);
+});
+
+for (const width of [1280, 390])
+  test(`communication uncertainty is held with safe Sent check at ${width}`, async ({
+    page,
+  }) => {
+    const data = structuredClone(base);
+    data.outreach[0].status = "unknown";
+    data.outreach[0].attempts = 1;
+    data.runtime.unresolved = 1;
+    data.runtime.communication_jobs = [
+      {
+        ...data.jobs[0],
+        kind: "send",
+        payload: { id: "qa-message-0" },
+        status: "interrupted",
+        can_retry: false,
+        error: "Worker interrupted; Sent evidence required",
+      },
+    ];
+    const { attempts } = await mock(page, data);
+    await page.setViewportSize({ width, height: 900 });
+    await page.goto("/?view=prospect&company=qa-company-0");
+    await expect(
+      page.getByText("1 communication hold(s)", { exact: false }),
+    ).toBeVisible();
+    await expect(
+      page.getByRole("button", { name: "Recheck queued work" }),
+    ).toHaveCount(0);
+    await page
+      .getByRole("button", { name: "Check existing Sent evidence" })
+      .click();
+    await expect(
+      page.getByText("Sent check · queued.", { exact: false }),
+    ).toBeVisible();
+    expect(
+      (await new AxeBuilder({ page }).withTags(["wcag2a", "wcag2aa"]).analyze())
+        .violations,
+    ).toEqual([]);
+    expect(
+      await page.evaluate(
+        () => document.documentElement.scrollWidth <= window.innerWidth,
+      ),
+    ).toBe(true);
+    await page.screenshot({
+      path: `${artifact}/communication-${width}.png`,
+      fullPage: true,
+    });
+    expect(attempts).toEqual([]);
+  });

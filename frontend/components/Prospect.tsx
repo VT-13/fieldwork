@@ -1,4 +1,5 @@
 "use client";
+import RuntimeStatus from "./RuntimeStatus";
 import Link from "next/link";
 import { useState } from "react";
 import { ArrowLeft, ArrowRight, MapPin } from "lucide-react";
@@ -192,6 +193,10 @@ export default function Prospect({
                 )}
               </section>
               <IntelligenceActions id={id} demo={c.demo} />
+              <RuntimeStatus
+                companyId={id}
+                outreachIds={history.map((m) => m.id)}
+              />
               <section className="section">
                 <div className="section-heading">
                   <h2>Communication history</h2>
@@ -202,6 +207,17 @@ export default function Prospect({
                       <span className="timeline-dot" aria-hidden="true" />
                       <div>
                         <Status value={m.status} />
+                        {m.confirmation_pending && (
+                          <p className="quiet-note">
+                            Confirmation pending · further sending held
+                          </p>
+                        )}
+                        {m.sent_verified === true && (
+                          <p className="quiet-note">
+                            Matching Sent evidence confirmed; inbox delivery is
+                            not known.
+                          </p>
+                        )}
                         <h3>{m.subject}</h3>
                         <p>
                           {m.sequence

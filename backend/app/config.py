@@ -21,6 +21,13 @@ class Settings(BaseSettings):
     dry_run: bool = True
     manual_mode: bool = True
     response_poll_enabled: bool = False
+    worker_poll_seconds: int = Field(15, ge=1, le=60)
+    worker_lease_seconds: int = Field(120, ge=60, le=300)
+    job_timeout_seconds: int = Field(600, ge=60, le=900)
+    mailbox_poll_seconds: int = Field(300, ge=300, le=3600)
+    mailbox_max_requests: int = Field(60, ge=10, le=100)
+    mailbox_max_messages: int = Field(40, ge=5, le=100)
+    mailbox_lookback_days: int = Field(30, ge=7, le=90)
     data_directory: str = ""
     auto_approve: bool = False
     daily_send_limit: int = Field(25, ge=1, le=30)
@@ -71,6 +78,8 @@ class Settings(BaseSettings):
     def production(self):
         if any(m not in self.model_allowlist for m in (self.cheap_model,self.writing_model,self.review_model)):
             raise ValueError('Extraction, writing and review models must be in MODEL_ALLOWLIST')
+        from zoneinfo import ZoneInfo
+        ZoneInfo(self.timezone)
         from pathlib import Path
         env=Path('.env')
         if env.exists() and (env.is_symlink() or env.stat().st_mode&0o077):

@@ -1,0 +1,5 @@
+# Communication status visual verification
+
+Inspected actual fictional browser captures communication-1280.png and communication-390.png after all20 browser checks passed. New status uses existing paper, ruled sections, typography, spacing, badges and controls; no new visual system or dependency. Desktop keeps the existing prospect sidebar; mobile stacks the same content without horizontal overflow. Queued Sent evidence checks explicitly say they never resend. Offline worker, recurring pause, stale sync and communication hold are visible; interrupted send offers only evidence checking, with no unsafe retry or broad resume.
+
+Browser checks cover linked inbox responses, durable sync intents, offline/stale notices, held delivery, zero axe violations on the tested communication surfaces and overflow at 1280/390. Existing flagship responsive/keyboard tests remain. Full-page mobile capture is long because it includes the complete existing prospect/evidence/history/outcome page; it is not a claim of Mac Safari verification. All capture data is fictional; no real email or profile was rendered.

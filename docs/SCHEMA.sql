@@ -1,4 +1,4 @@
--- Historical 001 schema snapshot only. Canonical current schema is Alembic001→004; see app/models.py and docs/MIGRATION_PLAN.md.
+-- Historical 001 schema snapshot only. Canonical current schema is Alembic001→005; see app/models.py and docs/MIGRATION_PLAN.md.
 -- Fieldwork initial PostgreSQL schema. Managed through Alembic.
 
 

@@ -81,10 +81,13 @@ class CandidateView(BaseModel):
     updated_at: datetime
 
 class JobView(BaseModel):
+    can_retry: bool = False
     id: str
     kind: str
     payload: dict[str, Any]
     dedupe_key: str
+    available_at: datetime | None = None
+    lease_until: datetime | None = None
     status: str
     error: str
     result: dict[str, Any]
@@ -156,6 +159,9 @@ class OutreachView(BaseModel):
     review: ReviewView
     strategy: str
     status: MessageState
+    confirmation_pending: bool = False
+    sent_verified: bool | None = None
+    delivery_reason: str = ''
     due_at: datetime
     sent_at: datetime | None
     provider_id: str
@@ -187,6 +193,11 @@ class CampaignView(BaseModel):
     ongoing_policy: PolicyView = Field(default_factory=PolicyView)
 
 class ReplyView(BaseModel):
+    contact_id: str | None = None
+    outreach_id: str | None = None
+    campaign_id: str = 'personal'
+    thread_id: str = ''
+    followup_stopped: bool = True
     id: str
     company_id: str
     company: str
@@ -208,6 +219,19 @@ class InboxView(BaseModel):
     needs_attention: int
     responses: list[ReplyView]
     sync: SyncView
+
+class RuntimeView(BaseModel):
+    database: str
+    schema_version: str
+    worker: str
+    worker_at: str | None
+    scheduler: str
+    scheduler_at: str | None
+    gmail: str
+    unresolved: int
+    sync_stale: bool
+    recurring_paused: bool
+    communication_jobs: list[JobView]
 
 class MetricsView(BaseModel):
     model_config = ConfigDict(extra="allow")
@@ -297,4 +321,4 @@ class SelfTestView(BaseModel):
 
 CONTRACTS = [ProfileInput, CompanyView, CompanyDetail, OutreachView, CampaignView,
              InboxView, MetricsView, SettingsView, ConnectionView, OutreachEdit, PacketView, EmlView, SelfTestView,
-             CandidateView,JobView,CapabilitiesView,GenerationView]
+             CandidateView,JobView,CapabilitiesView,GenerationView,RuntimeView]

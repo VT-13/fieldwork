@@ -1,6 +1,6 @@
 """Only company delivery entry point. UI, worker and CLI converge here."""
 from sqlalchemy import select
-from ..models import Outreach,Operation,Evidence,now
+from ..models import Outreach,Evidence,now
 from ..core import Blocked,profile_fingerprint
 from ..domain.states import transition
 from . import ledger,policy
@@ -17,6 +17,9 @@ async def send_company(db,id,*,mode='scheduled',provider=None):
     from ..mail import Mailbox
     row=db.get(Outreach,id)
     key='send:'+id
+    existing=ledger.operation(db,key)
+    if existing and existing.status=='succeeded':
+        return ledger.latest(db,existing).receipt
     # First evaluation fails before connecting to any provider; denial is queryable.
     try:
         company,contact,profile,original=policy.company(db,row,now(),mode)
@@ -36,7 +39,10 @@ async def send_company(db,id,*,mode='scheduled',provider=None):
         db.rollback();ledger.finish(db,check,'blocked' if isinstance(exc,Blocked) else 'failed',reason='preflight_blocked' if isinstance(exc,Blocked) else 'provider_check_failed')
         raise
     ledger.finish(db,check,'succeeded',reason='conversation_checked')
+    from .jobs import active_job,require_owner
+    ownership=active_job.get()
     def authorize():
+        if ownership:require_owner(db,*ownership)
         nonlocal row,company,contact,profile,original
         row=db.get(Outreach,id)
         company,contact,profile,original=policy.company(db,row,now(),mode)
@@ -48,21 +54,31 @@ async def send_company(db,id,*,mode='scheduled',provider=None):
         transition(db,row,'sending',reason='attempt_reserved')
         row.attempts+=1;row.sent_at=attempt.started_at
         row.message_id=f'<fieldwork-{row.id}@gmail.com>'
-    attempt,replay=ledger.claim(db,key,'company_send',provider.name,authorize,outreach_id=id,entity_id=id,reserve=reserve)
+    attempt,replay=ledger.claim(db,key,'company_send',provider.name,authorize,outreach_id=id,entity_id=id,job_id=ownership[0] if ownership else None,reserve=reserve)
     if replay:return attempt.receipt
     try:
         with ledger.permit(attempt):
             receipt=await provider.deliver(db,row,contact,original)
         if not receipt.provider_id:raise ValueError('Missing provider receipt')
-    except Exception:
+    except Exception as exc:
+        from .contracts import MailboxFailure
         db.rollback();row=db.get(Outreach,id)
+        if isinstance(exc,MailboxFailure) and exc.definite:
+            transition(db,row,'failed',reason=exc.code)
+            ledger.finish(db,attempt,'failed',reason=exc.code,receipt={'failure':exc.code,'retryable':exc.retryable})
+            raise Blocked('Provider rejected this attempt; no automatic send retry') from None
         transition(db,row,'unknown',reason='delivery_uncertain')
         # Fail closed for any ambiguous provider error. No blind 429 replay.
         ledger.finish(db,attempt,'unknown',reason='delivery_uncertain')
         raise Blocked('Delivery uncertain; reconcile Sent before further communication')
+    ledger.lock(db)
+    from ..models import Company
+    from ..core import STOP_STAGES
+    row=db.get(Outreach,id);company=db.get(Company,row.company_id)
     row.provider_id=receipt.provider_id;row.thread_id=receipt.thread_id
-    transition(db,row,'sent',reason='provider_accepted');company.stage='contacted'
-    result={'outreach_id':id,'provider_id':receipt.provider_id,'thread_id':receipt.thread_id,'at':row.sent_at.isoformat(),'sent_verified':receipt.sent_verified,'confirmation_pending':True}
+    transition(db,row,'sent',reason='provider_accepted')
+    if company.stage not in STOP_STAGES:company.stage='contacted'
+    result={'account':provider.sender.lower(),'operation_id':attempt.operation_id,'message_id':row.message_id,'accepted_at':now().isoformat(),'outreach_id':id,'provider_id':receipt.provider_id,'thread_id':receipt.thread_id,'at':row.sent_at.isoformat(),'sent_verified':receipt.sent_verified,'confirmation_pending':True}
     ledger.finish(db,attempt,'succeeded',receipt=result,reason='provider_accepted')
     # Acceptance is durable even if confirmation fails; confirmation never resends.
     try:

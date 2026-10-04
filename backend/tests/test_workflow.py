@@ -52,7 +52,17 @@ class FakeMailbox:
     token="valid"
     def __init__(self,error=None,messages=None): self.error=error;self.sent=0;self.items=messages or []
     async def messages(self,since): return self.items
-    async def call(self,method,url,**kwargs):return {"messages":[],"labelIds":["SENT"]}
+    async def call(self,method,url,**kwargs):
+        import base64
+        if url.endswith('/profile'):return {'emailAddress':'student@example.com','historyId':'100'}
+        if url.endswith('/history'):return {'historyId':'101','history':[]}
+        if url.endswith('/messages'):return {'messages':[{'id':m['id']} for m in self.items]} if kwargs.get('params',{}).get('q','').startswith('after:') else {'messages':[]}
+        mid=url.rsplit('/',1)[-1]
+        for m in self.items:
+            if m['id']==mid:
+                h={'to':'founder@example.com' if m.get('sent_verified') else 'student@example.com','subject':'Robotics project idea',**m['headers']}
+                return {'id':mid,'threadId':m['thread'],'internalDate':str(int(now().timestamp()*1000)),'labelIds':['SENT'] if m.get('sent_verified') else [],'payload':{'headers':[{'name':k,'value':v} for k,v in h.items()],'body':{'data':base64.urlsafe_b64encode(m['body'].encode()).decode()}}}
+        return {'messages':[], 'labelIds':['SENT']}
     async def send(self,db,row,contact,original):
         self.sent+=1
         if self.error: raise self.error
@@ -72,7 +82,8 @@ async def test_send_is_idempotent_and_persisted(db,ready,live):
     mailbox=FakeMailbox()
     await mail.send_one(db,ready[2],mailbox)
     assert ready[2].status=="sent" and ready[2].provider_id=="provider-id"
-    with pytest.raises(Blocked): await mail.send_one(db,ready[2],mailbox)
+    replay=await mail.send_one(db,ready[2],mailbox)
+    assert replay["provider_id"]=="provider-id"
     assert mailbox.sent==1
 
 async def test_timeout_is_unknown_not_retried(db,ready,live):
@@ -96,8 +107,8 @@ async def test_stale_or_catchall_validation_blocks(db,ready,live):
 
 async def test_reply_detected_immediately_before_followup(db,ready,live):
     c,contact,first=ready
-    first.status="sent";first.sent_at=now()-timedelta(days=7);first.thread_id="thread";first.message_id="<initial@example.com>"
-    follow=Outreach(company_id=c.id,contact_id=contact.id,sequence=1,status="approved",subject="Follow-up",body="A new idea",evidence_ids=first.evidence_ids,review={**first.review,"adds_new_value":True})
+    first.provider_id="original-id";first.status="sent";first.sent_at=now()-timedelta(days=7);first.thread_id="thread";first.message_id="<initial@example.com>"
+    follow=Outreach(company_id=c.id,contact_id=contact.id,sequence=1,status="approved",subject=first.subject,body="A new idea",evidence_ids=first.evidence_ids,review={**first.review,"adds_new_value":True})
     db.add(follow);db.commit()
     box=FakeMailbox(messages=[{"id":"reply1","thread":"thread","headers":{"from":contact.email,"subject":"Re: project"},"body":"Sure, let's talk"}])
     with pytest.raises(Blocked,match="stopped"): await mail.send_one(db,follow,box)
@@ -111,7 +122,7 @@ async def test_unknown_send_reconciles_from_sent_mail(db,ready,live):
     assert row.status=="sent" and row.provider_id=="confirmed"
 
 async def test_dsn_matches_message_not_random_bounce(db,ready,live):
-    row=ready[2];row.status="sent";row.message_id="<unique@example.com>";db.commit()
+    row=ready[2];row.status="sent";row.sent_at=now();row.message_id="<unique@example.com>";db.commit()
     box=FakeMailbox(messages=[{"id":"bounce1","thread":"","headers":{"from":"mailer-daemon@example.net"},"body":"Delivery failed <unique@example.com>"}])
     await mail.sync_mailbox(db,box)
     assert ready[0].stage=="bounce" and db.get(Suppression,ready[1].email)
@@ -174,7 +185,7 @@ async def test_no_followup_policy_blocks_explicit_send(db,ready,live):
 
 async def test_auto_response_stops_followups_but_is_not_human_reply(db,ready,live):
     from app.models import Event
-    row=ready[2];row.status='sent';row.thread_id='thread';db.commit()
+    row=ready[2];row.status='sent';row.sent_at=now();row.thread_id='thread';db.commit()
     box=FakeMailbox(messages=[{'id':'auto1','thread':'thread','headers':{'from':ready[1].email,'auto-submitted':'auto-replied','subject':'Thanks'},'body':'We received your email'}])
     await mail.sync_mailbox(db,box)
     event=db.scalar(select(Event).where(Event.source_id=='gmail:auto1'))

@@ -14,8 +14,8 @@ MESSAGE_TRANSITIONS = {
     'sent': set(), 'failed': set(), 'cancelled': set(), 'demo': set(),
 }
 JOB_TRANSITIONS = {
-    'queued': {'running'}, 'running': {'done','failed','blocked','interrupted'},
-    'failed': {'queued'}, 'blocked': {'queued'}, 'interrupted': {'queued'}, 'done': set(),
+    'queued': {'running','blocked','cancelled'}, 'running': {'done','failed','blocked','interrupted','cancelled'},
+    'failed': {'queued'}, 'blocked': {'queued','cancelled'}, 'interrupted': {'queued','cancelled'}, 'done': set(), 'cancelled': set(),
 }
 OPERATION_TRANSITIONS = {
     'pending': {'running','blocked','skipped'},

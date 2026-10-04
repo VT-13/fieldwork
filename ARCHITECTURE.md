@@ -17,7 +17,7 @@ Module 1 establishes canonical source, not a deployed release. One operator, one
 | Replies / CRM | Existing response tracker, events, suppressions and opportunity status; provider evidence stops future sends |
 | Usage | ActionAttempt for operational history; existing usage records retain token/cost accounting, not separate send authority |
 
-FastAPI, SQLAlchemy, existing providers and Next.js remain one application. The desktop shell is a client, not another scheduler. No additional database or distributed infrastructure is introduced. Most existing entities remain intact; only four additive ledger/transition tables are introduced.
+FastAPI, SQLAlchemy, existing providers and Next.js remain one application. The desktop shell is a client, not another scheduler. No additional database or distributed infrastructure is introduced. Existing entities remain intact; Modules 1–4 add ledger/security/intelligence records and Module 5 extends the existing Job and Event tables.
 
 ## Provider contracts
 
@@ -57,7 +57,7 @@ Global unknown/running communication, pending confirmation, suppression, replies
 | Discovery / research / generation | Pause alone does not cancel; manual mode or explicit prohibition on paid services blocks paid calls; budgets still apply |
 | Reply synchronization / read-only CRM / analytics | Allowed |
 
-Missing campaign policy fails closed. Worker DRY_RUN/MANUAL_MODE remain additional controls; the explicitly authorized scheduled helper uses database policy, not those worker flags. Use database pause/stop as authoritative communication control. No browser state, prompt, temporary file or chat memory overrides it. The legacy filesystem STOP fallback is compatibility-only for historical batch display/stop, never an alternative authorization source.
+Missing campaign policy fails closed. Worker DRY_RUN/MANUAL_MODE remain additional controls. The explicitly scoped scheduled helper retains its canonical database-policy exception; it still uses the same delivery reservation and ledger. Production worker sends observe configured business hours. Use database pause/stop as authoritative communication control. No browser state, prompt, temporary file or chat memory overrides it. The legacy filesystem STOP fallback is compatibility-only for historical batch display/stop, never an alternative authorization source.
 
 ## Release and expansion
 
@@ -73,4 +73,17 @@ auth.py owns operator sessions/authorization; gmail_oauth.py and credentials.py 
 
 Schema004 adds Candidate, ContactObservation, StudentFact and Generation, Evidence source/freshness fields and Usage metadata. No raw site dump goes into these domain records or premium writing context. Contact/student/company ownership is checked before generation and application; generation references bind to current source/profile/contact hashes. A deterministic renderer accepts only a validated model selection over supplied references and relevant supervised task IDs. Independent quality review is required; generated records remain unsent drafts. Prompt/version/model/input identity and prior versions persist. Existing send policy calls the narrow current-generation guard without introducing another transport or changing scheduling.
 
-Privacy export includes new domain records; content erasure removes student/generation text while preserving minimal linkage/history. Operational records/logs use IDs, hashes, counts and sanitized codes. Read-only capability endpoints describe actual configured adapters and disabled policy, never connection health. New private contracts feed the Module3 generated frontend client. See docs/module4/README.md for exact limits, provider coverage, testing and production constraints.
+Privacy export includes new domain records; content erasure removes student/generation text while preserving minimal linkage/history. Operational records/logs use IDs, hashes, counts and sanitized codes. Read-only capability endpoints describe actual configured adapters and disabled policy, never connection health. New private contracts feed the Module 3 generated frontend client. See docs/module4/README.md for exact limits, provider coverage, testing and production constraints.
+
+
+## Module 5 communication runtime
+
+`services/delivery.py` is the sole company-send service. API, worker and scheduled compatibility helpers delegate here; transport additionally binds the MIME recipient, sender, subject, body, RFC and threading to its durable reservation. Self-tests and own-account draft saves retain separate narrow ledger policies. Graph send endpoints fail closed, including query-suffixed URLs. No scheduled AI prompt is part of the canonical runtime.
+
+`services/jobs.py` owns serialized enqueue/claim, stable dedupe, owner-token/lease fencing, explicit retry eligibility and stale recovery. The personal-first worker uses one leader per tick (PostgreSQL advisory lock, development SQLite file lock), with database claims and delivery locks as independent safeguards against accidental competitors. Network I/O never holds the consequential reservation lock. Job intent and operator approval cannot override current database policy.
+
+The worker invokes a deterministic scheduler on each tick, claims one due job and renews its lease during bounded execution. Scheduling reads configuration/policy and writes intents; delivery rechecks authorization and replies immediately before reservation. Safe reads recover at most twice; interrupted or uncertain communication is never automatically requeued. SIGTERM/SIGINT stops new claims and finishes the bounded current job. Forced interruption after reservation becomes unknown. Permanent service/Compose source exists but remains uninstalled.
+
+One Gmail scanner verifies identity and saves incremental history/page checkpoints, with bounded recent backfill after an invalid cursor. Strong thread/RFC correlation or a unique bounded sender/recipient match records immutable linked events. Replies, acknowledgments, bounces and opt-outs cancel pending communication durably. A reply committed before reservation wins; an already reserved transmission may finish and must not overwrite the response state.
+
+One follow-up preparation intent has a fixed initial-send+168 h eligibility time. It rechecks confirmed original identity, policy/contact/replies/suppression and generates a distinct Module 4 proposal as a draft, never silently approving it. Later delivery runs all current guards again. Missed runs create no accumulated quota or historical batch replay. See docs/module5/README.md for crash windows, polling bounds and honest provider limits.

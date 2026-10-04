@@ -3,7 +3,7 @@ from app.responses import ingest,listing
 from app.models import now,State,Suppression
 
 def message(body='Happy to talk.',sender='colleague@example.com',headers=None,thread='thread',id='reply'):
- return {'id':id,'threadId':thread,'internalDate':str(int(now().timestamp()*1000)),'payload':{'headers':[{'name':'From','value':sender},{'name':'Subject','value':'Re: Internship'},*(headers or [])],'body':{'data':base64.urlsafe_b64encode(body.encode()).decode()}}}
+ return {'id':id,'threadId':thread,'internalDate':str(int(now().timestamp()*1000)),'payload':{'headers':[{'name':'To','value':'student@example.com'},{'name':'From','value':sender},{'name':'Subject','value':'Re: Internship'},*(headers or [])],'body':{'data':base64.urlsafe_b64encode(body.encode()).decode()}}}
 
 def setup(ready,db):
  c,ct,r=ready;r.sent_at=now();r.thread_id='thread';r.message_id='<original@example.com>';r.status='sent';db.commit();return c,ct,r

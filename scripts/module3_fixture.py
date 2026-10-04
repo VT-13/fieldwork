@@ -2,7 +2,7 @@
 import json,sys
 from pathlib import Path
 ROOT=Path(__file__).resolve().parents[1];sys.path.insert(0,str(ROOT/'backend'))
-from app.ui_contracts import CandidateView,JobView,CapabilitiesView,GenerationView,CompanyDetail, OutreachView, InboxView, MetricsView, ProfileInput, CampaignView, SettingsView, ConnectionView
+from app.ui_contracts import RuntimeView,CandidateView,JobView,CapabilitiesView,GenerationView,CompanyDetail, OutreachView, InboxView, MetricsView, ProfileInput, CampaignView, SettingsView, ConnectionView
 
 def fixture():
     stamp='2026-10-03T10:00:00Z'
@@ -25,6 +25,7 @@ def fixture():
     data['candidates']=[CandidateView(id='qa-candidate',domain='candidate.example',name='Willow Robotics (Demo)',website='https://candidate.example',industry='Robotics',distance_miles=None,status='candidate',company_id=None,observations=[{'field':'name','value':'Willow Robotics (Demo)','provider':'manual','source_url':'https://candidate.example/about','retrieved_at':stamp,'confidence':'unknown'}],contexts=['Personal internship search'],updated_at=stamp).model_dump(mode='json')]
     data['capabilities']=CapabilitiesView(paid_allowed=False,providers=[{'id':id,'configured':False,'available':False,'reason':'Paid calls disabled by mode/policy'} for id in ('maps','tavily','apollo','research','generate','contacts')],manual_import=True,limits={'companies':30,'contacts':5,'pages':5,'requests':16,'ai_calls':7,'generation_attempts':2,'job_tokens':24000,'daily_tokens':60000,'discovery_seconds':60,'research_seconds':120},worker_note='Queued work needs the existing worker process. This phase does not install or start it.').model_dump(mode='json')
     data['jobs']=[JobView(id='qa-job',kind='research',payload={'id':'qa-company-0'},dedupe_key='fixture-job',status='running',error='',result={'facts':2,'pages':1,'provider_requests':2},created_at=stamp,started_at=stamp,finished_at=None).model_dump(mode='json')]
+    data['runtime']=RuntimeView(database='reachable',schema_version='005',worker='offline',worker_at=None,scheduler='offline',scheduler_at=None,gmail='disconnected',unresolved=0,sync_stale=True,recurring_paused=True,communication_jobs=[]).model_dump(mode='json')
     data['generations']={c['id']:[] for c in companies}
     return data
 if __name__=='__main__':

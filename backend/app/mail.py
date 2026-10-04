@@ -1,13 +1,8 @@
 import base64
-import asyncio
-from datetime import timedelta
 from email.message import EmailMessage
-from email.utils import parseaddr
 import httpx
-from sqlalchemy import select, func
 from .config import settings
-from .core import Blocked, aware, day_start, STOP_STAGES, record_event, profile_fingerprint
-from .models import Company, Contact, Outreach, Profile, State, Suppression, now
+from .core import Blocked
 
 class Mailbox:
     def __init__(self):
@@ -49,6 +44,23 @@ class Mailbox:
 
     async def call(self, method, url, **kwargs):
         from .services.ledger import active_delivery
+        if self.cfg.mail_provider!='gmail':
+            from urllib.parse import urlsplit
+            import re
+            p=urlsplit(url)
+            drafting=method.upper()=='POST' and p.path=='/v1.0/me/messages' and not p.query
+            updating=method.upper()=='PATCH' and re.fullmatch(r'/v1.0/me/messages/[A-Za-z0-9_%=-]+',p.path) and not p.query
+            if p.scheme!='https' or p.netloc!='graph.microsoft.com' or not ((method.upper()=='GET' and p.path=='/v1.0/me') or drafting or updating):
+                raise Blocked('Unsupported Outlook operation; production sending and tracking are unavailable')
+            if drafting or updating:
+                from .db import Session
+                from .models import ActionAttempt,Operation
+                with Session() as current:
+                    attempt=current.get(ActionAttempt,active_delivery.get()) if active_delivery.get() else None
+                    op=current.get(Operation,attempt.operation_id) if attempt else None
+                    if not attempt or not attempt.authorized or attempt.status!='running' or not op or op.kind!='mailbox_draft':raise Blocked('Draft requires a durable mailbox-draft reservation')
+        if self.cfg.mail_provider!='gmail' and method.upper()=='POST' and url.endswith('/sendMail'):
+            raise Blocked('Outlook production sending is not implemented')
         if method.upper()=="POST" and (url.endswith("/messages/send") or url.endswith("/sendMail")) and not active_delivery.get():
             raise Blocked("Delivery requires a policy-authorized ledger reservation")
         if self.cfg.mail_provider=='gmail':
@@ -59,7 +71,7 @@ class Mailbox:
             import re
             path=p.path.removeprefix('/gmail/v1/users/me/')
             verb=method.upper()
-            read=verb=='GET' and re.fullmatch(r'(profile|messages|messages/[A-Za-z0-9_-]+|threads/[A-Za-z0-9_-]+)',path)
+            read=verb=='GET' and re.fullmatch(r'(profile|history|messages|messages/[A-Za-z0-9_-]+|threads/[A-Za-z0-9_-]+)',path)
             sending=verb=='POST' and path=='messages/send'
             drafting=(verb=='POST' and path=='drafts') or (verb=='PUT' and re.fullmatch(r'drafts/[A-Za-z0-9_-]+',path))
             if not (read or sending or drafting):raise Blocked('Unsupported Gmail operation; draft sends and raw mutations are prohibited')
@@ -73,18 +85,33 @@ class Mailbox:
                     allowed=('company_send','self_test') if sending else ('mailbox_draft',)
                     if not attempt or not attempt.authorized or attempt.status!='running' or not op or op.kind not in allowed:
                         raise Blocked('Provider mutation requires a matching durable authorized operation')
+                    if sending:
+                        from .services.envelope import validate
+                        validate(current,attempt,op,kwargs.get('json') or {},self.cfg.sender_email)
+                    if sending and op.job_id:
+                        from .services.jobs import active_job,require_owner
+                        ownership=active_job.get()
+                        if not ownership or ownership[0]!=op.job_id:raise Blocked('Delivery job ownership required')
+                        require_owner(current,*ownership)
                     if drafting:
                         from .gmail_oauth import require_connection,COMPOSE
                         if COMPOSE not in require_connection(current,self.generation).scopes:raise Blocked('Reconnect with explicit Gmail draft permission')
             self.ensure_authorized()
         async with httpx.AsyncClient(timeout=25,follow_redirects=False) as client:
             r = await client.request(method,url,headers={"Authorization":"Bearer "+self.token,**kwargs.pop("headers",{})},**kwargs)
-        if r.status_code in (401,403):
+        from .services.contracts import MailboxFailure
+        if r.status_code==404 and url.endswith('/history'):
+            raise MailboxFailure('cursor_invalid', definite=True)
+        if r.status_code==401 or (r.status_code==403 and 'rateLimitExceeded' not in r.text and 'userRateLimitExceeded' not in r.text):
             if self.managed:
                 from .gmail_oauth import invalidate
                 invalidate('provider_rejected')
-            raise Blocked('Mailbox access rejected; reconnect')
-        if r.status_code>=400:raise Blocked('Mailbox provider request failed')
+            raise MailboxFailure('authorization_rejected', definite=True)
+        if r.status_code==404:raise MailboxFailure('not_found', definite=True)
+        if r.status_code in (429,403):raise MailboxFailure('rate_limited', definite=True, retryable=True)
+        if r.status_code>=500:raise MailboxFailure('provider_unavailable', retryable=True)
+        if r.status_code>=400:raise MailboxFailure('provider_rejected', definite=True)
+        if len(r.content)>1_000_000:raise MailboxFailure('payload_limit')
         return r.json() if r.content else {}
 
     async def send(self, db, row, contact, original):
@@ -93,6 +120,7 @@ class Mailbox:
             raise Blocked("Delivery requires a policy-authorized ledger reservation")
         self.ensure_authorized(db)
         s = self.cfg
+        if s.mail_provider!='gmail':raise Blocked('Company delivery requires Gmail')
         msg = EmailMessage()
         msg["From"] = s.sender_email
         msg["To"] = contact.email
@@ -108,92 +136,15 @@ class Mailbox:
                 payload["threadId"] = original.thread_id
             data = await self.call("POST","https://gmail.googleapis.com/gmail/v1/users/me/messages/send",json=payload)
             return data["id"],data["threadId"]
-        # Graph accepts MIME, keeping the RFC Message-ID for reconciliation/thread headers.
-        await self.call("POST","https://graph.microsoft.com/v1.0/me/sendMail",
-            headers={"Content-Type":"text/plain"},content=base64.b64encode(msg.as_bytes()))
-        return "accepted:"+row.id,""
-
-    async def messages(self, since):
-        if self.cfg.mail_provider=="gmail":
-            token = None
-            result = []
-            for _ in range(10):
-                params = {"q":f"after:{int(since.timestamp())}","maxResults":100}
-                if token:
-                    params["pageToken"]=token
-                data = await self.call("GET","https://gmail.googleapis.com/gmail/v1/users/me/messages",params=params)
-                for item in data.get("messages",[]):
-                    full = await self.call("GET",f'https://gmail.googleapis.com/gmail/v1/users/me/messages/{item["id"]}',params={"format":"full"})
-                    payload = full.get("payload",{})
-                    headers = {h["name"].lower():h["value"] for h in payload.get("headers",[])}
-                    def body(p):
-                        raw = p.get("body",{}).get("data","")
-                        txt = base64.urlsafe_b64decode(raw+"="*(-len(raw)%4)).decode(errors="replace") if raw else ""
-                        return txt+"\n"+"\n".join(body(c) for c in p.get("parts",[]))
-                    result.append({"id":item["id"],"thread":full.get("threadId",""),"headers":headers,"body":body(payload)[:30000],"sent_verified":"SENT" in full.get("labelIds",[])})
-                token = data.get("nextPageToken")
-                if not token:
-                    return result
-            raise Blocked("Inbox sync page budget exhausted; narrow mailbox or extend sync implementation before sending")
-        url = "https://graph.microsoft.com/v1.0/me/messages"
-        params = {"$filter":f"receivedDateTime ge {since.isoformat()}","$top":100,"$select":"id,conversationId,internetMessageId,internetMessageHeaders,from,subject,body"}
-        result = []
-        for _ in range(10):
-            data = await self.call("GET",url,params=params)
-            for m in data.get("value",[]):
-                h = {v["name"].lower():v["value"] for v in m.get("internetMessageHeaders",[])}
-                h.update({"from":m.get("from",{}).get("emailAddress",{}).get("address",""),"subject":m.get("subject",""),"message-id":m.get("internetMessageId","")})
-                result.append({"id":m["id"],"thread":m.get("conversationId",""),"headers":h,"body":m.get("body",{}).get("content","")[:30000]})
-            url = data.get("@odata.nextLink")
-            if not url:
-                return result
-            if not url.startswith("https://graph.microsoft.com/"):
-                raise Blocked("Unexpected Graph continuation URL")
-            params = None
-        raise Blocked("Inbox sync page budget exhausted")
+        raise Blocked('Outlook production sending is not implemented')
 
 async def sync_mailbox(db, mailbox=None):
-    mailbox = mailbox or Mailbox()
-    if not mailbox.token:
-        await mailbox.connect()
-    state = db.get(State,"mail_sync")
-    start = now()
-    since = aware(__import__('datetime').datetime.fromisoformat(state.value["at"]))-timedelta(minutes=10) if state else start-timedelta(days=7)
-    try:
-        async with asyncio.timeout(60):
-            messages = await mailbox.messages(since)
-    except TimeoutError:
-        raise Blocked("Mailbox sync exceeded 60 seconds; sending paused until a complete sync succeeds")
-    sent = list(db.scalars(select(Outreach).where(Outreach.status.in_(["sent","sending","unknown"])) ))
-    for m in messages:
-        h = m["headers"]
-        sender = parseaddr(h.get("from",""))[1].lower()
-        if sender == getattr(mailbox,'cfg',settings()).sender_email.lower():
-            for row in sent:
-                if row.message_id and h.get("message-id")==row.message_id and m.get("sent_verified") is True:
-                    from .services.ledger import reconcile_sent
-                    was_uncertain=row.status in {"sending","unknown"}
-                    reconcile_sent(db,row,m["id"],m["thread"],h["message-id"])
-                    if was_uncertain:
-                        company = db.get(Company,row.company_id)
-                        if company.stage not in STOP_STAGES:
-                            company.stage = "contacted"
-            continue
-        text = m["body"].lower()
-        bounce = any(x in sender for x in ("mailer-daemon","postmaster")) or "delivery-status" in h.get("content-type","")
-        auto = h.get("auto-submitted","").lower() not in ("","no")
-        for row in sent:
-            contact = db.get(Contact,row.contact_id)
-            same_thread = bool(row.thread_id and row.thread_id==m["thread"])
-            reference = row.message_id in (h.get("in-reply-to","")+h.get("references","")) if row.message_id else False
-            dsn = bounce and row.message_id and row.message_id.lower() in text
-            if dsn or ((same_thread or reference) and sender==contact.email.lower()):
-                # Stop on any matched reply, including automatic replies; resume manually only.
-                kind = "bounce" if dsn else "auto_reply" if auto else "opt_out" if any(x in text for x in ("unsubscribe","remove me","do not contact","stop emailing")) else "reply"
-                record_event(db,db.get(Company,row.company_id),kind,settings().mail_provider+":"+m["id"],"Automatic response" if auto else h.get("subject",""))
-    db.merge(State(key="mail_sync",value={"at":start.isoformat(),"messages":len(messages)}))
-    db.commit()
-    return len(messages)
+    """Compatibility name for the one bounded response/reconciliation reader."""
+    from .responses import sync_session
+    result = await sync_session(db, mailbox)
+    if result['status'] not in ('ok', 'idle'):
+        raise Blocked('Mailbox sync incomplete; inspect Responses before sending')
+    return result.get('messages', 0)
 
 async def send_one(db, row, mailbox=None):
     """Compatibility entry point; all company delivery now uses the same service."""

@@ -4,7 +4,7 @@ from pathlib import Path
 ROOT=Path(__file__).resolve().parents[1]
 MANIFEST='docs/module1/canonical-source.json'
 PREFIXES=('backend/','frontend/','desktop/','scripts/')
-CONFIGS={'ARCHITECTURE.md','SECURITY.md','README.md','docs/SETUP.md','docs/MIGRATION_PLAN.md','docs/BACKUP_RESTORE.md','docs/DATA_LIFECYCLE.md','backend/pyproject.toml','backend/requirements.lock.txt','backend/alembic.ini','backend/Dockerfile','backend/.dockerignore','frontend/package.json','frontend/package-lock.json','frontend/tsconfig.json','frontend/next.config.ts','frontend/proxy.ts','frontend/Dockerfile','frontend/.dockerignore','compose.yaml','start-personal.sh','.env.example','.github/workflows/checks.yml'}
+CONFIGS={'ARCHITECTURE.md','SECURITY.md','README.md','docs/SETUP.md','docs/DEPLOYMENT.md','docs/PROVIDER_CAPABILITIES.md','docs/module5/README.md','docs/MIGRATION_PLAN.md','docs/BACKUP_RESTORE.md','docs/DATA_LIFECYCLE.md','backend/pyproject.toml','backend/requirements.lock.txt','backend/alembic.ini','backend/Dockerfile','backend/.dockerignore','frontend/package.json','frontend/package-lock.json','frontend/tsconfig.json','frontend/next.config.ts','frontend/proxy.ts','frontend/Dockerfile','frontend/.dockerignore','compose.yaml','start-personal.sh','.env.example','.github/workflows/checks.yml'}
 
 def tracked(root):
     files=subprocess.check_output(['git','ls-files'],cwd=root,text=True).splitlines()

@@ -80,10 +80,12 @@ def score_company(company, has_contact, interests):
 
 STOP_STAGES = {"auto_reply", "replied", "positive", "negative", "bounce", "opt_out", "interview", "offer", "closed"}
 
-def record_event(db, company, kind, source_id, detail=""):
+def record_event(db, company, kind, source_id, detail="", *, contact_id=None, outreach_id=None, received_at=None):
+    from .services.ledger import lock
+    lock(db)
     if db.scalar(select(Event).where(Event.source_id == source_id)):
         return
-    db.add(Event(company_id=company.id, kind=kind, source_id=source_id, detail=detail[:2000]))
+    db.add(Event(company_id=company.id, kind=kind, source_id=source_id, detail=detail[:2000], contact_id=contact_id, outreach_id=outreach_id, **({"created_at":received_at} if received_at else {})))
     if kind != "open":
         # Never downgrade an offer or interview merely because a reply arrives.
         if company.stage not in {"offer", "interview"} or kind in {"offer", "bounce", "opt_out", "closed"}:
@@ -94,6 +96,9 @@ def record_event(db, company, kind, source_id, detail=""):
     if kind in {"bounce", "opt_out", "negative"}:
         for c in db.scalars(select(Contact).where(Contact.company_id == company.id)):
             db.merge(Suppression(email=c.email.lower(), reason=kind))
+    if kind != "open":
+        from .services.jobs import cancel_company
+        cancel_company(db,company.id,'conversation_'+kind)
     db.commit()
 
 

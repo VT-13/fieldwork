@@ -42,7 +42,7 @@ def test_fresh_migrations_indices_constraints_and_schema(pg):
     with pg.connect() as c:assert compare_metadata(MigrationContext.configure(c),Base.metadata)==[]
     Session=sessionmaker(pg,expire_on_commit=False)
     with Session() as db:
-        assert db.scalar(text('select version_num from alembic_version'))=='004'
+        assert db.scalar(text('select version_num from alembic_version'))=='005'
         db.add(Job(kind='research',payload={'id':'company'},dedupe_key='durable',status='queued'));db.commit()
         db.add(Contact(company_id='does-not-exist',email='test@example.com'))
         with pytest.raises(IntegrityError):db.commit()

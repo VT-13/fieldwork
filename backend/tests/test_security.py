@@ -297,8 +297,8 @@ async def test_sync_uses_verified_provider_identity_not_optional_env(db,secure,r
     from types import SimpleNamespace
     from test_workflow import FakeMailbox
     monkeypatch.setenv('SENDER_EMAIL','');settings.cache_clear()
-    row=ready[2];row.status='unknown';row.message_id='<canonical>';db.commit()
-    box=FakeMailbox(messages=[{'id':'verified-sent','thread':'thread-kept','headers':{'from':'student@example.com','message-id':'<canonical>'},'body':'','sent_verified':True}]);box.cfg=SimpleNamespace(sender_email='student@example.com')
+    row=ready[2];row.status='unknown';row.sent_at=now();row.message_id='<canonical>';db.commit()
+    box=FakeMailbox(messages=[{'id':'verified-sent','thread':'thread-kept','headers':{'from':'student@example.com','message-id':'<canonical>'},'body':row.body,'sent_verified':True}]);box.cfg=SimpleNamespace(sender_email='student@example.com')
     await sync_mailbox(db,box)
     assert row.status=='sent' and row.provider_id=='verified-sent'
 

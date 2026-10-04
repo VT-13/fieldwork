@@ -2,6 +2,7 @@
 import { useCallback, useEffect, useSyncExternalStore } from "react";
 import schemas from "./contracts.schema.json";
 import type {
+  RuntimeView,
   CandidateView,
   JobView,
   CapabilitiesView,
@@ -21,6 +22,7 @@ import type {
 } from "./contracts";
 
 type Views = {
+  RuntimeView: RuntimeView;
   CandidateView: CandidateView;
   JobView: JobView;
   CapabilitiesView: CapabilitiesView;
@@ -157,6 +159,10 @@ export async function request(
     );
   }
   if (method !== "GET") {
+    if (path === "responses/sync" || path === "mail/sync")
+      invalidate("jobs", "runtime", "responses");
+    if (path.endsWith("/reconcile")) invalidate("runtime", "jobs");
+    if (path.startsWith("responses/")) invalidate("responses");
     if (path.endsWith("/regenerate") || path.includes("/actions/"))
       invalidate("jobs");
     if (path.startsWith("discovery/") || path === "discover")

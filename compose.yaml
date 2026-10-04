@@ -35,6 +35,13 @@ services:
     build: ./backend
     env_file: .env
     command: ["python", "-m", "app.worker"]
+    stop_grace_period: 16m
+    healthcheck:
+      test: ["CMD", "python", "-m", "app.worker", "--health"]
+      interval: 30s
+      timeout: 10s
+      start_period: 30s
+      retries: 3
     depends_on:
       migrate: {condition: service_completed_successfully}
     restart: unless-stopped

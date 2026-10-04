@@ -1,26 +1,32 @@
-"""Single PostgreSQL advisory-lock leader. All paid and mail actions run here."""
+"""Deterministic scheduler and durable executor; current policy owns external work."""
+
 import asyncio
 import logging
 from contextlib import contextmanager
-from datetime import timedelta
 from sqlalchemy import select, text
 from .db import Session, engine
-from .models import Company, Contact, Job, Outreach, State, now
+from .models import Company, Contact, Outreach, State, now
 from .domain.states import transition
 from .services import ledger, policy
 from .config import settings
-from .core import Blocked, public_url, aware, STOP_STAGES
+from .core import Blocked, STOP_STAGES
 from .providers import verify
 from .services.intelligence import ConfiguredProspects
-discover=ConfiguredProspects().discover
-from .pipeline import research, generate
-from .mail import send_one, sync_mailbox
 
+discover = ConfiguredProspects().discover
+from .pipeline import research, generate
+from .mail import sync_mailbox
+from .services.jobs import enqueue
+
+from uuid import uuid4
+
+INSTANCE_ID = str(uuid4())
 log = logging.getLogger("worker")
+
 
 @contextmanager
 def leadership():
-    if engine.dialect.name=="postgresql":
+    if engine.dialect.name == "postgresql":
         with engine.connect() as conn:
             acquired = conn.scalar(text("SELECT pg_try_advisory_lock(198640921)"))
             try:
@@ -31,187 +37,386 @@ def leadership():
     else:
         # OS lock prevents multiple local demo workers as well.
         import fcntl
-        with open(".worker.lock","w") as handle:
+
+        with open(".worker.lock", "w") as handle:
             try:
-                fcntl.flock(handle,fcntl.LOCK_EX|fcntl.LOCK_NB)
+                fcntl.flock(handle, fcntl.LOCK_EX | fcntl.LOCK_NB)
             except BlockingIOError:
                 yield False
                 return
             try:
                 yield True
             finally:
-                fcntl.flock(handle,fcntl.LOCK_UN)
+                fcntl.flock(handle, fcntl.LOCK_UN)
 
-def enqueue(db,kind,payload,key):
-    existing = db.scalar(select(Job).where(Job.dedupe_key==key))
-    if existing:
-        return existing
-    job=Job(kind=kind,payload=payload,dedupe_key=key)
-    db.add(job)
-    db.commit()
-    return job
 
-async def _execute(db,job):
-    policy.background(db,job.kind)
-    p=job.payload
-    if settings().manual_mode and job.kind in {"discover","research","pipeline","generate","regenerate","verify","send"}:
-        raise Blocked("Manual mode: use the personal review desk; paid calls and live sends are disabled")
-    if job.kind=="discover":
+async def _execute(db, job):
+    policy.background(db, job.kind)
+    p = job.payload
+    if settings().manual_mode and job.kind in {
+        "discover",
+        "research",
+        "pipeline",
+        "generate",
+        "regenerate",
+        "verify",
+        "send",
+        "followup_prepare",
+    }:
+        raise Blocked(
+            "Manual mode: use the personal review desk; paid calls and live sends are disabled"
+        )
+    if job.kind == "discover":
         async with asyncio.timeout(settings().discovery_seconds):
-            rows=await discover(db,p)
+            rows = await discover(db, p)
         from .intelligence.discovery import ingest_candidates
-        return ingest_candidates(db,rows,p.get('context','Personal internship search'))
-    if job.kind=='candidate_import':
+
+        return ingest_candidates(
+            db, rows, p.get("context", "Personal internship search")
+        )
+    if job.kind == "candidate_import":
         from .intelligence.discovery import ingest_candidates
-        return ingest_candidates(db,p['companies'],p.get('context','Personal internship search'))
-    if job.kind=="mailbox_draft":
+
+        return ingest_candidates(
+            db, p["companies"], p.get("context", "Personal internship search")
+        )
+    if job.kind == "mailbox_draft":
         from .draft_mail import save_mailbox_draft
-        return await save_mailbox_draft(db,p["id"],p["draft_hash"])
-    if job.kind=="sync":
-        return {"messages":await sync_mailbox(db)}
-    if job.kind=="regenerate":
-        row=db.get(Outreach,p["id"])
-        if not row or row.status not in {"draft","approved","rejected"}:
+
+        return await save_mailbox_draft(db, p["id"], p["draft_hash"])
+    if job.kind == "sync":
+        return {"messages": await sync_mailbox(db)}
+    if job.kind == "reconcile":
+        from .services.reconciliation import reconcile
+
+        return await reconcile(db, p["id"])
+    if job.kind == "followup_prepare":
+        from .services.email_provider import MailboxProvider
+        from .mail import Mailbox
+
+        original = db.get(Outreach, p["id"])
+        company, contact = policy.followup(db, original, now())
+        provider = MailboxProvider(Mailbox())
+        await provider.connect()
+        await provider.check_conversation(db, original, contact, original)
+        ledger.lock(db)
+        company, contact = policy.followup(db, db.get(Outreach, p["id"]), now())
+        db.commit()
+        row = await generate(db, company, 1, job_id=job.id)
+        return {
+            "draft_id": row.id,
+            "status": row.status,
+            "requires_operator_review": True,
+        }
+    if job.kind == "regenerate":
+        row = db.get(Outreach, p["id"])
+        if not row or row.status not in {"draft", "approved", "rejected"}:
             raise Blocked("Draft cannot be regenerated")
-        company=db.get(Company,row.company_id)
-        seq=row.sequence
-        generated=await generate(db,company,seq,replace=True,job_id=job.id)
-        return {"draft_id":generated.id}
-    if job.kind=="send":
-        await send_one(db,db.get(Outreach,p["id"]))
-        return {"sent":True}
-    if job.kind=="verify":
-        return {"validation":await verify(db,db.get(Contact,p["id"]))}
-    company=db.get(Company,p["id"])
+        company = db.get(Company, row.company_id)
+        seq = row.sequence
+        generated = await generate(db, company, seq, replace=True, job_id=job.id)
+        return {"draft_id": generated.id}
+    if job.kind == "send":
+        from .services.delivery import send_company
+
+        return await send_company(db, p["id"], mode="scheduled")
+    if job.kind == "verify":
+        return {"validation": await verify(db, db.get(Contact, p["id"]))}
+    company = db.get(Company, p["id"])
     if not company:
         raise Blocked("Company no longer exists")
-    if job.kind in {"research","pipeline"}:
-        research_result=await research(db,company)
-    if job.kind in {"generate","pipeline"}:
-        row=await generate(db,company,p.get("sequence",0),job_id=job.id)
-        contact=db.get(Contact,row.contact_id)
-        if settings().hunter_api_key and contact.validation!="valid":
-            await verify(db,contact)
-        return {"draft_id":row.id,"status":row.status}
-    return {"stage":company.stage,**(research_result if job.kind=="research" else {})}
+    if job.kind in {"research", "pipeline"}:
+        research_result = await research(db, company)
+    if job.kind in {"generate", "pipeline"}:
+        row = await generate(db, company, p.get("sequence", 0), job_id=job.id)
+        contact = db.get(Contact, row.contact_id)
+        if settings().hunter_api_key and contact.validation != "valid":
+            await verify(db, contact)
+        return {"draft_id": row.id, "status": row.status}
+    return {
+        "stage": company.stage,
+        **(research_result if job.kind == "research" else {}),
+    }
 
-async def execute(db,job):
-    if not job.id:  # Unsaved callers can validate, but cannot create a durable job execution.
-        return await _execute(db,job)
+
+async def execute(db, job):
+    if (
+        not job.id
+    ):  # Unsaved callers can validate, but cannot create a durable job execution.
+        return await _execute(db, job)
+
     def authorize():
-        if settings().manual_mode and job.kind in {"discover","research","pipeline","generate","regenerate","verify","send"}:
+        if job.owner_token:
+            from .services.jobs import require_owner
+
+            require_owner(db, job.id, job.owner_token)
+        if settings().manual_mode and job.kind in {
+            "discover",
+            "research",
+            "pipeline",
+            "generate",
+            "regenerate",
+            "verify",
+            "send",
+            "followup_prepare",
+        }:
             raise Blocked("Manual mode: paid calls and live sends are disabled")
-        return policy.background(db,job.kind)
-    attempt,replay=ledger.claim(db,'job:'+job.id,'job:'+job.kind,'local',authorize,entity_id=job.id,job_id=job.id,retry=True)
-    if replay:return attempt.receipt
+        return policy.background(db, job.kind)
+
+    attempt, replay = ledger.claim(
+        db,
+        "job:" + job.id,
+        "job:" + job.kind,
+        "local",
+        authorize,
+        entity_id=job.id,
+        job_id=job.id,
+        retry=True,
+    )
+    if replay:
+        return attempt.receipt
     try:
         from .intelligence.bounds import scope
-        with scope(db,job.id) as bounds:
-            result=await _execute(db,job)
-            if job.kind in ('discover','candidate_import','research','pipeline','generate','regenerate','verify'):
-                result={**job.result,**(result or {}),**bounds.summary()}
-                attempt.network_units=bounds.requests
+
+        with scope(db, job.id) as bounds:
+            result = await _execute(db, job)
+            if job.kind in (
+                "discover",
+                "candidate_import",
+                "research",
+                "pipeline",
+                "generate",
+                "regenerate",
+                "verify",
+            ):
+                result = {**job.result, **(result or {}), **bounds.summary()}
+                attempt.network_units = bounds.requests
     except Exception as exc:
         db.rollback()
-        if 'bounds' in locals():
-            attempt.network_units=bounds.requests
-            job.result={**job.result,**bounds.summary()}
+        if "bounds" in locals():
+            attempt.network_units = bounds.requests
+            job.result = {**job.result, **bounds.summary()}
             from .intelligence.bounds import IntelligenceFailure
-            if isinstance(exc,IntelligenceFailure):job.result={**job.result,'failure':{'code':exc.code,'retryable':exc.retryable}}
-        ledger.finish(db,attempt,'failed',reason='job_blocked' if isinstance(exc,Blocked) else 'job_failed',receipt=bounds.summary() if 'bounds' in locals() else {})
+
+            if isinstance(exc, IntelligenceFailure):
+                job.result = {
+                    **job.result,
+                    "failure": {"code": exc.code, "retryable": exc.retryable},
+                }
+        ledger.finish(
+            db,
+            attempt,
+            "failed",
+            reason="job_blocked" if isinstance(exc, Blocked) else "job_failed",
+            receipt=bounds.summary() if "bounds" in locals() else {},
+        )
         raise
-    ledger.finish(db,attempt,'succeeded',receipt=result or {})
+    ledger.finish(db, attempt, "succeeded", receipt=result or {})
     return result
 
+
 async def tick():
+    from .services import jobs, scheduler
+
     with leadership() as acquired:
         if not acquired:
-            return
+            return False
         with Session() as db:
-            # Crash recovery never blindly replays a potentially external mutation.
-            for job in db.scalars(select(Job).where(Job.status=="running")):
-                transition(db,job,"interrupted",domain="job",reason="worker_interrupted")
-                op=ledger.operation(db,"job:"+job.id)
-                if op and op.status=="running":
-                    attempt=ledger.latest(db,op)
-                    ledger.finish(db,attempt,"unknown",reason="worker_interrupted")
-                job.error="Worker interrupted. Inspect results before explicitly retrying."
-                job.finished_at=now()
-            for row in db.scalars(select(Outreach).where(Outreach.status=="sending")):
-                op=ledger.operation(db,"send:"+row.id)
-                if not op or op.provider=="legacy":transition(db,row,"unknown",reason="legacy_crash_recovery")
+            jobs.recover(db, now())
+            scheduler.tick(db)
+            db.merge(
+                State(
+                    key="worker_heartbeat",
+                    value={
+                        "at": now().isoformat(),
+                        "status": "idle",
+                        "instance_id": INSTANCE_ID,
+                    },
+                )
+            )
             db.commit()
-            job=db.scalar(select(Job).where(Job.status=="queued").order_by(Job.created_at).limit(1))
-            if job:
-                transition(db,job,"running",domain="job",reason="worker_claim")
-                job.started_at=now()
-                db.commit()
-                try:
-                    job.result=await execute(db,job)
-                    transition(db,job,"done",domain="job",reason="completed")
-                except Exception as exc:
-                    db.rollback()
-                    job=db.get(Job,job.id)
-                    transition(db,job,"blocked" if isinstance(exc,Blocked) else "failed",domain="job",reason="execution_failed")
-                    # Never persist exception URLs, request headers, or API keys.
-                    job.error=__import__('app.redaction',fromlist=['redact']).redact(str(exc))[:500] if isinstance(exc,Blocked) else type(exc).__name__+": integration/job failure; inspect configuration or provider console"
-                    if job.kind in {"research","pipeline","generate"}:
-                        company=db.get(Company,job.payload.get("id"))
-                        if company and company.stage not in STOP_STAGES:
-                            company.stage="needs_attention"
-                    log.warning("Job %s ended with %s",job.id,type(exc).__name__)
-                job.finished_at=now()
-                db.commit()
-                return
-            state=db.get(State,"automation")
-            if not state or not state.value.get("enabled"):
-                return
-            if settings().manual_mode:
-                return
-            # Poll even when no drafts remain, so late replies still update the CRM.
-            sync=db.get(State,"mail_sync")
-            if settings().oauth_refresh_token and (not sync or (now()-aware(__import__('datetime').datetime.fromisoformat(sync.value["at"]))).total_seconds()>300):
-                enqueue(db,"sync",{},"scheduled-sync:"+str(int(now().timestamp())//300))
-            # Bounded scheduled discovery once daily; the search cache avoids rescanning.
-            spec=state.value.get("discovery")
-            if spec:
-                enqueue(db,"discover",spec,"scheduled-discovery:"+now().strftime("%Y-%m-%d"))
-            company=db.scalar(select(Company).where(Company.stage=="discovered",Company.demo==False).order_by(Company.score.desc()).limit(1))
-            if company:
-                enqueue(db,"pipeline",{"id":company.id},"pipeline:"+company.id)
-            # Initial approved messages and follow-ups share one total sending limit.
-            if not settings().dry_run:
-                for row in db.scalars(select(Outreach).where(Outreach.status=="approved",Outreach.due_at<=now()).order_by(Outreach.due_at).limit(5)):
-                    try:
-                        await send_one(db,row)
-                        break
-                    except Blocked as exc:
-                        row.review={**row.review,"send_block_reason":__import__('app.redaction',fromlist=['redact']).redact(str(exc))}
-                        db.commit()
-            for initial in db.scalars(select(Outreach).where(Outreach.sequence==0,Outreach.status=="sent")):
-                company=db.get(Company,initial.company_id)
-                if company.research.get("followups") is False or company.stage in STOP_STAGES or not initial.sent_at:
-                    continue
-                policy_row=db.get(State,"outreach_policy")
-                if not policy_row or not policy_row.value.get("enabled") or policy_row.value.get("max_followups_per_company")!=1:continue
-                for seq,days in [(1,7)]:
-                    due=aware(initial.sent_at)+timedelta(days=days)
-                    previous=db.scalar(select(Outreach).where(Outreach.company_id==company.id,Outreach.sequence==seq-1))
-                    existing=db.scalar(select(Outreach).where(Outreach.company_id==company.id,Outreach.sequence==seq))
-                    if due<=now() and previous and previous.status=="sent" and not existing and now()-aware(previous.sent_at)>=timedelta(days=6):
-                        enqueue(db,"generate",{"id":company.id,"sequence":seq},f"followup:{company.id}:{seq}")
-                        break
-            db.merge(State(key="heartbeat",value={"at":now().isoformat()}))
+            job = jobs.claim_next(db)
+            if not job:
+                return False
+            token = job.owner_token
+            db.merge(
+                State(
+                    key="worker_heartbeat",
+                    value={
+                        "at": now().isoformat(),
+                        "status": "processing",
+                        "instance_id": INSTANCE_ID,
+                        "job_id": job.id,
+                    },
+                )
+            )
             db.commit()
 
+            async def heartbeat():
+                while True:
+                    await asyncio.sleep(settings().worker_lease_seconds / 3)
+                    with Session() as current:
+                        jobs.renew(current, job.id, token, INSTANCE_ID)
+
+            pulse = asyncio.create_task(heartbeat())
+            try:
+                async with asyncio.timeout(settings().job_timeout_seconds):
+                    with jobs.owned(job):
+                        result = await execute(db, job)
+                db.rollback()
+                ledger.lock(db)
+                current = db.get(type(job), job.id)
+                if current.status == "running" and current.owner_token == token:
+                    current.result = result or {}
+                    transition(db, current, "done", domain="job", reason="completed")
+            except BaseException as exc:
+                db.rollback()
+                ledger.lock(db)
+                current = db.get(type(job), job.id)
+                if current.status == "running" and current.owner_token == token:
+                    state = (
+                        "interrupted"
+                        if isinstance(exc, asyncio.CancelledError)
+                        else "blocked"
+                        if isinstance(exc, Blocked)
+                        else "failed"
+                    )
+                    transition(
+                        db, current, state, domain="job", reason="execution_" + state
+                    )
+                    current.error = (
+                        __import__("app.redaction", fromlist=["redact"]).redact(
+                            str(exc)
+                        )[:300]
+                        if isinstance(exc, Blocked)
+                        else "Worker interrupted"
+                        if isinstance(exc, asyncio.CancelledError)
+                        else "Integration/job failure; inspect configuration"
+                    )
+                    if job.kind in {"research", "pipeline", "generate"}:
+                        company = db.get(Company, job.payload.get("id"))
+                        if company and company.stage not in STOP_STAGES:
+                            company.stage = "needs_attention"
+                    log.warning(
+                        "job_id=%s kind=%s status=%s category=%s",
+                        job.id,
+                        job.kind,
+                        state,
+                        type(exc).__name__,
+                    )
+                if isinstance(exc, asyncio.CancelledError):
+                    op = ledger.operation(db, "job:" + job.id)
+                    if op and op.status == "running":
+                        ledger.finish(
+                            db,
+                            ledger.latest(db, op),
+                            "unknown"
+                            if job.kind in ("send", "mailbox_draft")
+                            else "failed",
+                            reason="worker_cancelled",
+                        )
+                    if job.kind == "send":
+                        row = db.get(Outreach, job.payload.get("id"))
+                        send = ledger.operation(db, "send:" + row.id) if row else None
+                        if row and row.status == "sending":
+                            transition(db, row, "unknown", reason="worker_cancelled")
+                            if send and send.status == "running":
+                                ledger.finish(
+                                    db,
+                                    ledger.latest(db, send),
+                                    "unknown",
+                                    reason="worker_cancelled",
+                                )
+                    # No resend. Reserved communications stay held for positive reconciliation.
+                    db.commit()
+                    raise
+            finally:
+                pulse.cancel()
+                from contextlib import suppress
+
+                with suppress(asyncio.CancelledError):
+                    await pulse
+                current = db.get(type(job), job.id)
+                if current.owner_token == token:
+                    current.lease_until = None
+                    current.owner_token = ""
+                    current.finished_at = now()
+                    db.commit()
+            return True
+
+
 async def main():
+    import signal
+    from .redaction import install_logging
+
+    install_logging()
     logging.basicConfig(level=logging.INFO)
-    while True:
+    with Session() as db:
+        from sqlalchemy import inspect
+
+        if (
+            not inspect(db.bind).has_table("alembic_version")
+            or db.scalar(text("SELECT version_num FROM alembic_version")) != "005"
+        ):
+            raise SystemExit(
+                "Worker requires schema005; run migration on the intended staged database first"
+            )
+    stop = asyncio.Event()
+    loop = asyncio.get_running_loop()
+    for sig in (signal.SIGTERM, signal.SIGINT):
+        loop.add_signal_handler(sig, stop.set)
+    # Graceful signals finish the bounded in-flight job, then prevent new claims.
+    while not stop.is_set():
         try:
             await tick()
         except Exception as exc:
-            log.error("Worker tick: %s",type(exc).__name__)
-        await asyncio.sleep(15)
+            log.error("Worker tick failed category=%s", type(exc).__name__)
+        try:
+            await asyncio.wait_for(stop.wait(), timeout=settings().worker_poll_seconds)
+        except TimeoutError:
+            pass
+    with Session() as db:
+        heartbeat = db.get(State, "worker_heartbeat")
+        if heartbeat and heartbeat.value.get("instance_id") == INSTANCE_ID:
+            heartbeat.value = {
+                **heartbeat.value,
+                "at": now().isoformat(),
+                "status": "stopped",
+            }
+            db.commit()
 
-if __name__=="__main__":
+
+if __name__ == "__main__":
+    import sys, json
+
+    if sys.argv[1:] == ["--health"]:
+        from .services.runtime import status
+
+        with Session() as db:
+            value = status(db)
+            print(
+                json.dumps(
+                    {
+                        k: value[k]
+                        for k in (
+                            "database",
+                            "schema_version",
+                            "worker",
+                            "scheduler",
+                            "gmail",
+                            "unresolved",
+                            "sync_stale",
+                            "recurring_paused",
+                        )
+                    }
+                )
+            )
+            raise SystemExit(
+                0
+                if value["schema_version"] == "005"
+                and value["worker"] in ("available", "processing")
+                else 1
+            )
+    if sys.argv[1:]:
+        raise SystemExit("Usage: python -m app.worker [--health]")
     asyncio.run(main())

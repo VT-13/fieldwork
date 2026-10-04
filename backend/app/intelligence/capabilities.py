@@ -50,7 +50,7 @@ def capabilities(db):
             "daily_reservation_usd": cfg.daily_budget_usd,
             "company_reservation_usd": cfg.company_budget_usd,
         },
-        "worker_note": "Queued work needs the existing worker process. This phase does not install or start it.",
+        "worker_note": "Queued work needs the dedicated Fieldwork worker. Check communication processing status; this build does not activate the installed runtime.",
     }
 
 

@@ -16,4 +16,9 @@ Use the final product-design reference, frontend-quality skill and `docs/module3
 
 ## Module 4 handoff
 
-Module4 is implemented and verified in canonical source only. Read docs/module4/README.md and verification.json for bounded candidate/research/evidence/ranking/generation ownership and limits. Keep the shared job/operation/usage/policy boundaries, deliberate candidate acceptance, exact evidence/profile references, review gate and immutable history. The installed personal runtime, receipts and recurring pause are unchanged. Module5 requires its own user prompt; Module4 does not authorize deployment, real provider calls, worker activation or mail.
+Module 4 is implemented and verified in canonical source only. Read docs/module4/README.md and verification.json for bounded candidate/research/evidence/ranking/generation ownership and limits. Keep the shared job/operation/usage/policy boundaries, deliberate candidate acceptance, exact evidence/profile references, review gate and immutable history. The installed personal runtime, receipts and recurring pause are unchanged. Module 5 requires its own user prompt; Module 4 does not authorize deployment, real provider calls, worker activation or mail.
+
+
+## Module 5 handoff
+
+Read docs/module5/README.md, verification.json and PROVIDER_CAPABILITIES.md. Canonical schema005 has one delivery/policy/ledger, durable owner-fenced Jobs, one bounded incremental Gmail scanner and one reviewed168 h follow-up workflow. Source-only worker/service configuration exists; installation/production migration/OAuth/send/automation changes remain unperformed. Module 6 requires its own user prompt. Keep exact unknown-send holds, current policy/review, suppression and installed preservation; release must stop/retire the old external sender before any authorized worker activation. Do not add another queue/scanner/agent scheduler.

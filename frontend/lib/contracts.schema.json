@@ -801,6 +801,28 @@
         "status": {
           "$ref": "#/$defs/MessageState"
         },
+        "confirmation_pending": {
+          "default": false,
+          "title": "Confirmation Pending",
+          "type": "boolean"
+        },
+        "sent_verified": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Sent Verified"
+        },
+        "delivery_reason": {
+          "default": "",
+          "title": "Delivery Reason",
+          "type": "string"
+        },
         "due_at": {
           "format": "date-time",
           "title": "Due At",
@@ -851,6 +873,9 @@
         "review",
         "strategy",
         "status",
+        "confirmation_pending",
+        "sent_verified",
+        "delivery_reason",
         "due_at",
         "sent_at",
         "provider_id",
@@ -997,6 +1022,45 @@
     },
     "ReplyView": {
       "properties": {
+        "contact_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Contact Id"
+        },
+        "outreach_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Outreach Id"
+        },
+        "campaign_id": {
+          "default": "personal",
+          "title": "Campaign Id",
+          "type": "string"
+        },
+        "thread_id": {
+          "default": "",
+          "title": "Thread Id",
+          "type": "string"
+        },
+        "followup_stopped": {
+          "default": true,
+          "title": "Followup Stopped",
+          "type": "boolean"
+        },
         "id": {
           "title": "Id",
           "type": "string"
@@ -1040,6 +1104,11 @@
         }
       },
       "required": [
+        "contact_id",
+        "outreach_id",
+        "campaign_id",
+        "thread_id",
+        "followup_stopped",
         "id",
         "company_id",
         "company",
@@ -1719,6 +1788,11 @@
     },
     "JobView": {
       "properties": {
+        "can_retry": {
+          "default": false,
+          "title": "Can Retry",
+          "type": "boolean"
+        },
         "id": {
           "title": "Id",
           "type": "string"
@@ -1735,6 +1809,32 @@
         "dedupe_key": {
           "title": "Dedupe Key",
           "type": "string"
+        },
+        "available_at": {
+          "anyOf": [
+            {
+              "format": "date-time",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Available At"
+        },
+        "lease_until": {
+          "anyOf": [
+            {
+              "format": "date-time",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Lease Until"
         },
         "status": {
           "title": "Status",
@@ -1780,10 +1880,13 @@
         }
       },
       "required": [
+        "can_retry",
         "id",
         "kind",
         "payload",
         "dedupe_key",
+        "available_at",
+        "lease_until",
         "status",
         "error",
         "result",
@@ -1965,6 +2068,86 @@
         "created_at"
       ],
       "title": "GenerationView",
+      "type": "object"
+    },
+    "RuntimeView": {
+      "properties": {
+        "database": {
+          "title": "Database",
+          "type": "string"
+        },
+        "schema_version": {
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "worker": {
+          "title": "Worker",
+          "type": "string"
+        },
+        "worker_at": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Worker At"
+        },
+        "scheduler": {
+          "title": "Scheduler",
+          "type": "string"
+        },
+        "scheduler_at": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Scheduler At"
+        },
+        "gmail": {
+          "title": "Gmail",
+          "type": "string"
+        },
+        "unresolved": {
+          "title": "Unresolved",
+          "type": "integer"
+        },
+        "sync_stale": {
+          "title": "Sync Stale",
+          "type": "boolean"
+        },
+        "recurring_paused": {
+          "title": "Recurring Paused",
+          "type": "boolean"
+        },
+        "communication_jobs": {
+          "items": {
+            "$ref": "#/$defs/JobView"
+          },
+          "title": "Communication Jobs",
+          "type": "array"
+        }
+      },
+      "required": [
+        "database",
+        "schema_version",
+        "worker",
+        "worker_at",
+        "scheduler",
+        "scheduler_at",
+        "gmail",
+        "unresolved",
+        "sync_stale",
+        "recurring_paused",
+        "communication_jobs"
+      ],
+      "title": "RuntimeView",
       "type": "object"
     }
   }

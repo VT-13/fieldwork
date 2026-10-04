@@ -184,10 +184,13 @@ export type InboxView = {
 };
 
 export type JobView = {
+  "can_retry": boolean;
   "id": string;
   "kind": string;
   "payload": Record<string, unknown>;
   "dedupe_key": string;
+  "available_at": string | null;
+  "lease_until": string | null;
   "status": string;
   "error": string;
   "result": Record<string, unknown>;
@@ -244,6 +247,9 @@ export type OutreachView = {
   "review": ReviewView;
   "strategy": string;
   "status": MessageState;
+  "confirmation_pending": boolean;
+  "sent_verified": boolean | null;
+  "delivery_reason": string;
   "due_at": string;
   "sent_at": string | null;
   "provider_id": string;
@@ -296,6 +302,11 @@ export type ProfileInput = {
 };
 
 export type ReplyView = {
+  "contact_id": string | null;
+  "outreach_id": string | null;
+  "campaign_id": string;
+  "thread_id": string;
+  "followup_stopped": boolean;
   "id": string;
   "company_id": string;
   "company": string;
@@ -316,6 +327,20 @@ export type ReviewView = {
   "grounded": boolean | null;
   "names_correct": boolean | null;
   "claims_supported": boolean | null;
+};
+
+export type RuntimeView = {
+  "database": string;
+  "schema_version": string;
+  "worker": string;
+  "worker_at": string | null;
+  "scheduler": string;
+  "scheduler_at": string | null;
+  "gmail": string;
+  "unresolved": number;
+  "sync_stale": boolean;
+  "recurring_paused": boolean;
+  "communication_jobs": (JobView)[];
 };
 
 export type SelfTestView = {

@@ -1,22 +1,9 @@
-# Fieldwork for this Mac
+# Personal desktop client and staged service templates
 
-Open ~/Applications/Fieldwork.app or its Desktop shortcut. The app is a native WebKit window for the personal local workspace. Gmail links open in the default browser.
+Fieldwork.swift is the existing personal native WebKit shell. It loads the configured private local web server; it is a client, not a scheduler. No installed app or launch agent was modified or activated in Module5.
 
-The API and production Next.js server run through LaunchAgents:
-- local.vihaan.fieldwork.api
-- local.vihaan.fieldwork.web
+The API/web plist files retain historical personal-machine paths. They are source templates, not an installation command. A future release must render current staged source/environment paths and follow MIGRATION_PLAN.md. `local.vihaan.fieldwork.worker.plist.template` adds the dedicated worker command and supervisor behavior; its placeholder paths must be replaced deliberately. Do not copy/load it during development or point it at the personal database as a test.
 
-Both start at sign-in and restart after process exit. Closing Fieldwork only closes the window. Reply checks run every five minutes. The Mac must be logged in, awake and online. No sleep or security settings were changed. Sending remains the existing weekday Codex automation and caps; keeping the server alive does not independently discover or send new email.
+The canonical `python -m app.worker` process owns scheduling and bounded response checking. A separate API response loop, scheduled AI agent, old heartbeat send prompt and legacy send worker are not production runtime components. Read DEPLOYMENT.md for health/shutdown/recovery and PROVIDER_CAPABILITIES.md for Gmail/Outlook scope.
 
-Service definitions: ~/Library/LaunchAgents/local.vihaan.fieldwork.*.plist
-Logs: ~/.local/share/fieldwork/logs/*-service.log
-Launch services: ~/.local/share/fieldwork/start-personal.sh
-Pause outreach using Pause ongoing outreach in the app. This leaves response tracking running.
-
-To disable background services intentionally:
-launchctl bootout gui/$(id -u)/local.vihaan.fieldwork.api
-launchctl bootout gui/$(id -u)/local.vihaan.fieldwork.web
-
-Remove or move the two LaunchAgent plist files if they should not load at next sign-in. Keep the app's data and backend/.env private. This is a locally built, ad-hoc signed personal app, not a notarized public distribution.
-
-My email desk now offers Send test to myself. It sends a saved draft only to the authenticated Gmail/profile address, requires no LLM API key, and sends each saved version at most once. Unknown sends are held rather than retried. AI generation inside the editor is still manual/chat-assisted; no Gemini or ChatGPT plan connection was added.
+A Mac must be logged in, awake and online; closing the client only closes its window. Local launch agents cannot provide reliable24/7 execution while asleep/offline. An always-on private worker is a later rollout choice. No sleep, power, security or authorization setting is changed by these templates. Keep external secret configuration, database, receipts and logs private.

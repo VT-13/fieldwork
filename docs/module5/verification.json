@@ -1,0 +1,210 @@
+{
+  "module": 5,
+  "status": "COMPLETE",
+  "baseline_commit": "cf37cbf",
+  "schema": "005",
+  "recorded_at": "2026-10-04T01:36:40.282200+00:00",
+  "scope": "Canonical source only; Module6 not started; no production rollout",
+  "commands": {
+    "backend": "FIELDWORK_DISPOSABLE_POSTGRES_URL=postgresql+psycopg://fieldwork_test@127.0.0.1:55432/postgres /private/tmp/fieldwork-module2-venv/bin/python scripts/module5_check.py",
+    "frontend": "/private/tmp/fieldwork-module2-venv/bin/python scripts/module5_frontend_check.py",
+    "preservation": "/private/tmp/fieldwork-module2-venv/bin/python scripts/module5_preserve.py",
+    "manifest": "python3 scripts/source_manifest.py verify"
+  },
+  "backend": {
+    "passed": 224,
+    "failed": 0,
+    "skipped": 0,
+    "warnings": 2,
+    "warning_categories": [
+      "Starlette TestClient httpx deprecation",
+      "anyio BlockingPortal alias deprecation"
+    ],
+    "checks": {
+      "contract-check": {
+        "command": [
+          "/private/tmp/fieldwork-module2-venv/bin/python",
+          "scripts/frontend_contracts.py",
+          "--check"
+        ],
+        "exit_code": 0,
+        "seconds": 0.22
+      },
+      "fixture-check": {
+        "command": [
+          "/private/tmp/fieldwork-module2-venv/bin/python",
+          "scripts/module3_fixture.py",
+          "--check"
+        ],
+        "exit_code": 0,
+        "seconds": 0.14
+      },
+      "backend-tests": {
+        "command": [
+          "/private/tmp/fieldwork-module2-venv/bin/python",
+          "-m",
+          "pytest",
+          "-q",
+          "-ra"
+        ],
+        "exit_code": 0,
+        "seconds": 13.61
+      },
+      "backend-lint": {
+        "command": [
+          "/private/tmp/fieldwork-module2-venv/bin/python",
+          "-m",
+          "ruff",
+          "check",
+          "app",
+          "scripts",
+          "tests"
+        ],
+        "exit_code": 0,
+        "seconds": 0.09
+      }
+    }
+  },
+  "frontend": {
+    "checks": {
+      "frontend-lint": {
+        "command": [
+          "npm",
+          "run",
+          "lint"
+        ],
+        "exit_code": 0,
+        "seconds": 4.07
+      },
+      "frontend-typecheck": {
+        "command": [
+          "npm",
+          "run",
+          "typecheck"
+        ],
+        "exit_code": 0,
+        "seconds": 3.5
+      },
+      "frontend-format": {
+        "command": [
+          "npm",
+          "run",
+          "format:check"
+        ],
+        "exit_code": 0,
+        "seconds": 0.78
+      },
+      "frontend-build": {
+        "command": [
+          "npm",
+          "run",
+          "build"
+        ],
+        "exit_code": 0,
+        "seconds": 8.88
+      },
+      "browser": {
+        "command": [
+          "npm",
+          "exec",
+          "--",
+          "playwright",
+          "test",
+          "--reporter=json"
+        ],
+        "exit_code": 0,
+        "seconds": 30.92
+      }
+    },
+    "browser": {
+      "startTime": "2026-10-04T01:12:38.472Z",
+      "duration": 29710.21,
+      "expected": 20,
+      "skipped": 0,
+      "unexpected": 0,
+      "flaky": 0
+    },
+    "visual_inspection": [
+      "communication-1280.png",
+      "communication-390.png"
+    ],
+    "test_scope": "Production standalone fictional intercepted API browser checks, not live provider E2E"
+  },
+  "postgres": {
+    "version": "16.2 disposable local test binary",
+    "production_target": "maintained PostgreSQL17, not executed locally",
+    "two_actual_send_workers_one_transmission": true,
+    "remaining_one_quota_slot": true,
+    "atomic_job_claims": true,
+    "pause_reply_ordering": true,
+    "sync_lease_competitors": true,
+    "migration_old_row_preservation": true,
+    "backup_restore": true,
+    "subprocess_worker_start_sigterm_restart_sigint": true,
+    "stopped_after_tests": true
+  },
+  "delivery": {
+    "canonical": "services/delivery.send_company",
+    "reservation_before_io": true,
+    "known_success_replay": "saved receipt, no provider connection/transmission",
+    "uncertain_retry": "forbidden; unique positive exact Sent evidence only",
+    "mailbox_mime_fence": true,
+    "conflicting_receipt_identity_preserved": true
+  },
+  "runtime": {
+    "one_queue": true,
+    "one_reply_scanner": true,
+    "scheduler": "inside deterministic worker",
+    "worker_source_service_exists": true,
+    "installed_worker_service_present_after": false,
+    "installed_worker_activation_check": "launchctl print gui/501/local.vihaan.fieldwork.worker: service not found (exit113)",
+    "followup_minimum_hours": 168,
+    "max_followups": 1,
+    "daily_total_cap": 25,
+    "scheduled_new_limit": 10,
+    "reply_classification": "deterministic; no auto reply, mark-read, label mutation or inferred offer"
+  },
+  "audit": {
+    "FW-002": "resolved/reverified global uncertainty hold",
+    "FW-003": "resolved/reverified fresh unthreaded reply checks and cancellation",
+    "FW-004": "resolved/reverified shared policy/ledger/caps and one follow-up",
+    "FW-005": "resolved canonical deterministic worker/scheduler, intentionally undeployed"
+  },
+  "preservation": {
+    "unchanged": true,
+    "counts": {
+      "companies": 46,
+      "outreach": 46,
+      "events": 6
+    },
+    "recurring_enabled": false,
+    "coverage": "installed source hashes, policy hash/pause/counts, credential file hashes, launch-agent definitions; not full live row equality"
+  },
+  "production_mutations": {
+    "deployed": false,
+    "live_database_migrated": false,
+    "real_outreach_sent": 0,
+    "recurring_pause_changed": false,
+    "real_oauth_changed": false,
+    "installed_worker_activated": false,
+    "active_automation_changed": false,
+    "paid_provider_calls": 0
+  },
+  "limitations": [
+    "Live Gmail OAuth/API/RFC preservation/delivery and throttling not tested",
+    "No Outlook production OAuth/send/replies/reconciliation/self-test; development draft contract partial",
+    "No SMTP/watch/push/automatic inbound reply",
+    "No free/subscription generation or automated AI detector",
+    "Docker, maintained PostgreSQL17, TLS/hosted deployment and Safari unverified",
+    "Existing Module3 development-only lint dependency advisory; no new dependency audit claimed",
+    "Old installed/external runtime unchanged; future release must stop it before new worker activation"
+  ],
+  "remaining_applicable_p0_p1": [],
+  "module6_readiness": "READY for separately requested final release verification; not permission to deploy",
+  "artifacts_note": "Captured log trailing whitespace normalized; results unchanged",
+  "source_integrity": {
+    "verified": true,
+    "command": "python3 scripts/source_manifest.py verify",
+    "exit_code": 0
+  }
+}

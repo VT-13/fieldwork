@@ -3,7 +3,7 @@ import json
 import secrets
 from datetime import timedelta
 from typing import Annotated, Literal
-from fastapi import FastAPI, Depends, Header, HTTPException, BackgroundTasks
+from fastapi import FastAPI, Depends, Header, HTTPException
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel, Field
 from sqlalchemy import select, func, text
@@ -25,15 +25,11 @@ from contextlib import asynccontextmanager, suppress
 from . import responses
 @asynccontextmanager
 async def lifespan(app):
-    task=asyncio.create_task(responses.loop()) if settings().response_poll_enabled else None
     from .privacy import retention_loop
     maintenance=asyncio.create_task(retention_loop())
     yield
     maintenance.cancel()
     with suppress(asyncio.CancelledError):await maintenance
-    if task:
-        task.cancel()
-        with suppress(asyncio.CancelledError): await task
 
 app=FastAPI(docs_url=None,redoc_url=None,openapi_url=None,lifespan=lifespan,title="Fieldwork — Internship Outreach",version="0.1.0")
 
@@ -58,7 +54,12 @@ def get(db,model,id):
     return row
 
 def asdict(row):
-    return {c.name:getattr(row,c.name) for c in row.__table__.columns}
+    if isinstance(row,Job):
+        from .services.jobs import view
+        from sqlalchemy.orm import object_session
+        return view(object_session(row),row)
+    result={c.name:getattr(row,c.name) for c in row.__table__.columns if c.name!='owner_token'}
+    return result
 
 @app.get("/health")
 def health(db:DB):
@@ -179,7 +180,13 @@ def verify_contact(id:str,db:DB):
 
 @app.get("/outreach",dependencies=[Auth],response_model=list[ui.OutreachView])
 def outreach(db:DB):
-    return [asdict(r) for r in db.scalars(select(Outreach).order_by(Outreach.created_at.desc()).limit(1000))]
+    from .services import ledger
+    results=[]
+    for r in db.scalars(select(Outreach).order_by(Outreach.created_at.desc()).limit(1000)):
+        op=ledger.operation(db,'send:'+r.id);attempt=ledger.latest(db,op) if op else None
+        receipt=attempt.receipt if attempt else {}
+        results.append({**asdict(r),'confirmation_pending':bool(receipt.get('confirmation_pending')),'sent_verified':receipt.get('sent_verified'),'delivery_reason':attempt.reason if attempt else ''})
+    return results
 
 @app.post("/outreach/{id}/approve",dependencies=[Auth])
 def approve(id:str,db:DB):
@@ -247,7 +254,7 @@ def send(id:str,db:DB):
 
 @app.post("/mail/sync",dependencies=[Auth])
 def mail_sync(db:DB):
-    return asdict(enqueue(db,"sync",{},"sync:"+now().strftime("%Y-%m-%dT%H:%M")))
+    return asdict(enqueue(db,"sync",{},"sync:"+str(int(now().timestamp())//settings().mailbox_poll_seconds)))
 
 @app.get("/jobs",dependencies=[Auth],response_model=list[ui.JobView])
 def jobs(db:DB):
@@ -257,8 +264,10 @@ def jobs(db:DB):
 def retry_job(id:str,db:DB):
     job=get(db,Job,id)
     if job.payload.get('stop_requested'):raise Blocked('Stopped work requires a new deliberate operation')
-    if job.kind=="send" or job.status not in {"failed","blocked","interrupted"}:
-        raise Blocked("Only failed non-send jobs may be explicitly retried")
+    from .services import ledger,jobs
+    ledger.lock(db)
+    job=db.get(Job,id)
+    if not jobs.retry_allowed(db,job):raise Blocked('Only safe interrupted work or blocked unattempted delivery can be requeued; uncertain sends never retry')
     from .models import Operation,ActionAttempt
     op=db.scalar(select(Operation).where(Operation.job_id==job.id))
     attempts=list(db.scalars(select(ActionAttempt).where(ActionAttempt.operation_id==op.id))) if op else []
@@ -370,9 +379,8 @@ def response_list(db:DB):
     return responses.listing(db)
 
 @app.post('/responses/sync',dependencies=[Auth],status_code=202)
-async def response_sync(background:BackgroundTasks):
-    background.add_task(responses.sync)
-    return {'status':'queued'}
+def response_sync(db:DB):
+    return asdict(enqueue(db,'sync',{},'sync:'+str(int(now().timestamp())//settings().mailbox_poll_seconds)))
 
 class ResponseHandled(BaseModel):
     handled: bool
@@ -498,3 +506,15 @@ def stop_intelligence_job(id:str,db:DB):
 def generation_history(id:str,db:DB):
     get(db,Company,id)
     return [asdict(r) for r in db.scalars(select(Generation).where(Generation.company_id==id).order_by(Generation.created_at.desc()).limit(40))]
+
+
+@app.get('/runtime',dependencies=[Auth],response_model=ui.RuntimeView)
+def runtime(db:DB):
+    from .services.runtime import status
+    return status(db)
+
+@app.post('/outreach/{id}/reconcile',dependencies=[Auth],response_model=ui.JobView,status_code=202)
+def reconcile_outreach(id:str,db:DB):
+    row=get(db,Outreach,id)
+    if row.status not in ('sent','unknown','sending'):raise Blocked('Only existing transmission attempts can be reconciled')
+    return asdict(enqueue(db,'reconcile',{'id':id},'reconcile:'+id+':'+str(int(now().timestamp())//settings().mailbox_poll_seconds)))
