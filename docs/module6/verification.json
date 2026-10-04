@@ -392,5 +392,16 @@
     }
   ],
   "cutover_authorized": false,
-  "cutover_ready": false
+  "cutover_ready": false,
+  "source_verification": {
+    "command": "python scripts/source_manifest.py verify; python scripts/source_manifest.py bundle --output <private test bundle>; extract and verify same manifest",
+    "passed": true,
+    "bundle_source_commit": "1073479f0f77deabdbd074baf69f2498d93b338c",
+    "bundle_sha256": "f5c141028ebd08d13e63e864683bd532807410bf1ed26ed6d7afdcc281820d75",
+    "bundle_private_state_included": false,
+    "extracted_bundle_verified": true,
+    "application_diff_from_tested_commit": false,
+    "manifest_sha256": "d77c50abad30db6e9d89ab81337ce22eb5e2c2b6eb4166b5b232e565a338180d",
+    "unexplained_drift": []
+  }
 }
