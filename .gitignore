@@ -19,3 +19,18 @@ data/
 .phase0-tmp/
 .env.*
 !.env.example
+
+# Private runtime data and exports; schema SQL and synthetic test fixtures remain tracked.
+*.sqlite3
+*.sqlite3-*
+*.dump
+*.backup
+*.bak
+*.eml
+*.pem
+*.key
+backups/
+receipts/
+gmail-exports/
+private-resumes/
+credentials/

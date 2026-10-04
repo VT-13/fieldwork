@@ -34,3 +34,7 @@ Current canonical head006 preserves exact legacy State identities with a255-char
 ## Package6B handoff
 
 Read docs/package6b/README.md and verification.json. The runtime-container gate passes actual Linux ARM64 production images, schema006, private networking, runtime-only secrets, separate API/web/worker/scheduler, fake E2E/recovery and full-record PG17 persistence/backup/restore. No product/Dockerfile redesign or installed production change. Fakes remain test-only and outside runtime images; scripts require isolated named staging targets. Hosted/private TLS/live Google/production activation remain separate gates. Package6C requires its own user request. Keep the personal schema001/source/credentials/services/pause unchanged.
+
+## Canonical GitHub remote
+
+This existing local repository and its intact history are canonical. Its permanent private collaboration/deployment remote is `origin`, `https://github.com/VT-13/fieldwork.git`; `main` tracks `origin/main`. Future work should edit this repository, verify, commit and push here. Reuse this GitHub repository for staging/Railway workflows; do not create another project, reset history, clone into new working directories or change origin without an explicit reason. Production databases, mail/resumes and credentials stay outside Git. GitHub connection alone never authorizes deployment, worker activation, OAuth changes or communication.

@@ -3,7 +3,7 @@
   "files": {
     ".env.example": "35eac59957aebe9afe895c00a9a5fe77e562ddce5636bdf0bd892886f68ba772",
     ".github/workflows/checks.yml": "9f37096f9ab9d4a15da5b926ec55177341332334d959d7959a3101fd29441104",
-    "AGENTS.md": "af5df116933647de154c19110bb460308e16251279efa53b10b73587d6f0909f",
+    "AGENTS.md": "ace4064c2cd40586ccbc989683d087f92baae57afa00a71cdb9349becdb9c732",
     "ARCHITECTURE.md": "239dfdb84eb9c564bc1b0b6be0d12f61c0da836bb332d1869f22f44aec4b050a",
     "BUG_AUDIT.md": "cd50fe4d8824bca4da76f6f41b27f79f93d63161877240a8fd3db211db7ab8eb",
     "DEPLOYMENT.md": "b9faab8d7ff7b2875df815a0ae5b17651b072a86452d9064faf9ab5539752b1b",
