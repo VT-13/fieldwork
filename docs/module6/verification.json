@@ -415,5 +415,14 @@
     "verification": "docs/package6b/verification.json",
     "production_mutated": false,
     "other_gates_unchanged": true
+  },
+  "current_hosted_tls_gate": "BLOCKED",
+  "package6c": {
+    "result": "BLOCKED",
+    "verification": "docs/package6c/verification.json",
+    "reason": "Intended staging project/server, stable HTTPS hostname and hosting access unavailable",
+    "hosted_checks_executed": false,
+    "production_mutated": false,
+    "package6d_readiness": "NOT READY"
   }
 }

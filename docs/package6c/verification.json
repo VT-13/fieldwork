@@ -1,0 +1,97 @@
+{
+  "package": "FIELDWORK 6C",
+  "gate": "hosted-tls",
+  "hosted_tls_gate": "BLOCKED",
+  "timestamp_utc": "2026-10-04T04:52:20.499513+00:00",
+  "application_baseline_commit": "6b63e3feae3dd4988e4ac3d0111a397576f3f1ae",
+  "schema_revision": "006",
+  "prerequisites": {
+    "FW-026": "RESOLVED; docs/package6a/verification.json",
+    "runtime-container": "PASS; docs/package6b/verification.json"
+  },
+  "environment": null,
+  "hostname": null,
+  "certificate_issuer": null,
+  "oauth_callback_url": null,
+  "blocker": {
+    "category": "missing_hosted_staging_access",
+    "description": "No intended staging project/server or stable HTTPS hostname supplied/configured. No hosting CLI/credential configuration or SSH server alias found; Railway dashboard presents sign-in. Hosting destination and access are required before deployment and hosted verification.",
+    "required_user_input": "Identify an existing authorized staging hosting project/server and stable hostname, and provide access through the hosting account or private local credential setup; do not paste secrets into chat."
+  },
+  "access_inventory": {
+    "git_remote_configured": false,
+    "hosting_manifests_found": 0,
+    "hosting_cli_available": false,
+    "railway_render_vercel_fly_aws_gcloud_config_present": false,
+    "ssh_server_aliases_configured": 0,
+    "hosting_environment_variables_present": false,
+    "railway_safari_dashboard": "sign-in required",
+    "hosting_connector_for_intended_stack_available": false,
+    "ssh_includes_followed": true,
+    "ssh_config_files_checked": 2
+  },
+  "source_review": {
+    "scope": "Static review only; not hosted verification",
+    "files_sha256": {
+      "backend/app/config.py": "49dc1c44c7741e0468fdaef2140a729c30d53970ec99d3f5f49c2549e7078e59",
+      "backend/app/auth.py": "9f91238e6f8463b06ebce79849b43058efdbd4bb37007686f949c0da39b215b9",
+      "backend/app/ingress.py": "aee41f7b73127c51f2b9f737fc132ddee30b88c39b9a5542fe3deb02192e2e35",
+      "backend/app/main.py": "be11688475a3bd7f375742db54be934732857ccabbdb566f76f2962b709139b3",
+      "backend/app/gmail_oauth.py": "afed816abe8efe84c767a7c429cab4eb8b042e902fb0f519934f21d9353e9f73",
+      "frontend/proxy.ts": "d06355820da302857fc9d29635cc004cd0574f43288405b7ac4dd47f2c9e3c5a",
+      "frontend/app/api/[...path]/route.ts": "04f31d704dd0044edbfaea86ea7fc04e5a7a0701c3eceb3eb46d1aca34a4f352",
+      "frontend/next.config.ts": "9b58b30c2bd9f601938246d474138ac26bf39fbb194627ab667a05f05dae599c"
+    },
+    "findings": "Exact configured Host/Origin, database-backed revocable sessions, production Secure/HttpOnly/Lax host-only cookies and fixed callback origin exist. Hosting ingress/header/network/log behavior cannot be inferred from source."
+  },
+  "hosted_checks": {
+    "tls_chain_hostname_issuer": "NOT RUN: hosted target unavailable",
+    "http_to_https": "NOT RUN: hosted target unavailable",
+    "mixed_content": "NOT RUN: hosted target unavailable",
+    "proxy_forwarded_headers": "NOT RUN: hosted target unavailable",
+    "trusted_hosts_spoofing": "NOT RUN: hosted target unavailable",
+    "session_cookie_attributes": "NOT RUN: hosted target unavailable",
+    "login_reload_logout": "NOT RUN: hosted target unavailable",
+    "forged_revoked_expired_sessions": "NOT RUN: hosted target unavailable",
+    "csrf_origin_cors_safe_mutation": "NOT RUN: hosted target unavailable",
+    "security_headers": "NOT RUN: hosted target unavailable",
+    "network_exposure": "NOT RUN: hosted target unavailable",
+    "frontend_api_https": "NOT RUN: hosted target unavailable",
+    "chromium": "NOT RUN: hosted target unavailable",
+    "webkit": "NOT RUN: hosted target unavailable",
+    "firefox": "NOT RUN: hosted target unavailable",
+    "worker_scheduler_restart_leadership": "NOT RUN: hosted target unavailable",
+    "hosted_log_secret_review": "NOT RUN: hosted target unavailable",
+    "stable_oauth_callback": "NOT RUN: hosted target unavailable",
+    "hosted_safe_defaults": "NOT RUN: hosted target unavailable"
+  },
+  "package6b_repeated": false,
+  "new_runtime_builds": 0,
+  "test_suites_rerun": false,
+  "self_signed_or_tunnel_used": false,
+  "certificate_validation_disabled": false,
+  "deployment_performed": false,
+  "production_mutations": {
+    "source": false,
+    "database": false,
+    "live_db_migrated": false,
+    "real_company_outreach_sent": 0,
+    "recurring_pause_changed": false,
+    "real_oauth_changed": false,
+    "services_or_launch_agents_changed": false,
+    "automation_changed": false,
+    "worker_started": false,
+    "paid_provider_calls": 0,
+    "services_purchased": false
+  },
+  "preservation_evidence": "preservation.json",
+  "package6d_started": false,
+  "package6d_readiness": "NOT READY",
+  "overall_release": "NOT READY",
+  "preservation_unchanged": true,
+  "source_integrity": {
+    "baseline_verified": true,
+    "current_manifest_verified": true,
+    "runtime_application_files_changed": false
+  }
+}
