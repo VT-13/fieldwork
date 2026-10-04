@@ -300,7 +300,7 @@ async def generate(db, company, sequence, replace, gateway, job_id=None):
             "contact_id": contact.id,
         }
     )
-    prior = db.scalar(
+    cached_generation = db.scalar(
         select(Generation).where(
             Generation.input_hash == input_hash,
             Generation.outreach_id == existing.id
@@ -308,8 +308,8 @@ async def generate(db, company, sequence, replace, gateway, job_id=None):
             else Generation.outreach_id.is_not(None),
         )
     )
-    if prior and not replace:
-        return db.get(Outreach, prior.outreach_id)
+    if cached_generation and not replace:
+        return db.get(Outreach, cached_generation.outreach_id)
     last = None
     with scope(db, job_id) as bounds:
         for attempt in range(cfg.max_generation_attempts):

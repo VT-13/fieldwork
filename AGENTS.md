@@ -22,3 +22,7 @@ Module 4 is implemented and verified in canonical source only. Read docs/module4
 ## Module 5 handoff
 
 Read docs/module5/README.md, verification.json and PROVIDER_CAPABILITIES.md. Canonical schema005 has one delivery/policy/ledger, durable owner-fenced Jobs, one bounded incremental Gmail scanner and one reviewed168 h follow-up workflow. Source-only worker/service configuration exists; installation/production migration/OAuth/send/automation changes remain unperformed. Module 6 requires its own user prompt. Keep exact unknown-send holds, current policy/review, suppression and installed preservation; release must stop/retire the old external sender before any authorized worker activation. Do not add another queue/scanner/agent scheduler.
+
+## Module6 handoff
+
+Read docs/module6/README.md, verification.json, RELEASE_CHECKLIST.md and RUNBOOK.md. Release is NOT READY: FW-026 is the actual installed SQLite State identifier width blocker for PG transfer; no truncation/guessed migration or frozen schema rewrite. Maintained PG17/native production-build/fake-provider/worker/browser evidence does not certify containers, hosted TLS or live Gmail. Installed runtime/schema001, credentials/services and recurring pause remain unchanged. No deployment, OAuth, worker activation or communication is authorized by this verification. Keep the sole policy/ledger and current review/unknown/suppression guarantees; resolve only concrete remaining release gates.

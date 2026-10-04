@@ -775,6 +775,10 @@
     "unresolved": 0,
     "sync_stale": true,
     "recurring_paused": true,
+    "daily_attempts": 0,
+    "daily_limit": 25,
+    "daily_bounces": 0,
+    "bounce_stop": false,
     "communication_jobs": []
   },
   "generations": {

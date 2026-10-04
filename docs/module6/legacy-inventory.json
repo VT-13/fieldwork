@@ -1,0 +1,23 @@
+{
+  "launch_agents": [
+    {
+      "path": "/Users/vihaantirumala/Library/LaunchAgents/local.vihaan.fieldwork.api.plist",
+      "label": "local.vihaan.fieldwork.api",
+      "unchanged_template_only": true
+    },
+    {
+      "path": "/Users/vihaantirumala/Library/LaunchAgents/local.vihaan.fieldwork.web.plist",
+      "label": "local.vihaan.fieldwork.web",
+      "unchanged_template_only": true
+    }
+  ],
+  "cron_status": 1,
+  "cron_entries_found": false,
+  "cron_raw_contents_exported": false,
+  "historical_scripts": [
+    "/Users/vihaantirumala/Documents/Codex/2026-09-21/wh/outputs/ongoing-outreach/setup_policy.py",
+    "/Users/vihaantirumala/Documents/Codex/2026-09-21/wh/outputs/internship-platform/backend/app/scheduled_send.py"
+  ],
+  "codex_automation": "rocklin-internship-outreach \u2014 verify/remove in separately authorized cutover; no connector available in this turn; not changed",
+  "production_actions_taken": []
+}

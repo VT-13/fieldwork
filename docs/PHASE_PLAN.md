@@ -37,3 +37,7 @@ Bounded company candidates/contact provenance, first-class current evidence, tra
 ## Module 5 handoff
 
 Canonical delivery/ledger, one bounded Gmail scanner, durable reply cancellation, one reviewed168 h follow-up, deterministic scheduler/worker ownership/recovery/health and source service configuration are implemented and verified with isolated regressions and disposable PostgreSQL. See module5/README.md and verification.json. The installed source/schema/OAuth/pause remain unchanged; no company mail or paid calls occurred. Module 6 is ready for separately requested release verification, not automatically started or authorized to deploy. Follow the schema005 migration/release ordering and explicit provider limits; do not repeat the repository audit or replace this queue/policy design.
+
+## Module6 verification outcome
+
+Production verification performed in canonical source only. Fresh clean pins, maintained PG17.11,250 backend tests,60 Chromium/WebKit/Firefox browser tests, production-build/private TLS/actual-worker/fake-provider E2E, shared quota/rollover, forced-crash uncertainty, reply race, bounded soak and compatible migration/restore passed. Observed release defects were fixed and regression-covered. Actual installed State key width is incompatible with frozen PG schema and remains P1 FW-026. Docker/intended hosted TLS/live authorized Google gates remain unverified. Release is **NOT READY**; installed source/schema/credentials/services, receipts and recurring pause are preserved. No automatic next phase or campaign activation is authorized.

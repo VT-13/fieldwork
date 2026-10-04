@@ -1,0 +1,1 @@
+{"outreach500": {"samples_ms": [80.5, 73.55, 69.84, 70.67, 69.0], "query_counts": [501, 501, 501, 501, 501], "median_ms": 70.67}, "private_runtime": {"samples_ms": [14.5, 6.65, 6.25, 5.55, 8.06], "query_counts": [18, 18, 18, 18, 18], "median_ms": 6.65}}

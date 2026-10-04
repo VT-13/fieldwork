@@ -231,6 +231,10 @@ class RuntimeView(BaseModel):
     unresolved: int
     sync_stale: bool
     recurring_paused: bool
+    daily_attempts: int = 0
+    daily_limit: int = 25
+    daily_bounces: int = 0
+    bounce_stop: bool = False
     communication_jobs: list[JobView]
 
 class MetricsView(BaseModel):

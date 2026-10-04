@@ -74,6 +74,8 @@ async function proxy(
     });
     for (const cookie of response.headers.getSetCookie())
       output.headers.append("Set-Cookie", cookie);
+    const requestId = response.headers.get("x-request-id");
+    if (requestId) output.headers.set("X-Request-ID", requestId);
     return output;
   } catch {
     return NextResponse.json(

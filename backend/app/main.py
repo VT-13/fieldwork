@@ -9,7 +9,7 @@ from pydantic import BaseModel, Field
 from sqlalchemy import select, func, text
 from sqlalchemy.orm import Session as DBSession
 from .config import settings
-from .db import session
+from .db import session, Session
 from .models import Company, Contact, Evidence, Outreach, Event, Profile, Job, Usage, State, now
 from .schemas import ProfileInput, CompanyInput, ContactInput, DiscoveryInput, EventInput
 from .intelligence.schemas import SearchSpec,CandidateImport,ContactRecord
@@ -25,6 +25,11 @@ from contextlib import asynccontextmanager, suppress
 from . import responses
 @asynccontextmanager
 async def lifespan(app):
+    from .redaction import install_logging
+    install_logging()
+    if settings().environment=='production':
+        from .services.runtime import require_schema
+        with Session() as db:require_schema(db)
     from .privacy import retention_loop
     maintenance=asyncio.create_task(retention_loop())
     yield
@@ -314,7 +319,7 @@ def metrics(db:DB):
     return {"companies":len(real_ids),"sent":n,"replies":replied,"interviews":interviews,"offers":offers,
         "response_rate":replied/n if n else 0,"interview_rate":interviews/n if n else 0,"conversion_rate":offers/n if n else 0,
         "opens_observed":count({"open"}),"open_rate":None,"open_note":"Not tracked automatically; provider pixels are unreliable. Manual observations are separate.",
-        "sent_today":db.scalar(select(func.count()).select_from(Outreach).where(Outreach.sent_at>=day_start(),Outreach.attempts>0)),
+        "sent_today":__import__('app.services.policy',fromlist=['send_usage']).send_usage(db,day_start()),
         "reserved_today_usd":round(db.scalar(select(func.coalesce(func.sum(Usage.reserved_usd),0)).where(Usage.created_at>=day_start())),3),
         "learning":learning(db)}
 
@@ -406,6 +411,8 @@ async def invalid_request(_,exc):
 
 @app.exception_handler(Exception)
 async def internal_failure(_,exc):
+    import logging
+    logging.getLogger('uvicorn.error').error(json.dumps({'event':'request_failure','request_id':getattr(_.state,'request_id',None),'category':type(exc).__name__}))
     return JSONResponse(status_code=500,content={'detail':'Internal operation failed; inspect service health'})
 
 from .auth import browser_operator,origin_check,create_session,set_cookie,COOKIE

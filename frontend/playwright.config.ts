@@ -17,10 +17,20 @@ export default defineConfig({
     baseURL: "http://localhost:13030",
     headless: true,
     trace: "retain-on-failure",
-    launchOptions: {
-      executablePath: process.env.FIELDWORK_BROWSER_EXECUTABLE || undefined,
-    },
   },
+  projects: [
+    {
+      name: "chromium",
+      use: {
+        browserName: "chromium",
+        launchOptions: {
+          executablePath: process.env.FIELDWORK_BROWSER_EXECUTABLE || undefined,
+        },
+      },
+    },
+    { name: "webkit", use: { browserName: "webkit" } },
+    { name: "firefox", use: { browserName: "firefox" } },
+  ],
   webServer: {
     command: "node scripts/test-server.mjs",
     url: "http://localhost:13030/login",

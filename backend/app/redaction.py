@@ -36,5 +36,8 @@ def install_logging():
         logger=logging.getLogger(name);logger.disabled=True;logger.handlers=[logging.NullHandler()];logger.propagate=False
         for child in list(logging.Logger.manager.loggerDict):
             if child.startswith(name+'.'):logging.getLogger(child).disabled=True
-    for handler in logging.getLogger().handlers:
+    handlers=set(logging.getLogger().handlers)
+    for logger in logging.Logger.manager.loggerDict.values():
+        if isinstance(logger,logging.Logger):handlers.update(logger.handlers)
+    for handler in handlers:
         if not any(isinstance(f,SafeLogFilter) for f in handler.filters):handler.addFilter(SafeLogFilter())

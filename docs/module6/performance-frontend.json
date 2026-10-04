@@ -1,0 +1,47 @@
+{
+  "scope": "Production Next build, 500 fictional companies, intercepted API, local unthrottled Chromium; not hosted Lighthouse",
+  "samples": [
+    {
+      "ready_ms": 342.84,
+      "dom_content_loaded_ms": 52.2,
+      "long_tasks_ms": [],
+      "cls": 0.0020493120829264324,
+      "js_encoded_bytes": 166914,
+      "api_reads": {
+        "companies": 1,
+        "profile": 1,
+        "campaign": 1,
+        "outreach": 1,
+        "settings": 1
+      }
+    },
+    {
+      "ready_ms": 149.16,
+      "dom_content_loaded_ms": 43.2,
+      "long_tasks_ms": [],
+      "cls": 0.002049345906575521,
+      "js_encoded_bytes": 166914,
+      "api_reads": {
+        "companies": 1,
+        "profile": 1,
+        "campaign": 1,
+        "outreach": 1,
+        "settings": 1
+      }
+    },
+    {
+      "ready_ms": 135.34,
+      "dom_content_loaded_ms": 33.3,
+      "long_tasks_ms": [],
+      "cls": 0.002049345906575521,
+      "js_encoded_bytes": 166914,
+      "api_reads": {
+        "companies": 1,
+        "profile": 1,
+        "campaign": 1,
+        "outreach": 1,
+        "settings": 1
+      }
+    }
+  ]
+}

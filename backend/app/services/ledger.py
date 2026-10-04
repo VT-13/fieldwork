@@ -5,6 +5,8 @@ other communications until completion or explicit reconciliation.
 """
 from contextlib import contextmanager
 from contextvars import ContextVar
+import json
+import logging
 from sqlalchemy import select, text, func
 from ..models import Operation, ActionAttempt, now
 from ..core import Blocked
@@ -12,6 +14,9 @@ from ..domain.states import transition
 
 active_delivery = ContextVar('active_delivery', default=None)
 COMMUNICATIONS = ('company_send','self_test','mailbox_draft')
+
+def log_status(op,status):
+    logging.getLogger('uvicorn.error').info(json.dumps({'event':'operation','operation_id':op.id,'job_id':op.job_id,'outreach_id':op.outreach_id,'provider':op.provider,'status':status}))
 
 def lock(db):
     db.flush()
@@ -56,12 +61,13 @@ def claim(db, key, kind, provider, authorize, *, outreach_id=None, entity_id='',
         if op.status=='failed':
             transition(db,op,'running',domain='operation',reason='retry_evaluation')
         transition(db,op,'blocked',domain='operation',reason='policy_denied')
-        db.commit();raise
+        db.commit();log_status(op,'blocked');raise
     transition(db,op,'running',domain='operation',reason='authorized')
     attempt.authorized=True;attempt.network_units=1;attempt.policy=policy;db.flush()
     if reserve:
         reserve(attempt)
     db.commit()
+    log_status(op,'reserved')
     return attempt,False
 
 def finish(db, attempt, status, *, receipt=None, reason=''):
@@ -73,6 +79,7 @@ def finish(db, attempt, status, *, receipt=None, reason=''):
     transition(db,op,status,domain='operation',reason=reason or status)
     attempt.status=status;attempt.reason=reason[:160];attempt.receipt=receipt or {};attempt.finished_at=now()
     db.commit()
+    log_status(op,status)
     return attempt
 
 @contextmanager

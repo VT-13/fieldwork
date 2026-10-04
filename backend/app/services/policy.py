@@ -46,6 +46,11 @@ def company(db,row,at,mode="scheduled"):
  if c.demo or c.stage in STOP or db.get(Suppression,ct.email.lower()):raise Blocked('Demo or company/contact is stopped')
  allowed=p.get('allowed_cities',['Rocklin'])
  if c.research.get('city') not in allowed:raise Blocked('Authorized local city evidence required')
+ city_evidence=c.research.get('city_evidence_id')
+ if city_evidence:
+  from ..intelligence.evidence import usable
+  city_fact=db.get(Evidence,city_evidence)
+  if not city_fact or city_fact.company_id!=c.id or city_fact.source_kind!='official' or not usable(city_fact):raise Blocked('Current official location evidence required')
  from pydantic import TypeAdapter,EmailStr,ValidationError
  try:TypeAdapter(EmailStr).validate_python(ct.email)
  except ValidationError:raise Blocked('Valid recipient email required') from None
@@ -89,7 +94,7 @@ def own_mailbox(db,address,sender,kind):
   raise Blocked('Uncertain delivery exists; reconcile before further communication')
  if kind=='self_test':
   start=now().astimezone(ZoneInfo(settings().timezone)).replace(hour=0,minute=0,second=0,microsecond=0).astimezone(timezone.utc)
-  if send_usage(db,start)>=min(25,settings().daily_send_limit):raise Blocked('Daily total cap reached')
+  if send_usage(db,start)>=snapshot(db,kind)['daily_cap']:raise Blocked('Daily total cap reached')
  return snapshot(db,kind)
 
 def set_paused(db,enabled):

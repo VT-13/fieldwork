@@ -87,3 +87,11 @@ backend/app/{auth,credentials,gmail_oauth,ingress,privacy,redaction,url_safety}.
 - `frontend/components/RuntimeStatus.tsx`, Prospect and ResponseInbox: real queued/running/blocked/interrupted status, worker/offline/stale-sync/uncertainty copy, safe explicit retry and evidence-only Sent check. No broad resume or autonomous inbound reply.
 - `backend/tests/test_runtime.py`: crash windows, exact transport/reconciliation scope, responses, scheduling, follow-ups, subprocess restart and disposable PostgreSQL competitors. `scripts/module5_*`, `docs/module5/`: sanitized gates, screenshots, preservation and handoff.
 - `compose.yaml` and optional desktop worker plist template: source-only persistent service configuration. Current actual capabilities in PROVIDER_CAPABILITIES.md. Installed worker remains inactive and old external automation is not part of the canonical production path.
+
+## Module6 release map
+
+- `backend/tests/test_release.py`, `test_release_migration.py`: production startup/config, official city, follow-up, idle rate bucket, shared quota, provider error mapping, sanitized logging, transactional failure/retry and compatible SQLite001→PG17 migration/restore plus incompatible-field refusal.
+- `backend/tests/release_runtime.py`: explicit disposable-only fake-provider/controlled-clock harness, excluded from application package and Docker runtime. Not a production fixture mode or API endpoint.
+- `backend/scripts/transfer_legacy.py`: validation-first paused exact001 backup to empty PG target; apply needs stopped-sender confirmation, no values/logged secrets; real installed over-width key currently blocks it.
+- `scripts/module6_{check,e2e,preserve,frontend_perf}.py`, `docs/module6/`: clean dependency/PG17/native TLS production-build/worker/fake-provider/browser/soak/performance/audit/preservation evidence. Private test runtimes live only under `/private/tmp/fieldwork-module6`.
+- `docs/{RUNBOOK,RELEASE_CANDIDATE,RELEASE_CHECKLIST}.md`, root `DEPLOYMENT.md`: exact release conditions, operations, cutover retirement and backup-plus-compatible-source rollback. No installed/deployed service changes.

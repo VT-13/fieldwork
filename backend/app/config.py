@@ -17,7 +17,7 @@ class Settings(BaseSettings):
     oauth_redirect_uri: str = "http://localhost:3000/api/integrations/gmail/callback"
     gmail_drafts_enabled: bool = False
     allow_legacy_oauth: bool = False
-    environment: str = "development"
+    environment: Literal["development", "production"] = "development"
     dry_run: bool = True
     manual_mode: bool = True
     response_poll_enabled: bool = False
@@ -86,7 +86,7 @@ class Settings(BaseSettings):
             raise ValueError('Private .env must be a regular owner-only file (chmod 600)')
         from urllib.parse import urlsplit
         origin=urlsplit(self.app_origin)
-        if origin.scheme not in ('http','https') or origin.path not in ('','/') or origin.query or origin.fragment or origin.username or origin.password:
+        if not origin.hostname or origin.scheme not in ('http','https') or origin.path not in ('','/') or origin.query or origin.fragment or origin.username or origin.password:
             raise ValueError('APP_ORIGIN must be an exact HTTP(S) origin')
         if self.operator_password_hash or self.credential_keys:
             if len(self.api_key)<32 or self.api_key.startswith(('local-','replace-with-')):
@@ -99,17 +99,27 @@ class Settings(BaseSettings):
             from cryptography.fernet import Fernet
             if not self.credential_keys:raise ValueError("Production requires CREDENTIAL_KEYS")
             for key in self.credential_keys.split(","):Fernet(key.strip().encode())
-            if not self.operator_password_hash.startswith("scrypt$"):
-                raise ValueError("Production requires OPERATOR_PASSWORD_HASH")
+            try:
+                import base64
+                kind,salt,digest=self.operator_password_hash.split('$')
+                if kind!='scrypt' or len(base64.urlsafe_b64decode(salt))!=16 or len(base64.urlsafe_b64decode(digest))!=32:raise ValueError()
+            except (ValueError,TypeError):raise ValueError("Production requires a valid OPERATOR_PASSWORD_HASH") from None
             if urlsplit(self.app_origin).scheme != 'https':
                 raise ValueError("Production requires HTTPS APP_ORIGIN")
-            if any('*' in h for h in self.trusted_hosts) or 'testserver' in self.trusted_hosts:
+            if not self.trusted_hosts or any('*' in h for h in self.trusted_hosts) or 'testserver' in self.trusted_hosts:
                 raise ValueError("Set explicit production TRUSTED_HOSTS")
             if not self.data_directory or not Path(self.data_directory).is_absolute():raise ValueError('Production requires an absolute private DATA_DIRECTORY')
             if self.allow_legacy_oauth or self.oauth_refresh_token:
                 raise ValueError("Production requires encrypted OAuth storage, not legacy tokens")
-            if not self.database_url.startswith("postgresql"):
-                raise ValueError("Production requires PostgreSQL")
+            from sqlalchemy.engine import make_url
+            try:
+                db_url=make_url(self.database_url)
+                if db_url.get_backend_name()!='postgresql' or not db_url.host or not db_url.database:raise ValueError()
+            except Exception:raise ValueError("Production requires an explicit PostgreSQL host/database") from None
+            if self.oauth_client_id or self.oauth_client_secret:
+                callback=urlsplit(self.oauth_redirect_uri)
+                if not self.oauth_client_id or not self.oauth_client_secret or (callback.scheme,callback.netloc)!=(origin.scheme,origin.netloc) or callback.path!='/api/integrations/gmail/callback' or callback.query or callback.fragment:
+                    raise ValueError("Gmail OAuth credentials and exact HTTPS callback must be configured together")
         return self
 
 @lru_cache

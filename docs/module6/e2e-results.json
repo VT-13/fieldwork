@@ -1,0 +1,55 @@
+{
+  "scope": "Real TLS HTTP -> production Next proxy -> authenticated API -> actual worker process -> disposable PG17; fake provider seams only",
+  "production_mutations": false,
+  "scenarios": {
+    "initial_followup_reply": {
+      "passed": true,
+      "transmissions": 2,
+      "operator_review_before_each_send": true,
+      "same_subject_thread": true,
+      "replay_no_duplicate": true,
+      "reply_linkage_and_cancellation": true
+    },
+    "forced_crash_uncertain_reconciliation": {
+      "passed": true,
+      "no_evidence_held": true,
+      "exact_evidence_sent": true,
+      "no_resend": true,
+      "transmissions": 1
+    },
+    "shared_daily_quota": {
+      "passed": true,
+      "cap": 4,
+      "types": [
+        "followup",
+        "uncertain_initial",
+        "self_test",
+        "initial"
+      ],
+      "overflow_calls": 0,
+      "unknown_counted": true
+    },
+    "timezone_rollover_no_catchup": {
+      "passed": true,
+      "timezone": "America/Los_Angeles",
+      "new_day_attempts": 0
+    },
+    "due_followup_reply_race": {
+      "passed": true,
+      "reserved_transmissions": 0,
+      "pending_message_cancelled": true
+    }
+  },
+  "soak": {
+    "seconds": 181.3,
+    "samples": 60,
+    "rss_first_kib": 43376,
+    "rss_last_kib": 39664,
+    "rss_max_kib": 51760,
+    "max_cpu_percent": 6.9,
+    "job_growth": 3,
+    "extra_transmissions": 0,
+    "scope": "Bounded native fake-provider soak, not long-term hosted reliability"
+  },
+  "result": "passed"
+}

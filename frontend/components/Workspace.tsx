@@ -149,7 +149,10 @@ export default function Workspace() {
             className="command-trigger"
             aria-label="Find a prospect or action"
             aria-keyshortcuts="Meta+K Control+K"
-            onClick={() => setCommand(true)}
+            onClick={(event) => {
+              event.currentTarget.focus();
+              setCommand(true);
+            }}
           >
             <Search size={16} aria-hidden="true" />
             <span>Find a prospect or action</span>

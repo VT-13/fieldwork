@@ -106,6 +106,7 @@ function MessageEditor({
     const element = editor.current;
     if (!element) return;
     let width = 0;
+    let frame = 0;
     const resize = () => {
       element.style.height = "auto";
       element.style.height = element.scrollHeight + "px";
@@ -115,11 +116,15 @@ function MessageEditor({
       const nextWidth = entries[0].contentRect.width;
       if (nextWidth !== width) {
         width = nextWidth;
-        resize();
+        cancelAnimationFrame(frame);
+        frame = requestAnimationFrame(resize);
       }
     });
     observer.observe(element);
-    return () => observer.disconnect();
+    return () => {
+      observer.disconnect();
+      cancelAnimationFrame(frame);
+    };
   }, [body]);
   useUnsavedChanges(dirty);
   const editable =

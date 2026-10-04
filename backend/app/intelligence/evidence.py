@@ -206,6 +206,7 @@ async def research(db, company, gateway):
                                 "retryable": False,
                             }
                         )
+                    observed_city(db, company)
                     facts = bundle(db, company)
                     observed_size = next(
                         (
@@ -367,3 +368,18 @@ def rank(db, company):
         },
     }
     return company.score
+
+
+def observed_city(db, company):
+    """Use explicit official office statements, never search-area/address guesses."""
+    from ..models import State
+    state=db.get(State,"outreach_policy")
+    allowed=(state.value if state else {}).get("allowed_cities",["Rocklin"])
+    matches={}
+    for e in db.scalars(select(Evidence).where(Evidence.company_id==company.id)):
+        if e.source_kind!="official" or not usable(e):continue
+        for city in allowed:
+            if re.search(r"\b(?:based|located|headquartered|office)\s+(?:is\s+)?in\s+"+re.escape(city)+r"(?=\s*[,.;]|$)", e.quote, re.I):matches.setdefault(city,e)
+    if len(matches)==1:
+        city,e=next(iter(matches.items()))
+        company.research={**company.research,"city":city,"city_evidence_id":e.id}

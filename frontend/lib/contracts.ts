@@ -340,6 +340,10 @@ export type RuntimeView = {
   "unresolved": number;
   "sync_stale": boolean;
   "recurring_paused": boolean;
+  "daily_attempts": number;
+  "daily_limit": number;
+  "daily_bounces": number;
+  "bounce_stop": boolean;
   "communication_jobs": (JobView)[];
 };
 

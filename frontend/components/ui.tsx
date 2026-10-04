@@ -146,6 +146,27 @@ export function Dialog({
       ref={ref}
       aria-labelledby="dialog-title"
       onCancel={close}
+      onKeyDown={(e) => {
+        if (e.key !== "Tab") return;
+        // WebKit on macOS may omit links from native Tab navigation. Keep the
+        // dialog's controls and results reachable with a consistent focus loop.
+        const controls = Array.from(
+          e.currentTarget.querySelectorAll<HTMLElement>(
+            "a[href], button, input, select, textarea, [tabindex]",
+          ),
+        ).filter(
+          (el) =>
+            el.tabIndex >= 0 &&
+            !el.hasAttribute("disabled") &&
+            el.getClientRects().length > 0,
+        );
+        if (!controls.length) return;
+        const current = controls.indexOf(document.activeElement as HTMLElement);
+        const next =
+          (current + (e.shiftKey ? -1 : 1) + controls.length) % controls.length;
+        e.preventDefault();
+        controls[next].focus();
+      }}
       onClick={(e) => {
         if (e.target === e.currentTarget) close();
       }}

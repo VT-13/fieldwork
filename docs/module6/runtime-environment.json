@@ -1,0 +1,16 @@
+{
+  "native_python": "Python 3.13.3",
+  "node": "v24.18.0",
+  "npm": "11.16.0",
+  "postgres": "postgres (PostgreSQL) 17.11",
+  "pg_source_checksum_match": true,
+  "docker_available": false,
+  "container_verified": false,
+  "native_production_dependencies_only": true,
+  "frontend_build_id": "3W_xTGOAvedGHON6GFX9O",
+  "frontend_secret_matches": [],
+  "private_inputs_never_copied_to_build": true,
+  "hosted_tls_verified": false,
+  "local_tls_scope": "Ephemeral isolated CA, explicitly trusted client, production Next proxy/API; no system trust change",
+  "architecture": "one API, one Next server, dedicated deterministic worker with integrated scheduler; external PostgreSQL"
+}

@@ -2,8 +2,8 @@
 
 from datetime import datetime
 from sqlalchemy import select, func, inspect, text
-from ..models import State, Integration, Operation, Job, Outreach, now
-from ..core import aware
+from ..models import State, Integration, Operation, Job, Outreach, Event, now
+from ..core import aware, day_start
 from ..config import settings
 
 
@@ -67,7 +67,9 @@ def status(db):
             .exists(),
         )
     )
-    from . import ledger, jobs
+    from . import ledger, jobs, policy as communication_policy
+    limits=communication_policy.snapshot(db,'read_only')
+    bounces=len(set(db.scalars(select(Event.company_id).where(Event.kind=='bounce',Event.created_at>=day_start()))))
 
     if ledger.unresolved(db) and unresolved == 0:
         unresolved = 1
@@ -90,5 +92,23 @@ def status(db):
         "unresolved": unresolved,
         "sync_stale": stale,
         "recurring_paused": not policy or not policy.value.get("enabled"),
+        "daily_attempts": communication_policy.send_usage(db,day_start()),
+        "daily_limit": limits['daily_cap'],
+        "daily_bounces": bounces,
+        "bounce_stop": bounces>=min(2,(policy.value if policy else {}).get('stop_after_bounces_per_day',2)),
         "communication_jobs": [jobs.view(db, j) for j in communication],
     }
+
+
+def require_schema(db):
+    """Production startup gate; diagnostics contain no SQL or connection secrets."""
+    try:
+        if (
+            not inspect(db.bind).has_table("alembic_version")
+            or db.scalar(text("SELECT version_num FROM alembic_version")) != "005"
+        ):
+            raise RuntimeError()
+    except Exception:
+        raise RuntimeError(
+            "Production database/schema unavailable; verify stopped-sender migration to schema005"
+        ) from None

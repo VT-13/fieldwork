@@ -1,5 +1,7 @@
 """Bound requests before parsing; fixed hosts/origins and DB-backed sensitive limits."""
 import json
+import logging
+from uuid import uuid4
 from datetime import timedelta
 from sqlalchemy import delete
 from .auth import digest
@@ -25,8 +27,9 @@ def rate_limit(client,path,method):
     key=digest(client+':'+kind)
     with Session() as db:
         lock(db)
-        at=now();row=db.get(RateBucket,key)
+        at=now()
         db.execute(delete(RateBucket).where(RateBucket.window_start<at-timedelta(hours=1)).execution_options(synchronize_session=False))
+        row=db.get(RateBucket,key)
         if not row:row=RateBucket(key=key,window_start=at,count=0);db.add(row)
         if aware(row.window_start)<=at-timedelta(seconds=seconds):row.window_start=at;row.count=0
         row.count+=1;allowed=row.count<=limit;db.commit()
@@ -38,6 +41,15 @@ class Ingress:
     async def __call__(self,scope,receive,send):
         if scope['type']!='http':return await self.app(scope,receive,send)
         cfg=settings();headers={k.decode().lower():v.decode() for k,v in scope['headers']}
+        request_id=str(uuid4())
+        scope.setdefault('state',{})['request_id']=request_id
+        async def identified_send(event):
+            if event['type']=='http.response.start':
+                event['headers'].append((b'x-request-id',request_id.encode()))
+                logging.getLogger('uvicorn.error').info(json.dumps({'event':'request','request_id':request_id,'method':scope['method'],'status':event['status']}))
+            await raw_send(event)
+        raw_send=send
+        send=identified_send
         async def fail(status,detail):
             body=json.dumps({'detail':detail}).encode()
             await send({'type':'http.response.start','status':status,'headers':[(b'content-type',b'application/json'),(b'cache-control',b'no-store'),(b'x-content-type-options',b'nosniff')]})

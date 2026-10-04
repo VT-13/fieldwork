@@ -35,3 +35,7 @@ All applicable sends share the total daily cap 25, including own-account tests a
 - `scripts/module5_check.py` and `module5_frontend_check.py`: sanitized disposable backend/PostgreSQL and browser gates; [verification](docs/module5/verification.json) records actual results and limitations.
 
 Gmail capabilities are implemented and fake-tested; live OAuth/delivery, maintained PostgreSQL17/container/TLS/hosted operation and Safari remain release checks. Outlook production sending/tracking and SMTP are not implemented. No tracking pixels, calibrated open-rate claims, autonomous inbound replies, SaaS tenancy or response-rate guarantee are provided.
+
+## Module6 release status
+
+The verified canonical candidate remains **NOT READY for cutover**.250 backend tests on maintained PostgreSQL17.11 and60 Chromium/WebKit/Firefox tests pass; real production-build/API/worker/fake-provider TLS flows, crash/unknown/reply/quota/soak and compatible migration/restore pass. One installed historical State key exceeds the frozen PG width (FW-026); actual transfer is safely blocked. Declared containers, intended hosted TLS and safe live Gmail remain unverified. See docs/module6/README.md, RELEASE_CHECKLIST.md and RUNBOOK.md. Installed source/schema/OAuth/services, receipts and recurring pause remain unchanged.

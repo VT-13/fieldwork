@@ -19,3 +19,7 @@ Keep daily encrypted backups for a short documented rotation (recommended 30 day
 ## Verification performed
 
 Module 2 used pg_dump/pg_restore against disposable PostgreSQL. The restored database retained paused outreach policy, durable jobs, ledger attempts and provider receipt IDs. A full consistent backup was also checked for a digest and mode 0600. No live database backup, restore, migration, key change or send was run. Test binaries/tooling live only in private temporary directories and were shut down after checks; CI/production should use maintained patched PostgreSQL tools.
+
+## Module6 maintained-target evidence
+
+`test_release_migration.py` performs a private SQLite backup, transactional compatible SQLite001→PG17.11/005 rehearsal, private custom-format PG17 dump, deliberate source policy mutation and restore into a newly created disposable database. Exact old records, pause/control states, confirmed/unknown attempt history, original receipts, queued job, acknowledgment, suppression and synthetic integration generation/ciphertext reference survive. Existing PostgreSQL tests also exercise constraints/metadata and consistent backup helpers. See module6/migration-rehearsal.json and backend-tests.log. Credential references are synthetic; encryption keys remain external. No installed personal database was used destructively or copied as a test fixture. The installed over-width State key remains a cutover blocker, not a successful real migration claim.

@@ -1,7 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 export function proxy(request: NextRequest) {
   const origin = process.env.APP_ORIGIN || "http://localhost:3000";
-  if (request.nextUrl.host !== new URL(origin).host)
+  // Next's self-hosted request URL uses the internal listening address. Validate
+  // the original Host instead; the edge proxy must preserve the public Host.
+  // Forwarded host/protocol headers are deliberately not authorization inputs.
+  if (request.headers.get("host") !== new URL(origin).host)
     return new NextResponse("Invalid host", { status: 400 });
   // Only FastAPI can authorize API access; cookie presence grants no authority.
   if (

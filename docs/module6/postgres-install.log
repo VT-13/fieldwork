@@ -1,0 +1,870 @@
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C ./src/backend generated-headers
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C ../include/catalog generated-headers
+make[2]: Nothing to be done for `generated-headers'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C nodes generated-header-symlinks
+make[2]: Nothing to be done for `generated-header-symlinks'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C utils generated-header-symlinks
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C adt jsonpath_gram.h
+make[3]: `jsonpath_gram.h' is up to date.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C src install
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C common install
+/bin/sh ../../config/install-sh -c -d '/private/tmp/fieldwork-module6/pg17/install/lib'
+/usr/bin/install -c -m 644  libpgcommon.a '/private/tmp/fieldwork-module6/pg17/install/lib/libpgcommon.a'
+/usr/bin/install -c -m 644  libpgcommon_shlib.a '/private/tmp/fieldwork-module6/pg17/install/lib/libpgcommon_shlib.a'
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C port install
+/bin/sh ../../config/install-sh -c -d '/private/tmp/fieldwork-module6/pg17/install/lib'
+/usr/bin/install -c -m 644  libpgport.a '/private/tmp/fieldwork-module6/pg17/install/lib/libpgport.a'
+/usr/bin/install -c -m 644  libpgport_shlib.a '/private/tmp/fieldwork-module6/pg17/install/lib/libpgport_shlib.a'
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C timezone install
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C ../../src/port all
+make[3]: Nothing to be done for `all'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C ../../src/common all
+make[3]: Nothing to be done for `all'.
+/bin/sh ../../config/install-sh -c -d '/private/tmp/fieldwork-module6/pg17/install/share/postgresql'
+./zic -d '/private/tmp/fieldwork-module6/pg17/install/share/postgresql/timezone'  ./data/tzdata.zi
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C tznames install
+/bin/sh ../../../config/install-sh -c -d '/private/tmp/fieldwork-module6/pg17/install/share/postgresql/timezonesets'
+/usr/bin/install -c -m 644 ./Africa.txt ./America.txt ./Antarctica.txt ./Asia.txt ./Atlantic.txt ./Australia.txt ./Etc.txt ./Europe.txt ./Indian.txt ./Pacific.txt '/private/tmp/fieldwork-module6/pg17/install/share/postgresql/timezonesets'
+/usr/bin/install -c -m 644 ./Default ./Australia ./India '/private/tmp/fieldwork-module6/pg17/install/share/postgresql/timezonesets'
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C backend install
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C ../../src/port all
+make[3]: Nothing to be done for `all'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C ../../src/common all
+make[3]: Nothing to be done for `all'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C ../include/catalog generated-headers
+make[3]: Nothing to be done for `generated-headers'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C utils generated-header-symlinks
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C adt jsonpath_gram.h
+make[4]: `jsonpath_gram.h' is up to date.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C access all
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C brin all
+make[4]: Nothing to be done for `all'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C common all
+make[4]: Nothing to be done for `all'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C gin all
+make[4]: Nothing to be done for `all'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C gist all
+make[4]: Nothing to be done for `all'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C hash all
+make[4]: Nothing to be done for `all'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C heap all
+make[4]: Nothing to be done for `all'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C index all
+make[4]: Nothing to be done for `all'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C nbtree all
+make[4]: Nothing to be done for `all'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C rmgrdesc all
+make[4]: Nothing to be done for `all'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C spgist all
+make[4]: Nothing to be done for `all'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C sequence all
+make[4]: Nothing to be done for `all'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C table all
+make[4]: Nothing to be done for `all'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C tablesample all
+make[4]: Nothing to be done for `all'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C transam all
+make[4]: Nothing to be done for `all'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C archive all
+make[3]: Nothing to be done for `all'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C backup all
+make[3]: Nothing to be done for `all'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C bootstrap all
+make[3]: Nothing to be done for `all'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C catalog all
+make[3]: Nothing to be done for `all'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C parser all
+make[3]: Nothing to be done for `all'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C commands all
+make[3]: Nothing to be done for `all'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C executor all
+make[3]: Nothing to be done for `all'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C foreign all
+make[3]: Nothing to be done for `all'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C lib all
+make[3]: Nothing to be done for `all'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C libpq all
+make[3]: Nothing to be done for `all'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C main all
+make[3]: Nothing to be done for `all'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C nodes all
+make[3]: Nothing to be done for `all'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C optimizer all
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C geqo all
+make[4]: Nothing to be done for `all'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C path all
+make[4]: Nothing to be done for `all'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C plan all
+make[4]: Nothing to be done for `all'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C prep all
+make[4]: Nothing to be done for `all'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C util all
+make[4]: Nothing to be done for `all'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C partitioning all
+make[3]: Nothing to be done for `all'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C port all
+make[3]: Nothing to be done for `all'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C postmaster all
+make[3]: Nothing to be done for `all'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C regex all
+make[3]: Nothing to be done for `all'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C replication all
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C logical all
+make[4]: Nothing to be done for `all'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C rewrite all
+make[3]: Nothing to be done for `all'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C statistics all
+make[3]: Nothing to be done for `all'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C storage all
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C aio all
+make[4]: Nothing to be done for `all'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C buffer all
+make[4]: Nothing to be done for `all'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C file all
+make[4]: Nothing to be done for `all'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C freespace all
+make[4]: Nothing to be done for `all'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C ipc all
+make[4]: Nothing to be done for `all'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C large_object all
+make[4]: Nothing to be done for `all'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C lmgr all
+make[4]: Nothing to be done for `all'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C page all
+make[4]: Nothing to be done for `all'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C smgr all
+make[4]: Nothing to be done for `all'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C sync all
+make[4]: Nothing to be done for `all'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C tcop all
+make[3]: Nothing to be done for `all'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C tsearch all
+make[3]: Nothing to be done for `all'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C utils all
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C activity all
+make[4]: Nothing to be done for `all'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C adt all
+make[4]: Nothing to be done for `all'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C cache all
+make[4]: Nothing to be done for `all'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C error all
+make[4]: Nothing to be done for `all'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C fmgr all
+make[4]: Nothing to be done for `all'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C hash all
+make[4]: Nothing to be done for `all'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C init all
+make[4]: Nothing to be done for `all'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C mb all
+make[4]: Nothing to be done for `all'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C misc all
+make[4]: Nothing to be done for `all'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C mmgr all
+make[4]: Nothing to be done for `all'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C resowner all
+make[4]: Nothing to be done for `all'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C sort all
+make[4]: Nothing to be done for `all'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C time all
+make[4]: Nothing to be done for `all'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C adt jsonpath_gram.h
+make[4]: `jsonpath_gram.h' is up to date.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C ../../src/timezone all
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C ../../src/port all
+make[4]: Nothing to be done for `all'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C ../../src/common all
+make[4]: Nothing to be done for `all'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C jit all
+make[3]: Nothing to be done for `all'.
+/bin/sh ../../config/install-sh -c -d '/private/tmp/fieldwork-module6/pg17/install/bin' '/private/tmp/fieldwork-module6/pg17/install/share/postgresql'
+/usr/bin/install -c  postgres '/private/tmp/fieldwork-module6/pg17/install/bin/postgres'
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C access install
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C brin install
+make[4]: Nothing to be done for `install'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C common install
+make[4]: Nothing to be done for `install'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C gin install
+make[4]: Nothing to be done for `install'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C gist install
+make[4]: Nothing to be done for `install'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C hash install
+make[4]: Nothing to be done for `install'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C heap install
+make[4]: Nothing to be done for `install'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C index install
+make[4]: Nothing to be done for `install'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C nbtree install
+make[4]: Nothing to be done for `install'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C rmgrdesc install
+make[4]: Nothing to be done for `install'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C spgist install
+make[4]: Nothing to be done for `install'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C sequence install
+make[4]: Nothing to be done for `install'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C table install
+make[4]: Nothing to be done for `install'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C tablesample install
+make[4]: Nothing to be done for `install'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C transam install
+make[4]: Nothing to be done for `install'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C archive install
+make[3]: Nothing to be done for `install'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C backup install
+make[3]: Nothing to be done for `install'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C bootstrap install
+make[3]: Nothing to be done for `install'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C catalog install
+make[3]: Nothing to be done for `install'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C parser install
+make[3]: Nothing to be done for `install'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C commands install
+make[3]: Nothing to be done for `install'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C executor install
+make[3]: Nothing to be done for `install'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C foreign install
+make[3]: Nothing to be done for `install'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C lib install
+make[3]: Nothing to be done for `install'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C libpq install
+make[3]: Nothing to be done for `install'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C main install
+make[3]: Nothing to be done for `install'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C nodes install
+make[3]: Nothing to be done for `install'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C optimizer install
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C geqo install
+make[4]: Nothing to be done for `install'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C path install
+make[4]: Nothing to be done for `install'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C plan install
+make[4]: Nothing to be done for `install'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C prep install
+make[4]: Nothing to be done for `install'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C util install
+make[4]: Nothing to be done for `install'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C partitioning install
+make[3]: Nothing to be done for `install'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C port install
+make[3]: Nothing to be done for `install'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C postmaster install
+make[3]: Nothing to be done for `install'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C regex install
+make[3]: Nothing to be done for `install'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C replication install
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C logical install
+make[4]: Nothing to be done for `install'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C rewrite install
+make[3]: Nothing to be done for `install'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C statistics install
+make[3]: Nothing to be done for `install'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C storage install
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C aio install
+make[4]: Nothing to be done for `install'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C buffer install
+make[4]: Nothing to be done for `install'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C file install
+make[4]: Nothing to be done for `install'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C freespace install
+make[4]: Nothing to be done for `install'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C ipc install
+make[4]: Nothing to be done for `install'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C large_object install
+make[4]: Nothing to be done for `install'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C lmgr install
+make[4]: Nothing to be done for `install'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C page install
+make[4]: Nothing to be done for `install'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C smgr install
+make[4]: Nothing to be done for `install'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C sync install
+make[4]: Nothing to be done for `install'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C tcop install
+make[3]: Nothing to be done for `install'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C tsearch install
+make[3]: Nothing to be done for `install'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C utils install
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C activity install
+make[4]: Nothing to be done for `install'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C adt install
+make[4]: Nothing to be done for `install'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C cache install
+make[4]: Nothing to be done for `install'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C error install
+make[4]: Nothing to be done for `install'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C fmgr install
+make[4]: Nothing to be done for `install'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C hash install
+make[4]: Nothing to be done for `install'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C init install
+make[4]: Nothing to be done for `install'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C mb install
+make[4]: Nothing to be done for `install'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C misc install
+make[4]: Nothing to be done for `install'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C mmgr install
+make[4]: Nothing to be done for `install'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C resowner install
+make[4]: Nothing to be done for `install'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C sort install
+make[4]: Nothing to be done for `install'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C time install
+make[4]: Nothing to be done for `install'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C ../../src/timezone install
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C ../../src/port all
+make[4]: Nothing to be done for `all'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C ../../src/common all
+make[4]: Nothing to be done for `all'.
+/bin/sh ../../config/install-sh -c -d '/private/tmp/fieldwork-module6/pg17/install/share/postgresql'
+./zic -d '/private/tmp/fieldwork-module6/pg17/install/share/postgresql/timezone'  ./data/tzdata.zi
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C tznames install
+/bin/sh ../../../config/install-sh -c -d '/private/tmp/fieldwork-module6/pg17/install/share/postgresql/timezonesets'
+/usr/bin/install -c -m 644 ./Africa.txt ./America.txt ./Antarctica.txt ./Asia.txt ./Atlantic.txt ./Australia.txt ./Etc.txt ./Europe.txt ./Indian.txt ./Pacific.txt '/private/tmp/fieldwork-module6/pg17/install/share/postgresql/timezonesets'
+/usr/bin/install -c -m 644 ./Default ./Australia ./India '/private/tmp/fieldwork-module6/pg17/install/share/postgresql/timezonesets'
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C jit install
+make[3]: Nothing to be done for `install'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C catalog install-data
+/bin/sh ../../../config/install-sh -c -d '/private/tmp/fieldwork-module6/pg17/install/share/postgresql'
+/usr/bin/install -c -m 644 ./system_functions.sql '/private/tmp/fieldwork-module6/pg17/install/share/postgresql/system_functions.sql'
+/usr/bin/install -c -m 644 ./system_views.sql '/private/tmp/fieldwork-module6/pg17/install/share/postgresql/system_views.sql'
+/usr/bin/install -c -m 644 ./information_schema.sql '/private/tmp/fieldwork-module6/pg17/install/share/postgresql/information_schema.sql'
+/usr/bin/install -c -m 644 ./sql_features.txt '/private/tmp/fieldwork-module6/pg17/install/share/postgresql/sql_features.txt'
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C tsearch install-data
+/bin/sh ../../../config/install-sh -c -d '/private/tmp/fieldwork-module6/pg17/install/share/postgresql' '/private/tmp/fieldwork-module6/pg17/install/share/postgresql/tsearch_data'
+/usr/bin/install -c -m 644 ./dicts/synonym_sample.syn ./dicts/thesaurus_sample.ths ./dicts/hunspell_sample.affix ./dicts/ispell_sample.affix ./dicts/ispell_sample.dict ./dicts/hunspell_sample_long.affix ./dicts/hunspell_sample_long.dict ./dicts/hunspell_sample_num.affix ./dicts/hunspell_sample_num.dict '/private/tmp/fieldwork-module6/pg17/install/share/postgresql/tsearch_data/'
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C utils install-data
+/bin/sh ../../../config/install-sh -c -d '/private/tmp/fieldwork-module6/pg17/install/share/postgresql'
+/usr/bin/install -c -m 644 ./errcodes.txt '/private/tmp/fieldwork-module6/pg17/install/share/postgresql/errcodes.txt'
+/usr/bin/install -c -m 644 ./libpq/pg_hba.conf.sample '/private/tmp/fieldwork-module6/pg17/install/share/postgresql/pg_hba.conf.sample'
+/usr/bin/install -c -m 644 ./libpq/pg_ident.conf.sample '/private/tmp/fieldwork-module6/pg17/install/share/postgresql/pg_ident.conf.sample'
+/usr/bin/install -c -m 644 ./utils/misc/postgresql.conf.sample '/private/tmp/fieldwork-module6/pg17/install/share/postgresql/postgresql.conf.sample'
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C backend/utils/mb/conversion_procs install
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C cyrillic_and_mic install
+/bin/sh ../../../../../../config/install-sh -c -d '/private/tmp/fieldwork-module6/pg17/install/lib/postgresql'
+/usr/bin/install -c -m 755  cyrillic_and_mic.dylib '/private/tmp/fieldwork-module6/pg17/install/lib/postgresql/cyrillic_and_mic.dylib'
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C euc_cn_and_mic install
+/bin/sh ../../../../../../config/install-sh -c -d '/private/tmp/fieldwork-module6/pg17/install/lib/postgresql'
+/usr/bin/install -c -m 755  euc_cn_and_mic.dylib '/private/tmp/fieldwork-module6/pg17/install/lib/postgresql/euc_cn_and_mic.dylib'
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C euc_jp_and_sjis install
+/bin/sh ../../../../../../config/install-sh -c -d '/private/tmp/fieldwork-module6/pg17/install/lib/postgresql'
+/usr/bin/install -c -m 755  euc_jp_and_sjis.dylib '/private/tmp/fieldwork-module6/pg17/install/lib/postgresql/euc_jp_and_sjis.dylib'
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C euc_kr_and_mic install
+/bin/sh ../../../../../../config/install-sh -c -d '/private/tmp/fieldwork-module6/pg17/install/lib/postgresql'
+/usr/bin/install -c -m 755  euc_kr_and_mic.dylib '/private/tmp/fieldwork-module6/pg17/install/lib/postgresql/euc_kr_and_mic.dylib'
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C euc_tw_and_big5 install
+/bin/sh ../../../../../../config/install-sh -c -d '/private/tmp/fieldwork-module6/pg17/install/lib/postgresql'
+/usr/bin/install -c -m 755  euc_tw_and_big5.dylib '/private/tmp/fieldwork-module6/pg17/install/lib/postgresql/euc_tw_and_big5.dylib'
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C latin2_and_win1250 install
+/bin/sh ../../../../../../config/install-sh -c -d '/private/tmp/fieldwork-module6/pg17/install/lib/postgresql'
+/usr/bin/install -c -m 755  latin2_and_win1250.dylib '/private/tmp/fieldwork-module6/pg17/install/lib/postgresql/latin2_and_win1250.dylib'
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C latin_and_mic install
+/bin/sh ../../../../../../config/install-sh -c -d '/private/tmp/fieldwork-module6/pg17/install/lib/postgresql'
+/usr/bin/install -c -m 755  latin_and_mic.dylib '/private/tmp/fieldwork-module6/pg17/install/lib/postgresql/latin_and_mic.dylib'
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C utf8_and_big5 install
+/bin/sh ../../../../../../config/install-sh -c -d '/private/tmp/fieldwork-module6/pg17/install/lib/postgresql'
+/usr/bin/install -c -m 755  utf8_and_big5.dylib '/private/tmp/fieldwork-module6/pg17/install/lib/postgresql/utf8_and_big5.dylib'
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C utf8_and_cyrillic install
+/bin/sh ../../../../../../config/install-sh -c -d '/private/tmp/fieldwork-module6/pg17/install/lib/postgresql'
+/usr/bin/install -c -m 755  utf8_and_cyrillic.dylib '/private/tmp/fieldwork-module6/pg17/install/lib/postgresql/utf8_and_cyrillic.dylib'
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C utf8_and_euc_cn install
+/bin/sh ../../../../../../config/install-sh -c -d '/private/tmp/fieldwork-module6/pg17/install/lib/postgresql'
+/usr/bin/install -c -m 755  utf8_and_euc_cn.dylib '/private/tmp/fieldwork-module6/pg17/install/lib/postgresql/utf8_and_euc_cn.dylib'
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C utf8_and_euc_jp install
+/bin/sh ../../../../../../config/install-sh -c -d '/private/tmp/fieldwork-module6/pg17/install/lib/postgresql'
+/usr/bin/install -c -m 755  utf8_and_euc_jp.dylib '/private/tmp/fieldwork-module6/pg17/install/lib/postgresql/utf8_and_euc_jp.dylib'
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C utf8_and_euc_kr install
+/bin/sh ../../../../../../config/install-sh -c -d '/private/tmp/fieldwork-module6/pg17/install/lib/postgresql'
+/usr/bin/install -c -m 755  utf8_and_euc_kr.dylib '/private/tmp/fieldwork-module6/pg17/install/lib/postgresql/utf8_and_euc_kr.dylib'
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C utf8_and_euc_tw install
+/bin/sh ../../../../../../config/install-sh -c -d '/private/tmp/fieldwork-module6/pg17/install/lib/postgresql'
+/usr/bin/install -c -m 755  utf8_and_euc_tw.dylib '/private/tmp/fieldwork-module6/pg17/install/lib/postgresql/utf8_and_euc_tw.dylib'
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C utf8_and_gb18030 install
+/bin/sh ../../../../../../config/install-sh -c -d '/private/tmp/fieldwork-module6/pg17/install/lib/postgresql'
+/usr/bin/install -c -m 755  utf8_and_gb18030.dylib '/private/tmp/fieldwork-module6/pg17/install/lib/postgresql/utf8_and_gb18030.dylib'
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C utf8_and_gbk install
+/bin/sh ../../../../../../config/install-sh -c -d '/private/tmp/fieldwork-module6/pg17/install/lib/postgresql'
+/usr/bin/install -c -m 755  utf8_and_gbk.dylib '/private/tmp/fieldwork-module6/pg17/install/lib/postgresql/utf8_and_gbk.dylib'
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C utf8_and_iso8859 install
+/bin/sh ../../../../../../config/install-sh -c -d '/private/tmp/fieldwork-module6/pg17/install/lib/postgresql'
+/usr/bin/install -c -m 755  utf8_and_iso8859.dylib '/private/tmp/fieldwork-module6/pg17/install/lib/postgresql/utf8_and_iso8859.dylib'
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C utf8_and_iso8859_1 install
+/bin/sh ../../../../../../config/install-sh -c -d '/private/tmp/fieldwork-module6/pg17/install/lib/postgresql'
+/usr/bin/install -c -m 755  utf8_and_iso8859_1.dylib '/private/tmp/fieldwork-module6/pg17/install/lib/postgresql/utf8_and_iso8859_1.dylib'
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C utf8_and_johab install
+/bin/sh ../../../../../../config/install-sh -c -d '/private/tmp/fieldwork-module6/pg17/install/lib/postgresql'
+/usr/bin/install -c -m 755  utf8_and_johab.dylib '/private/tmp/fieldwork-module6/pg17/install/lib/postgresql/utf8_and_johab.dylib'
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C utf8_and_sjis install
+/bin/sh ../../../../../../config/install-sh -c -d '/private/tmp/fieldwork-module6/pg17/install/lib/postgresql'
+/usr/bin/install -c -m 755  utf8_and_sjis.dylib '/private/tmp/fieldwork-module6/pg17/install/lib/postgresql/utf8_and_sjis.dylib'
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C utf8_and_win install
+/bin/sh ../../../../../../config/install-sh -c -d '/private/tmp/fieldwork-module6/pg17/install/lib/postgresql'
+/usr/bin/install -c -m 755  utf8_and_win.dylib '/private/tmp/fieldwork-module6/pg17/install/lib/postgresql/utf8_and_win.dylib'
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C utf8_and_uhc install
+/bin/sh ../../../../../../config/install-sh -c -d '/private/tmp/fieldwork-module6/pg17/install/lib/postgresql'
+/usr/bin/install -c -m 755  utf8_and_uhc.dylib '/private/tmp/fieldwork-module6/pg17/install/lib/postgresql/utf8_and_uhc.dylib'
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C utf8_and_euc2004 install
+/bin/sh ../../../../../../config/install-sh -c -d '/private/tmp/fieldwork-module6/pg17/install/lib/postgresql'
+/usr/bin/install -c -m 755  utf8_and_euc2004.dylib '/private/tmp/fieldwork-module6/pg17/install/lib/postgresql/utf8_and_euc2004.dylib'
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C utf8_and_sjis2004 install
+/bin/sh ../../../../../../config/install-sh -c -d '/private/tmp/fieldwork-module6/pg17/install/lib/postgresql'
+/usr/bin/install -c -m 755  utf8_and_sjis2004.dylib '/private/tmp/fieldwork-module6/pg17/install/lib/postgresql/utf8_and_sjis2004.dylib'
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C euc2004_sjis2004 install
+/bin/sh ../../../../../../config/install-sh -c -d '/private/tmp/fieldwork-module6/pg17/install/lib/postgresql'
+/usr/bin/install -c -m 755  euc2004_sjis2004.dylib '/private/tmp/fieldwork-module6/pg17/install/lib/postgresql/euc2004_sjis2004.dylib'
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C backend/snowball install
+/bin/sh ../../../config/install-sh -c -d '/private/tmp/fieldwork-module6/pg17/install/lib/postgresql'
+/bin/sh ../../../config/install-sh -c -d '/private/tmp/fieldwork-module6/pg17/install/share/postgresql' '/private/tmp/fieldwork-module6/pg17/install/share/postgresql/tsearch_data'
+/usr/bin/install -c -m 755  dict_snowball.dylib '/private/tmp/fieldwork-module6/pg17/install/lib/postgresql/dict_snowball.dylib'
+/usr/bin/install -c -m 644 snowball_create.sql '/private/tmp/fieldwork-module6/pg17/install/share/postgresql'
+/usr/bin/install -c -m 644 ./stopwords/danish.stop ./stopwords/dutch.stop ./stopwords/english.stop ./stopwords/finnish.stop ./stopwords/french.stop ./stopwords/german.stop ./stopwords/hungarian.stop ./stopwords/italian.stop ./stopwords/nepali.stop ./stopwords/norwegian.stop ./stopwords/portuguese.stop ./stopwords/russian.stop ./stopwords/spanish.stop ./stopwords/swedish.stop ./stopwords/turkish.stop '/private/tmp/fieldwork-module6/pg17/install/share/postgresql/tsearch_data'
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C include install
+/bin/sh ../../config/install-sh -c -d '/private/tmp/fieldwork-module6/pg17/install/include/libpq' '/private/tmp/fieldwork-module6/pg17/install/include/postgresql/internal/libpq'
+/bin/sh ../../config/install-sh -c -d '/private/tmp/fieldwork-module6/pg17/install/include/postgresql/server'/access '/private/tmp/fieldwork-module6/pg17/install/include/postgresql/server'/archive '/private/tmp/fieldwork-module6/pg17/install/include/postgresql/server'/bootstrap '/private/tmp/fieldwork-module6/pg17/install/include/postgresql/server'/catalog '/private/tmp/fieldwork-module6/pg17/install/include/postgresql/server'/commands '/private/tmp/fieldwork-module6/pg17/install/include/postgresql/server'/common '/private/tmp/fieldwork-module6/pg17/install/include/postgresql/server'/datatype '/private/tmp/fieldwork-module6/pg17/install/include/postgresql/server'/executor '/private/tmp/fieldwork-module6/pg17/install/include/postgresql/server'/fe_utils '/private/tmp/fieldwork-module6/pg17/install/include/postgresql/server'/foreign '/private/tmp/fieldwork-module6/pg17/install/include/postgresql/server'/jit '/private/tmp/fieldwork-module6/pg17/install/include/postgresql/server'/lib '/private/tmp/fieldwork-module6/pg17/install/include/postgresql/server'/libpq '/private/tmp/fieldwork-module6/pg17/install/include/postgresql/server'/mb '/private/tmp/fieldwork-module6/pg17/install/include/postgresql/server'/nodes '/private/tmp/fieldwork-module6/pg17/install/include/postgresql/server'/optimizer '/private/tmp/fieldwork-module6/pg17/install/include/postgresql/server'/parser '/private/tmp/fieldwork-module6/pg17/install/include/postgresql/server'/partitioning '/private/tmp/fieldwork-module6/pg17/install/include/postgresql/server'/postmaster '/private/tmp/fieldwork-module6/pg17/install/include/postgresql/server'/regex '/private/tmp/fieldwork-module6/pg17/install/include/postgresql/server'/replication '/private/tmp/fieldwork-module6/pg17/install/include/postgresql/server'/rewrite '/private/tmp/fieldwork-module6/pg17/install/include/postgresql/server'/statistics '/private/tmp/fieldwork-module6/pg17/install/include/postgresql/server'/storage '/private/tmp/fieldwork-module6/pg17/install/include/postgresql/server'/tcop '/private/tmp/fieldwork-module6/pg17/install/include/postgresql/server'/snowball '/private/tmp/fieldwork-module6/pg17/install/include/postgresql/server'/snowball/libstemmer '/private/tmp/fieldwork-module6/pg17/install/include/postgresql/server'/tsearch '/private/tmp/fieldwork-module6/pg17/install/include/postgresql/server'/tsearch/dicts '/private/tmp/fieldwork-module6/pg17/install/include/postgresql/server'/utils '/private/tmp/fieldwork-module6/pg17/install/include/postgresql/server'/port '/private/tmp/fieldwork-module6/pg17/install/include/postgresql/server'/port/atomics '/private/tmp/fieldwork-module6/pg17/install/include/postgresql/server'/port/win32 '/private/tmp/fieldwork-module6/pg17/install/include/postgresql/server'/port/win32_msvc '/private/tmp/fieldwork-module6/pg17/install/include/postgresql/server'/port/win32_msvc/sys '/private/tmp/fieldwork-module6/pg17/install/include/postgresql/server'/port/win32/arpa '/private/tmp/fieldwork-module6/pg17/install/include/postgresql/server'/port/win32/netinet '/private/tmp/fieldwork-module6/pg17/install/include/postgresql/server'/port/win32/sys '/private/tmp/fieldwork-module6/pg17/install/include/postgresql/server'/portability
+/usr/bin/install -c -m 644 ./postgres_ext.h   '/private/tmp/fieldwork-module6/pg17/install/include'
+/usr/bin/install -c -m 644 ./libpq/libpq-fs.h '/private/tmp/fieldwork-module6/pg17/install/include/libpq'
+/usr/bin/install -c -m 644 pg_config.h     '/private/tmp/fieldwork-module6/pg17/install/include'
+/usr/bin/install -c -m 644 pg_config_ext.h '/private/tmp/fieldwork-module6/pg17/install/include'
+/usr/bin/install -c -m 644 pg_config_os.h  '/private/tmp/fieldwork-module6/pg17/install/include'
+/usr/bin/install -c -m 644 ./pg_config_manual.h '/private/tmp/fieldwork-module6/pg17/install/include'
+/usr/bin/install -c -m 644 ./c.h            '/private/tmp/fieldwork-module6/pg17/install/include/postgresql/internal'
+/usr/bin/install -c -m 644 ./port.h         '/private/tmp/fieldwork-module6/pg17/install/include/postgresql/internal'
+/usr/bin/install -c -m 644 ./postgres_fe.h  '/private/tmp/fieldwork-module6/pg17/install/include/postgresql/internal'
+/usr/bin/install -c -m 644 ./libpq/pqcomm.h '/private/tmp/fieldwork-module6/pg17/install/include/postgresql/internal/libpq'
+/usr/bin/install -c -m 644 ./libpq/protocol.h '/private/tmp/fieldwork-module6/pg17/install/include/postgresql/internal/libpq'
+/usr/bin/install -c -m 644 pg_config.h     '/private/tmp/fieldwork-module6/pg17/install/include/postgresql/server'
+/usr/bin/install -c -m 644 pg_config_ext.h '/private/tmp/fieldwork-module6/pg17/install/include/postgresql/server'
+/usr/bin/install -c -m 644 pg_config_os.h  '/private/tmp/fieldwork-module6/pg17/install/include/postgresql/server'
+/usr/bin/install -c -m 644 nodes/nodetags.h '/private/tmp/fieldwork-module6/pg17/install/include/postgresql/server/nodes'
+/usr/bin/install -c -m 644 utils/errcodes.h '/private/tmp/fieldwork-module6/pg17/install/include/postgresql/server/utils'
+/usr/bin/install -c -m 644 utils/fmgroids.h '/private/tmp/fieldwork-module6/pg17/install/include/postgresql/server/utils'
+/usr/bin/install -c -m 644 utils/fmgrprotos.h '/private/tmp/fieldwork-module6/pg17/install/include/postgresql/server/utils'
+/usr/bin/install -c -m 644 ./*.h '/private/tmp/fieldwork-module6/pg17/install/include/postgresql/server'
+for dir in access archive bootstrap catalog commands common datatype executor fe_utils foreign jit lib libpq mb nodes optimizer parser partitioning postmaster regex replication rewrite statistics storage tcop snowball snowball/libstemmer tsearch tsearch/dicts utils port port/atomics port/win32 port/win32_msvc port/win32_msvc/sys port/win32/arpa port/win32/netinet port/win32/sys portability; do \
+	  /usr/bin/install -c -m 644 ./$dir/*.h '/private/tmp/fieldwork-module6/pg17/install/include/postgresql/server'/$dir || exit; \
+	done
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C catalog install
+/bin/sh ../../../config/install-sh -c -d '/private/tmp/fieldwork-module6/pg17/install/share/postgresql' '/private/tmp/fieldwork-module6/pg17/install/include/postgresql/server'
+/usr/bin/install -c -m 644 postgres.bki '/private/tmp/fieldwork-module6/pg17/install/share/postgresql/postgres.bki'
+/usr/bin/install -c -m 644 system_constraints.sql '/private/tmp/fieldwork-module6/pg17/install/share/postgresql/system_constraints.sql'
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C interfaces install
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C libpq install
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C ../../../src/port all
+make[4]: Nothing to be done for `all'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C ../../../src/common all
+make[4]: Nothing to be done for `all'.
+/bin/sh ../../../config/install-sh -c -d '/private/tmp/fieldwork-module6/pg17/install/lib' '/private/tmp/fieldwork-module6/pg17/install/lib/pkgconfig'
+/bin/sh ../../../config/install-sh -c -d '/private/tmp/fieldwork-module6/pg17/install/include' '/private/tmp/fieldwork-module6/pg17/install/include/postgresql/internal' '/private/tmp/fieldwork-module6/pg17/install/share/postgresql'
+/usr/bin/install -c -m 755  libpq.5.dylib '/private/tmp/fieldwork-module6/pg17/install/lib/libpq.5.dylib'
+cd '/private/tmp/fieldwork-module6/pg17/install/lib' && \
+	rm -f libpq.dylib && \
+	ln -s libpq.5.dylib libpq.dylib
+/usr/bin/install -c -m 644  libpq.a '/private/tmp/fieldwork-module6/pg17/install/lib/libpq.a'
+/usr/bin/install -c -m 644 libpq.pc '/private/tmp/fieldwork-module6/pg17/install/lib/pkgconfig/libpq.pc'
+/usr/bin/install -c -m 644 ./libpq-fe.h '/private/tmp/fieldwork-module6/pg17/install/include'
+/usr/bin/install -c -m 644 ./libpq-events.h '/private/tmp/fieldwork-module6/pg17/install/include'
+/usr/bin/install -c -m 644 ./libpq-int.h '/private/tmp/fieldwork-module6/pg17/install/include/postgresql/internal'
+/usr/bin/install -c -m 644 ./fe-auth-sasl.h '/private/tmp/fieldwork-module6/pg17/install/include/postgresql/internal'
+/usr/bin/install -c -m 644 ./pqexpbuffer.h '/private/tmp/fieldwork-module6/pg17/install/include/postgresql/internal'
+/usr/bin/install -c -m 644 ./pg_service.conf.sample '/private/tmp/fieldwork-module6/pg17/install/share/postgresql/pg_service.conf.sample'
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C ecpg install
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C include install
+/bin/sh ../../../../config/install-sh -c -d '/private/tmp/fieldwork-module6/pg17/install/include' '/private/tmp/fieldwork-module6/pg17/install/include/postgresql/informix/esql'
+/usr/bin/install -c -m 644 ./ecpgerrno.h ./ecpglib.h ./ecpgtype.h ./sqlca.h ./sql3types.h ./ecpg_informix.h ./pgtypes_error.h ./pgtypes_numeric.h ./pgtypes_timestamp.h ./pgtypes_date.h ./pgtypes_interval.h ./pgtypes.h ./sqlda.h ./sqlda-compat.h ./sqlda-native.h '/private/tmp/fieldwork-module6/pg17/install/include/'
+/usr/bin/install -c -m 644 ./datetime.h ./decimal.h ./sqltypes.h '/private/tmp/fieldwork-module6/pg17/install/include/postgresql/informix/esql/'
+/usr/bin/install -c -m 644 ../../../../src/interfaces/ecpg/include/ecpg_config.h '/private/tmp/fieldwork-module6/pg17/install/include'
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C pgtypeslib install
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C ../../../../src/port all
+make[5]: Nothing to be done for `all'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C ../../../../src/common all
+make[5]: Nothing to be done for `all'.
+/bin/sh ../../../../config/install-sh -c -d '/private/tmp/fieldwork-module6/pg17/install/lib' '/private/tmp/fieldwork-module6/pg17/install/lib/pkgconfig'
+/usr/bin/install -c -m 755  libpgtypes.3.dylib '/private/tmp/fieldwork-module6/pg17/install/lib/libpgtypes.3.dylib'
+cd '/private/tmp/fieldwork-module6/pg17/install/lib' && \
+	rm -f libpgtypes.dylib && \
+	ln -s libpgtypes.3.dylib libpgtypes.dylib
+/usr/bin/install -c -m 644  libpgtypes.a '/private/tmp/fieldwork-module6/pg17/install/lib/libpgtypes.a'
+/usr/bin/install -c -m 644 libpgtypes.pc '/private/tmp/fieldwork-module6/pg17/install/lib/pkgconfig/libpgtypes.pc'
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C ecpglib install
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C ../../../../src/interfaces/libpq all
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C ../../../src/port all
+make[6]: Nothing to be done for `all'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C ../../../src/common all
+make[6]: Nothing to be done for `all'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C ../../../../src/interfaces/ecpg/pgtypeslib all
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C ../../../../src/port all
+make[6]: Nothing to be done for `all'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C ../../../../src/common all
+make[6]: Nothing to be done for `all'.
+/bin/sh ../../../../config/install-sh -c -d '/private/tmp/fieldwork-module6/pg17/install/lib' '/private/tmp/fieldwork-module6/pg17/install/lib/pkgconfig'
+/usr/bin/install -c -m 755  libecpg.6.dylib '/private/tmp/fieldwork-module6/pg17/install/lib/libecpg.6.dylib'
+cd '/private/tmp/fieldwork-module6/pg17/install/lib' && \
+	rm -f libecpg.dylib && \
+	ln -s libecpg.6.dylib libecpg.dylib
+/usr/bin/install -c -m 644  libecpg.a '/private/tmp/fieldwork-module6/pg17/install/lib/libecpg.a'
+/usr/bin/install -c -m 644 libecpg.pc '/private/tmp/fieldwork-module6/pg17/install/lib/pkgconfig/libecpg.pc'
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C compatlib install
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C ../../../../src/interfaces/ecpg/ecpglib all
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C ../../../../src/interfaces/libpq all
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C ../../../src/port all
+make[7]: Nothing to be done for `all'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C ../../../src/common all
+make[7]: Nothing to be done for `all'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C ../../../../src/interfaces/ecpg/pgtypeslib all
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C ../../../../src/port all
+make[7]: Nothing to be done for `all'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C ../../../../src/common all
+make[7]: Nothing to be done for `all'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C ../../../../src/interfaces/ecpg/pgtypeslib all
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C ../../../../src/port all
+make[6]: Nothing to be done for `all'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C ../../../../src/common all
+make[6]: Nothing to be done for `all'.
+/bin/sh ../../../../config/install-sh -c -d '/private/tmp/fieldwork-module6/pg17/install/lib' '/private/tmp/fieldwork-module6/pg17/install/lib/pkgconfig'
+/usr/bin/install -c -m 755  libecpg_compat.3.dylib '/private/tmp/fieldwork-module6/pg17/install/lib/libecpg_compat.3.dylib'
+cd '/private/tmp/fieldwork-module6/pg17/install/lib' && \
+	rm -f libecpg_compat.dylib && \
+	ln -s libecpg_compat.3.dylib libecpg_compat.dylib
+/usr/bin/install -c -m 644  libecpg_compat.a '/private/tmp/fieldwork-module6/pg17/install/lib/libecpg_compat.a'
+/usr/bin/install -c -m 644 libecpg_compat.pc '/private/tmp/fieldwork-module6/pg17/install/lib/pkgconfig/libecpg_compat.pc'
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C preproc install
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C ../../../../src/port all
+make[5]: Nothing to be done for `all'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C ../../../../src/common all
+make[5]: Nothing to be done for `all'.
+/bin/sh ../../../../config/install-sh -c -d '/private/tmp/fieldwork-module6/pg17/install/bin'
+/usr/bin/install -c  ecpg '/private/tmp/fieldwork-module6/pg17/install/bin'
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C backend/replication/libpqwalreceiver install
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C ../../../../src/interfaces/libpq all
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C ../../../src/port all
+make[4]: Nothing to be done for `all'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C ../../../src/common all
+make[4]: Nothing to be done for `all'.
+/bin/sh ../../../../config/install-sh -c -d '/private/tmp/fieldwork-module6/pg17/install/lib/postgresql'
+/usr/bin/install -c -m 755  libpqwalreceiver.dylib '/private/tmp/fieldwork-module6/pg17/install/lib/postgresql/libpqwalreceiver.dylib'
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C backend/replication/pgoutput install
+/bin/sh ../../../../config/install-sh -c -d '/private/tmp/fieldwork-module6/pg17/install/lib/postgresql'
+/usr/bin/install -c -m 755  pgoutput.dylib '/private/tmp/fieldwork-module6/pg17/install/lib/postgresql/pgoutput.dylib'
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C fe_utils install
+/bin/sh ../../config/install-sh -c -d '/private/tmp/fieldwork-module6/pg17/install/lib'
+/usr/bin/install -c -m 644  libpgfeutils.a '/private/tmp/fieldwork-module6/pg17/install/lib/libpgfeutils.a'
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C bin install
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C initdb install
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C ../../../src/interfaces/libpq all
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C ../../../src/port all
+make[5]: Nothing to be done for `all'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C ../../../src/common all
+make[5]: Nothing to be done for `all'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C ../../../src/port all
+make[4]: Nothing to be done for `all'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C ../../../src/common all
+make[4]: Nothing to be done for `all'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C ../../../src/port all
+make[4]: Nothing to be done for `all'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C ../../../src/common all
+make[4]: Nothing to be done for `all'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C ../../../src/fe_utils all
+make[4]: Nothing to be done for `all'.
+/bin/sh ../../../config/install-sh -c -d '/private/tmp/fieldwork-module6/pg17/install/bin'
+/usr/bin/install -c  initdb '/private/tmp/fieldwork-module6/pg17/install/bin/initdb'
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C pg_amcheck install
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C ../../../src/interfaces/libpq all
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C ../../../src/port all
+make[5]: Nothing to be done for `all'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C ../../../src/common all
+make[5]: Nothing to be done for `all'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C ../../../src/port all
+make[4]: Nothing to be done for `all'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C ../../../src/common all
+make[4]: Nothing to be done for `all'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C ../../../src/port all
+make[4]: Nothing to be done for `all'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C ../../../src/common all
+make[4]: Nothing to be done for `all'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C ../../../src/fe_utils all
+make[4]: Nothing to be done for `all'.
+/bin/sh ../../../config/install-sh -c -d '/private/tmp/fieldwork-module6/pg17/install/bin'
+/usr/bin/install -c  pg_amcheck '/private/tmp/fieldwork-module6/pg17/install/bin/pg_amcheck'
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C pg_archivecleanup install
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C ../../../src/port all
+make[4]: Nothing to be done for `all'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C ../../../src/common all
+make[4]: Nothing to be done for `all'.
+/bin/sh ../../../config/install-sh -c -d '/private/tmp/fieldwork-module6/pg17/install/bin'
+/usr/bin/install -c  pg_archivecleanup '/private/tmp/fieldwork-module6/pg17/install/bin/pg_archivecleanup'
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C pg_basebackup install
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C ../../../src/interfaces/libpq all
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C ../../../src/port all
+make[5]: Nothing to be done for `all'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C ../../../src/common all
+make[5]: Nothing to be done for `all'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C ../../../src/port all
+make[4]: Nothing to be done for `all'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C ../../../src/common all
+make[4]: Nothing to be done for `all'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C ../../../src/port all
+make[4]: Nothing to be done for `all'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C ../../../src/common all
+make[4]: Nothing to be done for `all'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C ../../../src/fe_utils all
+make[4]: Nothing to be done for `all'.
+/bin/sh ../../../config/install-sh -c -d '/private/tmp/fieldwork-module6/pg17/install/bin'
+/usr/bin/install -c  pg_basebackup '/private/tmp/fieldwork-module6/pg17/install/bin/pg_basebackup'
+/usr/bin/install -c  pg_createsubscriber '/private/tmp/fieldwork-module6/pg17/install/bin/pg_createsubscriber'
+/usr/bin/install -c  pg_receivewal '/private/tmp/fieldwork-module6/pg17/install/bin/pg_receivewal'
+/usr/bin/install -c  pg_recvlogical '/private/tmp/fieldwork-module6/pg17/install/bin/pg_recvlogical'
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C pg_checksums install
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C ../../../src/port all
+make[4]: Nothing to be done for `all'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C ../../../src/common all
+make[4]: Nothing to be done for `all'.
+/bin/sh ../../../config/install-sh -c -d '/private/tmp/fieldwork-module6/pg17/install/bin'
+/usr/bin/install -c  pg_checksums '/private/tmp/fieldwork-module6/pg17/install/bin/pg_checksums'
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C pg_combinebackup install
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C ../../../src/port all
+make[4]: Nothing to be done for `all'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C ../../../src/common all
+make[4]: Nothing to be done for `all'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C ../../../src/port all
+make[4]: Nothing to be done for `all'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C ../../../src/common all
+make[4]: Nothing to be done for `all'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C ../../../src/fe_utils all
+make[4]: Nothing to be done for `all'.
+/bin/sh ../../../config/install-sh -c -d '/private/tmp/fieldwork-module6/pg17/install/bin'
+/usr/bin/install -c  pg_combinebackup '/private/tmp/fieldwork-module6/pg17/install/bin/pg_combinebackup'
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C pg_config install
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C ../../../src/port all
+make[4]: Nothing to be done for `all'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C ../../../src/common all
+make[4]: Nothing to be done for `all'.
+/bin/sh ../../../config/install-sh -c -d '/private/tmp/fieldwork-module6/pg17/install/bin'
+/usr/bin/install -c -m 755 pg_config '/private/tmp/fieldwork-module6/pg17/install/bin/pg_config'
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C pg_controldata install
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C ../../../src/port all
+make[4]: Nothing to be done for `all'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C ../../../src/common all
+make[4]: Nothing to be done for `all'.
+/bin/sh ../../../config/install-sh -c -d '/private/tmp/fieldwork-module6/pg17/install/bin'
+/usr/bin/install -c  pg_controldata '/private/tmp/fieldwork-module6/pg17/install/bin/pg_controldata'
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C pg_ctl install
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C ../../../src/port all
+make[4]: Nothing to be done for `all'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C ../../../src/common all
+make[4]: Nothing to be done for `all'.
+/bin/sh ../../../config/install-sh -c -d '/private/tmp/fieldwork-module6/pg17/install/bin'
+/usr/bin/install -c  pg_ctl '/private/tmp/fieldwork-module6/pg17/install/bin/pg_ctl'
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C pg_dump install
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C ../../../src/interfaces/libpq all
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C ../../../src/port all
+make[5]: Nothing to be done for `all'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C ../../../src/common all
+make[5]: Nothing to be done for `all'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C ../../../src/port all
+make[4]: Nothing to be done for `all'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C ../../../src/common all
+make[4]: Nothing to be done for `all'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C ../../../src/port all
+make[4]: Nothing to be done for `all'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C ../../../src/common all
+make[4]: Nothing to be done for `all'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C ../../../src/fe_utils all
+make[4]: Nothing to be done for `all'.
+/bin/sh ../../../config/install-sh -c -d '/private/tmp/fieldwork-module6/pg17/install/bin'
+/usr/bin/install -c  pg_dump '/private/tmp/fieldwork-module6/pg17/install/bin'/pg_dump
+/usr/bin/install -c  pg_restore '/private/tmp/fieldwork-module6/pg17/install/bin'/pg_restore
+/usr/bin/install -c  pg_dumpall '/private/tmp/fieldwork-module6/pg17/install/bin'/pg_dumpall
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C pg_resetwal install
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C ../../../src/port all
+make[4]: Nothing to be done for `all'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C ../../../src/common all
+make[4]: Nothing to be done for `all'.
+/bin/sh ../../../config/install-sh -c -d '/private/tmp/fieldwork-module6/pg17/install/bin'
+/usr/bin/install -c  pg_resetwal '/private/tmp/fieldwork-module6/pg17/install/bin/pg_resetwal'
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C pg_rewind install
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C ../../../src/interfaces/libpq all
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C ../../../src/port all
+make[5]: Nothing to be done for `all'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C ../../../src/common all
+make[5]: Nothing to be done for `all'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C ../../../src/port all
+make[4]: Nothing to be done for `all'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C ../../../src/common all
+make[4]: Nothing to be done for `all'.
+/bin/sh ../../../config/install-sh -c -d '/private/tmp/fieldwork-module6/pg17/install/bin'
+/usr/bin/install -c  pg_rewind '/private/tmp/fieldwork-module6/pg17/install/bin/pg_rewind'
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C pg_test_fsync install
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C ../../../src/port all
+make[4]: Nothing to be done for `all'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C ../../../src/common all
+make[4]: Nothing to be done for `all'.
+/bin/sh ../../../config/install-sh -c -d '/private/tmp/fieldwork-module6/pg17/install/bin'
+/usr/bin/install -c  pg_test_fsync '/private/tmp/fieldwork-module6/pg17/install/bin/pg_test_fsync'
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C pg_test_timing install
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C ../../../src/port all
+make[4]: Nothing to be done for `all'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C ../../../src/common all
+make[4]: Nothing to be done for `all'.
+/bin/sh ../../../config/install-sh -c -d '/private/tmp/fieldwork-module6/pg17/install/bin'
+/usr/bin/install -c  pg_test_timing '/private/tmp/fieldwork-module6/pg17/install/bin/pg_test_timing'
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C pg_upgrade install
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C ../../../src/interfaces/libpq all
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C ../../../src/port all
+make[5]: Nothing to be done for `all'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C ../../../src/common all
+make[5]: Nothing to be done for `all'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C ../../../src/port all
+make[4]: Nothing to be done for `all'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C ../../../src/common all
+make[4]: Nothing to be done for `all'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C ../../../src/port all
+make[4]: Nothing to be done for `all'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C ../../../src/common all
+make[4]: Nothing to be done for `all'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C ../../../src/fe_utils all
+make[4]: Nothing to be done for `all'.
+/bin/sh ../../../config/install-sh -c -d '/private/tmp/fieldwork-module6/pg17/install/bin'
+/usr/bin/install -c  pg_upgrade '/private/tmp/fieldwork-module6/pg17/install/bin/pg_upgrade'
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C pg_verifybackup install
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C ../../../src/interfaces/libpq all
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C ../../../src/port all
+make[5]: Nothing to be done for `all'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C ../../../src/common all
+make[5]: Nothing to be done for `all'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C ../../../src/port all
+make[4]: Nothing to be done for `all'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C ../../../src/common all
+make[4]: Nothing to be done for `all'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C ../../../src/port all
+make[4]: Nothing to be done for `all'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C ../../../src/common all
+make[4]: Nothing to be done for `all'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C ../../../src/fe_utils all
+make[4]: Nothing to be done for `all'.
+/bin/sh ../../../config/install-sh -c -d '/private/tmp/fieldwork-module6/pg17/install/bin'
+/usr/bin/install -c  pg_verifybackup '/private/tmp/fieldwork-module6/pg17/install/bin/pg_verifybackup'
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C pg_waldump install
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C ../../../src/port all
+make[4]: Nothing to be done for `all'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C ../../../src/common all
+make[4]: Nothing to be done for `all'.
+/bin/sh ../../../config/install-sh -c -d '/private/tmp/fieldwork-module6/pg17/install/bin'
+/usr/bin/install -c  pg_waldump '/private/tmp/fieldwork-module6/pg17/install/bin/pg_waldump'
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C pg_walsummary install
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C ../../../src/port all
+make[4]: Nothing to be done for `all'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C ../../../src/common all
+make[4]: Nothing to be done for `all'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C ../../../src/port all
+make[4]: Nothing to be done for `all'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C ../../../src/common all
+make[4]: Nothing to be done for `all'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C ../../../src/fe_utils all
+make[4]: Nothing to be done for `all'.
+/bin/sh ../../../config/install-sh -c -d '/private/tmp/fieldwork-module6/pg17/install/bin'
+/usr/bin/install -c  pg_walsummary '/private/tmp/fieldwork-module6/pg17/install/bin/pg_walsummary'
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C pgbench install
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C ../../../src/interfaces/libpq all
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C ../../../src/port all
+make[5]: Nothing to be done for `all'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C ../../../src/common all
+make[5]: Nothing to be done for `all'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C ../../../src/port all
+make[4]: Nothing to be done for `all'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C ../../../src/common all
+make[4]: Nothing to be done for `all'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C ../../../src/port all
+make[4]: Nothing to be done for `all'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C ../../../src/common all
+make[4]: Nothing to be done for `all'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C ../../../src/fe_utils all
+make[4]: Nothing to be done for `all'.
+/bin/sh ../../../config/install-sh -c -d '/private/tmp/fieldwork-module6/pg17/install/bin'
+/usr/bin/install -c  pgbench '/private/tmp/fieldwork-module6/pg17/install/bin/pgbench'
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C psql install
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C ../../../src/interfaces/libpq all
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C ../../../src/port all
+make[5]: Nothing to be done for `all'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C ../../../src/common all
+make[5]: Nothing to be done for `all'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C ../../../src/port all
+make[4]: Nothing to be done for `all'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C ../../../src/common all
+make[4]: Nothing to be done for `all'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C ../../../src/port all
+make[4]: Nothing to be done for `all'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C ../../../src/common all
+make[4]: Nothing to be done for `all'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C ../../../src/fe_utils all
+make[4]: Nothing to be done for `all'.
+/bin/sh ../../../config/install-sh -c -d '/private/tmp/fieldwork-module6/pg17/install/bin' '/private/tmp/fieldwork-module6/pg17/install/share/postgresql'
+/usr/bin/install -c  psql '/private/tmp/fieldwork-module6/pg17/install/bin/psql'
+/usr/bin/install -c -m 644 ./psqlrc.sample '/private/tmp/fieldwork-module6/pg17/install/share/postgresql/psqlrc.sample'
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C scripts install
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C ../../../src/interfaces/libpq all
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C ../../../src/port all
+make[5]: Nothing to be done for `all'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C ../../../src/common all
+make[5]: Nothing to be done for `all'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C ../../../src/port all
+make[4]: Nothing to be done for `all'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C ../../../src/common all
+make[4]: Nothing to be done for `all'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C ../../../src/port all
+make[4]: Nothing to be done for `all'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C ../../../src/common all
+make[4]: Nothing to be done for `all'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C ../../../src/fe_utils all
+make[4]: Nothing to be done for `all'.
+/bin/sh ../../../config/install-sh -c -d '/private/tmp/fieldwork-module6/pg17/install/bin'
+/usr/bin/install -c  createdb   '/private/tmp/fieldwork-module6/pg17/install/bin'/createdb
+/usr/bin/install -c  dropdb     '/private/tmp/fieldwork-module6/pg17/install/bin'/dropdb
+/usr/bin/install -c  createuser '/private/tmp/fieldwork-module6/pg17/install/bin'/createuser
+/usr/bin/install -c  dropuser   '/private/tmp/fieldwork-module6/pg17/install/bin'/dropuser
+/usr/bin/install -c  clusterdb  '/private/tmp/fieldwork-module6/pg17/install/bin'/clusterdb
+/usr/bin/install -c  vacuumdb   '/private/tmp/fieldwork-module6/pg17/install/bin'/vacuumdb
+/usr/bin/install -c  reindexdb  '/private/tmp/fieldwork-module6/pg17/install/bin'/reindexdb
+/usr/bin/install -c  pg_isready '/private/tmp/fieldwork-module6/pg17/install/bin'/pg_isready
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C pl install
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C plpgsql install
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C src install
+/bin/sh ../../../../config/install-sh -c -d '/private/tmp/fieldwork-module6/pg17/install/lib/postgresql'
+/usr/bin/install -c -m 755  plpgsql.dylib '/private/tmp/fieldwork-module6/pg17/install/lib/postgresql/plpgsql.dylib'
+/bin/sh ../../../../config/install-sh -c -d '/private/tmp/fieldwork-module6/pg17/install/share/postgresql/extension'
+/bin/sh ../../../../config/install-sh -c -d '/private/tmp/fieldwork-module6/pg17/install/include/postgresql/server'
+/usr/bin/install -c -m 644 ./plpgsql.control ./plpgsql--1.0.sql '/private/tmp/fieldwork-module6/pg17/install/share/postgresql/extension/'
+/usr/bin/install -c -m 644 './plpgsql.h' '/private/tmp/fieldwork-module6/pg17/install/include/postgresql/server'
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C makefiles install
+/bin/sh ../../config/install-sh -c -d '/private/tmp/fieldwork-module6/pg17/install/lib/postgresql/pgxs/src/makefiles'
+/usr/bin/install -c -m 644 ./pgxs.mk '/private/tmp/fieldwork-module6/pg17/install/lib/postgresql/pgxs/src/makefiles/'
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C test/regress install
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C ../../../src/port all
+make[3]: Nothing to be done for `all'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C ../../../src/common all
+make[3]: Nothing to be done for `all'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C ../../../contrib/spi
+make[3]: Nothing to be done for `all'.
+/bin/sh ../../../config/install-sh -c -d '/private/tmp/fieldwork-module6/pg17/install/lib/postgresql/pgxs/src/test/regress'
+/usr/bin/install -c  pg_regress '/private/tmp/fieldwork-module6/pg17/install/lib/postgresql/pgxs/src/test/regress/pg_regress'
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C test/isolation install
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C ../../../src/interfaces/libpq all
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C ../../../src/port all
+make[4]: Nothing to be done for `all'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C ../../../src/common all
+make[4]: Nothing to be done for `all'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C ../../../src/port all
+make[3]: Nothing to be done for `all'.
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C ../../../src/common all
+make[3]: Nothing to be done for `all'.
+/bin/sh ../../../config/install-sh -c -d '/private/tmp/fieldwork-module6/pg17/install/lib/postgresql/pgxs/src/test/isolation'
+/usr/bin/install -c  pg_isolation_regress '/private/tmp/fieldwork-module6/pg17/install/lib/postgresql/pgxs/src/test/isolation/pg_isolation_regress'
+/usr/bin/install -c  isolationtester '/private/tmp/fieldwork-module6/pg17/install/lib/postgresql/pgxs/src/test/isolation/isolationtester'
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C test/perl install
+make[2]: Nothing to be done for `install'.
+/bin/sh ../config/install-sh -c -d '/private/tmp/fieldwork-module6/pg17/install/lib/postgresql/pgxs/src'
+/usr/bin/install -c -m 644 Makefile.global '/private/tmp/fieldwork-module6/pg17/install/lib/postgresql/pgxs/src/Makefile.global'
+/usr/bin/install -c -m 644 Makefile.port '/private/tmp/fieldwork-module6/pg17/install/lib/postgresql/pgxs/src/Makefile.port'
+/usr/bin/install -c -m 644 ./Makefile.shlib '/private/tmp/fieldwork-module6/pg17/install/lib/postgresql/pgxs/src/Makefile.shlib'
+/usr/bin/install -c -m 644 ./nls-global.mk '/private/tmp/fieldwork-module6/pg17/install/lib/postgresql/pgxs/src/nls-global.mk'
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -C config install
+/bin/sh ../config/install-sh -c -d '/private/tmp/fieldwork-module6/pg17/install/lib/postgresql/pgxs/config'
+/usr/bin/install -c -m 755 ./install-sh '/private/tmp/fieldwork-module6/pg17/install/lib/postgresql/pgxs/config/install-sh'
+/usr/bin/install -c -m 755 ./missing '/private/tmp/fieldwork-module6/pg17/install/lib/postgresql/pgxs/config/missing'

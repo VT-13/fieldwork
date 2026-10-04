@@ -1,0 +1,9 @@
+{
+  "result": "BLOCKED",
+  "installed_revision": "001",
+  "state_keys_exceeding_pg_limit": 1,
+  "private_keys_or_values_exported": false,
+  "source_mutated": false,
+  "reason": "SQLite accepts State key longer than varchar(100); exact-preservation PG transfer refuses before writes",
+  "required": "A versioned, lossless identifier/alias migration must be designed and rehearsed; do not truncate, rename blindly, delete history, or rewrite frozen schema005"
+}

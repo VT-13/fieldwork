@@ -349,8 +349,8 @@ async def main():
     import signal
     from .redaction import install_logging
 
-    install_logging()
     logging.basicConfig(level=logging.INFO)
+    install_logging()
     with Session() as db:
         from sqlalchemy import inspect
 

@@ -2126,6 +2126,26 @@
           "title": "Recurring Paused",
           "type": "boolean"
         },
+        "daily_attempts": {
+          "default": 0,
+          "title": "Daily Attempts",
+          "type": "integer"
+        },
+        "daily_limit": {
+          "default": 25,
+          "title": "Daily Limit",
+          "type": "integer"
+        },
+        "daily_bounces": {
+          "default": 0,
+          "title": "Daily Bounces",
+          "type": "integer"
+        },
+        "bounce_stop": {
+          "default": false,
+          "title": "Bounce Stop",
+          "type": "boolean"
+        },
         "communication_jobs": {
           "items": {
             "$ref": "#/$defs/JobView"
@@ -2145,6 +2165,10 @@
         "unresolved",
         "sync_stale",
         "recurring_paused",
+        "daily_attempts",
+        "daily_limit",
+        "daily_bounces",
+        "bounce_stop",
         "communication_jobs"
       ],
       "title": "RuntimeView",

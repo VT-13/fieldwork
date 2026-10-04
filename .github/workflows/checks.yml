@@ -16,6 +16,7 @@ jobs:
           --health-timeout 5s --health-retries 10
     env:
       TEST_POSTGRES_URL: postgresql+psycopg://test:test@localhost:5432/testdb
+      FIELDWORK_TEST_PG_TOOLS: /usr/lib/postgresql/17/bin
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -29,6 +30,7 @@ jobs:
         working-directory: backend
       - run: python -m pytest -q
         working-directory: backend
+      - run: test -x /usr/lib/postgresql/17/bin/pg_dump && /usr/lib/postgresql/17/bin/pg_dump --version
       - run: alembic upgrade head
         working-directory: backend
         env:
@@ -41,7 +43,14 @@ jobs:
         with: {node-version: '22', cache: npm, cache-dependency-path: frontend/package-lock.json}
       - run: npm ci --ignore-scripts && npm run lint && npm run typecheck && npm run format:check && npm run build && npm audit --omit=dev
         working-directory: frontend
-      - run: npx playwright install --with-deps chromium
+      - run: npx playwright install --with-deps chromium webkit firefox
         working-directory: frontend
       - run: npm run test:browser
         working-directory: frontend
+  containers:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: docker build -t fieldwork-api:release-check backend
+      - run: docker build -t fieldwork-web:release-check frontend
+      - run: docker run --rm --entrypoint python fieldwork-api:release-check -c "import app.models, importlib.util; assert importlib.util.find_spec('pytest') is None"

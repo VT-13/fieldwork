@@ -1,7 +1,10 @@
 FROM python:3.13-slim
 WORKDIR /app
-COPY . .
-RUN pip install --no-cache-dir -r requirements.lock.txt && pip install --no-cache-dir --no-deps .
+COPY requirements.runtime.lock.txt pyproject.toml alembic.ini ./
+COPY app ./app
+COPY alembic ./alembic
+COPY scripts ./scripts
+RUN pip install --no-cache-dir -r requirements.runtime.lock.txt && pip install --no-cache-dir --no-deps .
 RUN useradd -m app && chown -R app:app /app
 USER app
 EXPOSE 8000
