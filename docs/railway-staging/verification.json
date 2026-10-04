@@ -1,0 +1,43 @@
+{
+  "origin": "https://fieldwork-staging.up.railway.app",
+  "frontend": 200,
+  "health": {
+    "status": "ok"
+  },
+  "runtime": {
+    "database": "reachable",
+    "schema_version": "006",
+    "worker": "available",
+    "worker_at": "2026-10-04T05:45:19.988963+00:00",
+    "scheduler": "available",
+    "scheduler_at": "2026-10-04T05:45:19.962044+00:00",
+    "gmail": "disconnected",
+    "unresolved": 0,
+    "sync_stale": true,
+    "recurring_paused": true,
+    "daily_attempts": 0,
+    "daily_limit": 25,
+    "daily_bounces": 0,
+    "bounce_stop": false
+  },
+  "network_private": true,
+  "frontend_secret_exposure": false,
+  "logs_secret_matches": false,
+  "js_assets_scanned": 7,
+  "production_mode": true,
+  "real_provider_keys": false,
+  "separate_worker": true,
+  "schema": "006",
+  "postgres": "17.11",
+  "source_commit": "c4ac75d85b1c5f484cc567d9970719a5f7236c7c",
+  "package6c_executed": false,
+  "timestamp_utc": "2026-10-04T05:46:42.081655+00:00",
+  "project": "fieldwork-staging",
+  "environment": "staging",
+  "project_id": "803f24c5-8e9e-4a88-9c84-7909136f4524",
+  "environment_id": "cb9a856c-2e1f-4e69-a552-05ce5a389638",
+  "installed_production_unchanged": true,
+  "staging_ready": true,
+  "hosted_tls_gate": "NOT VERIFIED; separate Package6C",
+  "production_activation": false
+}

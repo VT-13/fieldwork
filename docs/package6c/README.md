@@ -1,3 +1,5 @@
+> Setup update: the original access blocker below is historical. [Railway staging](../railway-staging/README.md) is now provisioned and ready for a separately requested Package6C run. This artifact records the earlier failed access attempt; it does not certify the new hosted target.
+
 # Package6C — hosted TLS gate BLOCKED
 
 FW-026 is resolved and Package6B's runtime-container gate is PASS. This package attempted hosting access discovery against canonical commit `6b63e3feae3dd4988e4ac3d0111a397576f3f1ae`, schema006. It did not deploy a service or run hosted tests.

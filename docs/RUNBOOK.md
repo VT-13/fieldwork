@@ -63,3 +63,7 @@ Communication was paused at initial startup and returned to paused after isolate
 ## Package6C blocked hosting handoff
 
 Read package6c/README.md and verification.json before resuming hosted verification. An existing authorized isolated staging project/server plus stable HTTPS hostname/access is missing; do not infer this gate from local TLS or source controls. No hosted commands/tests were executed. Keep the installed personal DB and credentials outside staging. No exact Google callback is ready to register, and Package6D has not started.
+
+## Railway staging setup update
+
+Isolated staging provisioning is READY; see [setup evidence](railway-staging/README.md) and [smoke results](railway-staging/verification.json). Stable origin is https://fieldwork-staging.up.railway.app; private API/worker/PG17.11 run schema006 with communication paused and no real provider keys. The historical Package6C access blocker is superseded. Its full hosted verification gate remains unchecked; production activation and live Google remain separate. Do not enable outreach or use production data/secrets in staging.
