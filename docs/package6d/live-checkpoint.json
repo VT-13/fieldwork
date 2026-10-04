@@ -1,8 +1,8 @@
 {
   "package": "FIELDWORK 6D LIVE VALIDATION",
   "status": "BLOCKED",
-  "checkpoint": "1_google_owner_authorization",
-  "timestamp_utc": "2026-10-04T07:15:58.398327+00:00",
+  "checkpoint": "1_google_owner_authorization_retry",
+  "timestamp_utc": "2026-10-04T07:23:41.518156+00:00",
   "resume_without_restarting": true,
   "old_exposed_credential_revoked": true,
   "credential_proof": {
@@ -10,7 +10,7 @@
     "retired_http": 401,
     "current_client_validated": true
   },
-  "google_browser_checkpoint": "Choose an account; Account A present in existing browser session",
+  "google_browser_checkpoint": "Fresh account chooser after test-user persistence verification",
   "google_authorization_completed": false,
   "drafts_created": 0,
   "test_messages_sent": 0,
@@ -19,5 +19,8 @@
   "recurring_paused": true,
   "required_owner_action": "Complete the Google authorization currently shown in the browser, then tell me done.",
   "authorized_test_accounts": "Designated A/B identities stored privately; no third identity authorized",
-  "package6e_started": false
+  "package6e_started": false,
+  "test_user_verified_after_reload": true,
+  "previous_oauth_error": "403 access_denied: developer-approved testers only",
+  "test_user_repair": "Audience initially showed no saved rows; committed email entry and saved again. Google displayed an ineligible dialog, but subsequent page reload confirms the exact designated entry persisted. Actual consent eligibility still requires retry."
 }
