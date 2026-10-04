@@ -744,6 +744,18 @@
           ],
           "default": null,
           "title": "Claims Supported"
+        },
+        "autopilot_blocked_reason": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Autopilot Blocked Reason"
         }
       },
       "title": "ReviewView",
@@ -755,7 +767,8 @@
         "profile_hash",
         "grounded",
         "names_correct",
-        "claims_supported"
+        "claims_supported",
+        "autopilot_blocked_reason"
       ]
     },
     "OutreachView": {

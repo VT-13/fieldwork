@@ -10,7 +10,7 @@ from pydantic import BaseModel, ConfigDict, Field, EmailStr, TypeAdapter
 from sqlalchemy import select, func
 from ..models import (State, Profile, Integration, Company, Contact, ContactObservation,
                       Evidence, Generation, Outreach, Event, Suppression, Usage, Job,
-                      DomainTransition, now)
+                      DomainTransition, Operation, now)
 from ..core import Blocked, aware, profile_fingerprint, day_start, public_url, STOP_STAGES
 from ..config import settings
 from . import ledger, policy
@@ -299,13 +299,17 @@ def view(db):
     cfg = configuration(db)
     p = db.get(State, 'outreach_policy')
     rows = list(db.scalars(select(Outreach)))
+    # A legacy/ledger representation of the same attempted company is one hold.
+    holds = {'company:' + r.id for r in rows if r.status in ('unknown', 'sending')}
+    for op in db.scalars(select(Operation).where(Operation.kind.in_(['company_send', 'self_test', 'mailbox_draft']), Operation.status.in_(['running', 'unknown']))):
+        holds.add('company:' + op.outreach_id if op.outreach_id else 'operation:' + op.id)
     return {**cfg, 'recurring_paused': not p or not p.value.get('enabled'),
             'daily_attempts': policy.send_usage(db, day_start()), 'daily_limit': policy.snapshot(db, 'read_only')['daily_cap'],
             'new_introductions_today': policy.send_usage(db, day_start(), initial_only=True),
             'approved_queue': sum(r.status == 'approved' and not r.attempts for r in rows),
             'needs_review': sum(r.status in ('draft', 'rejected') and not r.attempts for r in rows),
             'replies': db.scalar(select(func.count()).select_from(Event).where(Event.kind.in_(['reply', 'positive', 'interview', 'offer']))),
-            'delivery_holds': sum(r.status in ('unknown', 'sending') for r in rows) + int(ledger.unresolved(db)),
+            'delivery_holds': len(holds),
             'provider_budget_status': budget_status(db), 'followups_supported': False}
 
 

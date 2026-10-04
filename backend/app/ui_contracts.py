@@ -147,6 +147,7 @@ class ReviewView(BaseModel):
     grounded: bool | None = None
     names_correct: bool | None = None
     claims_supported: bool | None = None
+    autopilot_blocked_reason: str | None = None
 
 class OutreachView(BaseModel):
     id: str

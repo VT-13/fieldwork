@@ -196,6 +196,11 @@ function MessageEditor({
               ? "Quality checks passed for the saved version. Still read every claim and recipient yourself."
               : "This version cannot be approved until the server quality check passes."}
           </p>
+          {m.review.autopilot_blocked_reason && (
+            <p role="status">
+              Automatic approval held: {m.review.autopilot_blocked_reason}
+            </p>
+          )}
           {m.review.issues.map((issue, i) => (
             <p className="review-issue" key={`${i}-${issue}`}>
               {issue}

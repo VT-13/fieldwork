@@ -514,7 +514,8 @@
         "profile_hash": "",
         "grounded": null,
         "names_correct": null,
-        "claims_supported": null
+        "claims_supported": null,
+        "autopilot_blocked_reason": null
       },
       "strategy": "practical-help",
       "status": "draft",
@@ -546,7 +547,8 @@
         "profile_hash": "",
         "grounded": null,
         "names_correct": null,
-        "claims_supported": null
+        "claims_supported": null,
+        "autopilot_blocked_reason": null
       },
       "strategy": "practical-help",
       "status": "sent",

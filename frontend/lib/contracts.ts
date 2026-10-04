@@ -352,6 +352,7 @@ export type ReviewView = {
   "grounded": boolean | null;
   "names_correct": boolean | null;
   "claims_supported": boolean | null;
+  "autopilot_blocked_reason": string | null;
 };
 
 export type RuntimeView = {

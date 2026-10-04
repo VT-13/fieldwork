@@ -892,3 +892,19 @@ test("Autopilot controls and confirmation are accessible across viewports", asyn
     ),
   ).toBe(true);
 });
+
+test("held automatic approval explains the required review action", async ({
+  page,
+}) => {
+  const data = structuredClone(base);
+  data.outreach[0].review.autopilot_blocked_reason =
+    "Contact validation is stale or insufficient";
+  const qa = await mock(page, data);
+  await page.goto("/?view=review");
+  await expect(
+    page.getByText(
+      "Automatic approval held: Contact validation is stale or insufficient",
+    ),
+  ).toBeVisible();
+  expect(qa.attempts).toEqual([]);
+});

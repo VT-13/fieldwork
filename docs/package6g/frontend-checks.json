@@ -6,7 +6,7 @@
       "--ignore-scripts"
     ],
     "exit_code": 0,
-    "seconds": 4.55
+    "seconds": 5.24
   },
   "lint": {
     "command": [
@@ -15,7 +15,7 @@
       "lint"
     ],
     "exit_code": 0,
-    "seconds": 3.67
+    "seconds": 4.41
   },
   "typecheck": {
     "command": [
@@ -24,7 +24,7 @@
       "typecheck"
     ],
     "exit_code": 0,
-    "seconds": 4.24
+    "seconds": 6.11
   },
   "format": {
     "command": [
@@ -33,7 +33,7 @@
       "format:check"
     ],
     "exit_code": 0,
-    "seconds": 0.9
+    "seconds": 1.05
   },
   "build": {
     "command": [
@@ -42,6 +42,6 @@
       "build"
     ],
     "exit_code": 0,
-    "seconds": 7.21
+    "seconds": 8.36
   }
 }

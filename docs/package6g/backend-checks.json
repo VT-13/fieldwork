@@ -6,7 +6,7 @@
       "--check"
     ],
     "exit_code": 0,
-    "seconds": 0.2
+    "seconds": 0.48
   },
   "fixture-check": {
     "command": [
@@ -15,7 +15,7 @@
       "--check"
     ],
     "exit_code": 0,
-    "seconds": 0.14
+    "seconds": 0.22
   },
   "backend-tests": {
     "command": [
@@ -26,7 +26,7 @@
       "-ra"
     ],
     "exit_code": 0,
-    "seconds": 23.43
+    "seconds": 31.27
   },
   "backend-lint": {
     "command": [
@@ -39,6 +39,6 @@
       "tests"
     ],
     "exit_code": 0,
-    "seconds": 0.14
+    "seconds": 0.1
   }
 }

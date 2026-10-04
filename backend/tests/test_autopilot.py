@@ -423,3 +423,17 @@ def test_autopilot_http_requires_authenticated_confirmed_same_origin_operator(db
             assert client.put('/autopilot', headers=origin, json={'autopilot_enabled': False}).json()['autopilot_enabled'] is False
     finally:
         app.dependency_overrides.clear()
+
+
+def test_delivery_hold_metric_counts_each_durable_attempt_once(db, active):
+    from app.models import Operation
+    c, ct = active
+    row = Outreach(company_id=c.id, contact_id=ct.id, status='unknown')
+    db.add(row);db.commit()
+    assert autopilot.view(db)['delivery_holds'] == 1
+    db.add(Operation(idempotency_key='fake-company-unknown', kind='company_send', status='unknown', outreach_id=row.id))
+    db.commit()
+    assert autopilot.view(db)['delivery_holds'] == 1
+    db.add(Operation(idempotency_key='fake-self-test-unknown', kind='self_test', status='unknown'))
+    db.commit()
+    assert autopilot.view(db)['delivery_holds'] == 2
