@@ -11,7 +11,7 @@ Checked entries have executed evidence. Unchecked gates block cutover or need se
 - [x] **Backup/restore:** actual disposable PG17 dump/restore preserves pause, receipts/unknowns, jobs, suppression and integration metadata; private mode0600 and source unchanged (migration-rehearsal.json).
 - [x] **Rollback:** concrete pre-attempt backup+compatible-source restore and post-attempt forward repair; restore fences/credentials/privacy covered (RUNBOOK.md, BACKUP_RESTORE.md, security/runtime tests).
 - [x] **Security/config:** private sessions/origin/CSRF/host/body/rate/ownership/SSRF/prompt scope, startup/schema and safe defaults; allowlisted IDs/traceback redaction tests (backend-tests.log, E2E and BUG_AUDIT.md).
-- [ ] **OAuth/Gmail live (Package6D):** Mandatory live behaviors PASS: dedicated OAuth/identity/encrypted storage/natural refresh, exact unsent draft, one A-to-B self-test, Gmail IDs/SENT/reconciliation replay, B reply/deduplication/cancellation and incremental sync/restart. Final staging reconnect owner authorization pending after safe disconnect; see package6d/verification.json. Existing personal production OAuth is unchanged.
+- [x] **OAuth/Gmail live (Package6D):** PASS. Dedicated OAuth/state/PKCE/identity/encrypted storage/natural refresh, exact unsent draft, one A-to-B self-test, Gmail IDs/SENT/reconciliation replay, B reply/deduplication/cancellation, incremental sync/restart and safe disconnect/reconnect verified live. Final Gmail connected; see package6d/verification.json. Existing personal production OAuth is unchanged.
 - [x] **Worker:** actual process, SIGTERM/SIGINT/restart/stale lease/duplicate leader tests; fake-provider forced termination/no resend;181-second60-sample bounded soak (`e2e-results.json`, backend-tests.log).
 - [x] **Scheduler:** persistent dedupe/one current bucket/offline no-catchup/current pause/rollover tests (test_runtime.py, e2e-results.json).
 - [x] **Delivery:** real HTTPS→production Next proxy→authenticated API→actual worker→PG17→fake provider; explicit approval, initial/follow-up, receipt/replay/unknown/own-test/shared cap (e2e-results.json).
@@ -39,3 +39,7 @@ Isolated staging provisioning is READY; see [setup evidence](railway-staging/REA
 ## Package6C superseding evidence
 
 The previous access blocker is resolved and actual hosted gate PASS. Package6D is ready to begin only on separate user request; real providers remain disconnected. Historical Module6 native/container evidence remains unchanged; no production cutover, personal DB/OAuth/sender/service/pause change occurred.
+
+## Package6D superseding evidence
+
+Live Google gate PASS on the existing dedicated staging client and designated A/B identities.167 targeted regressions pass, privacy/source/preservation checks pass, and all four staging services are online on schema006 with Gmail connected and recurring paused. Live synthetic communication totals remain one unsent draft, one initial self-test and one owner reply, with no duplicate transmissions/events or company sends. Package6E is READY for a separate request and remains unstarted; production activation/cutover remains unchecked.

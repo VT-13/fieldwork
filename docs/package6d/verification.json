@@ -1,13 +1,13 @@
 {
   "package": "FIELDWORK 6D",
-  "live_google_gate": "BLOCKED",
-  "timestamp_utc": "2026-10-04T16:36:29.668122+00:00",
+  "live_google_gate": "PASS",
+  "timestamp_utc": "2026-10-04T16:43:25.180298+00:00",
   "environment": "Railway fieldwork-staging/staging",
   "staging_url": "https://fieldwork-staging.up.railway.app",
   "callback_url": "https://fieldwork-staging.up.railway.app/api/integrations/gmail/callback",
   "prerequisite_hosted_tls": "PASS",
-  "blocker": "Mandatory live tests pass; final staging Gmail reconnect requires owner account selection/consent.",
-  "required_input": "Complete the Google authorization currently shown in the browser, then tell me done.",
+  "blocker": null,
+  "required_input": null,
   "preflight": {
     "services_online": true,
     "source_manifest_verified": true,
@@ -33,7 +33,7 @@
     "controlled_reply": "VERIFIED LIVE; owner-authorized It is working reply, correct A/B/thread/test record; exactly one immutable test_reply Event; followup cancelled; replay deduped",
     "history_checkpoint": "VERIFIED LIVE; bounded incremental history, cursor retained; replay and post-restart sync each two requests, no recurring mailbox-wide scan",
     "sync_restart": "VERIFIED LIVE; worker process identity changed; exact receipt/Event/cursor hashes unchanged; continuation/replay no duplicate Event/send",
-    "disconnect_reconnect": "Disconnect VERIFIED LIVE including upstream revocation, local fail-closed and preserved history; reconnect owner authorization pending",
+    "disconnect_reconnect": "VERIFIED LIVE; upstream revocation/local fail-closed/history preservation, owner reconnect through same callback, exact Google A identity, one Integration, historical receipt/reply still linked, incremental history resumes",
     "token_storage": "VERIFIED LIVE; encrypted canonical Integration",
     "authenticated_gmail_api": "VERIFIED LIVE; profile and exact synthetic messages only"
   },
@@ -61,7 +61,7 @@
   },
   "production_preservation_unchanged": true,
   "code_changes": true,
-  "package6e_readiness": "NOT READY",
+  "package6e_readiness": "READY",
   "oauth_preflight_artifact": "docs/package6d/preflight.json",
   "live_checkpoint": "docs/package6d/live-checkpoint.json",
   "old_exposed_credential_revoked": true,
@@ -87,10 +87,11 @@
     "fafd8b1",
     "f6f35e4",
     "cd868ca",
-    "53189d8"
+    "53189d8",
+    "79ede5e"
   ],
   "mandatory_live_behaviors": "PASS",
-  "gmail_final_state": "disconnected; reconnect pending",
+  "gmail_final_state": "connected",
   "restart_recovery": {
     "exact_receipt_preserved": true,
     "exact_event_preserved": true,
@@ -102,5 +103,44 @@
     ],
     "duplicate_events": 0,
     "additional_transmissions": 0
+  },
+  "package6e_started": false,
+  "final_live_evidence": {
+    "reconnect_verified": true,
+    "exact_google_identity": true,
+    "duplicate_integration": false,
+    "historical_receipt_and_reply_linked": true,
+    "incremental_history_resumes": true,
+    "history_requests": 3,
+    "draft_still_unsent": true,
+    "test_transmissions": 1,
+    "owner_reply_events": 1,
+    "duplicate_events": 0,
+    "company_transmissions": 0,
+    "unexpected_transmissions": 0,
+    "recurring_paused": true
+  },
+  "final_staging_sanity": {
+    "frontend": "online",
+    "backend": "online",
+    "worker": "available",
+    "scheduler": "available",
+    "heartbeat": "healthy",
+    "postgresql": "reachable",
+    "schema": "006",
+    "gmail": "connected",
+    "sync_stale": false,
+    "recurring": "PAUSED",
+    "company_transmissions": 0,
+    "unexpected_transmissions": 0,
+    "production_preservation": "unchanged"
+  },
+  "remaining_issues": [],
+  "scope_limits": {
+    "ordinary_self_test": "own-account only",
+    "live_validation_scope": "staging only, expiring, exact A/B packet hashes, one reserved attempt",
+    "company_send": "not exercised or certified live",
+    "company_bounce_or_followup_send": "not exercised live",
+    "paid_provider_calls": 0
   }
 }

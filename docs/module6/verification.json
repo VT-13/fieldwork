@@ -376,8 +376,8 @@
   },
   "remaining_conditions": [
     {
-      "id": "live-google",
-      "condition": "Separately authorized encrypted test-account OAuth and own-account RFC/Sent/thread/history/draft/self-test validation"
+      "id": "package6e",
+      "condition": "Separately requested final release verification; production cutover remains unauthorized and unperformed"
     }
   ],
   "cutover_authorized": false,
@@ -422,13 +422,20 @@
     "production_mutated": false,
     "package6d_readiness": "READY"
   },
-  "current_live_google_gate": "BLOCKED",
+  "current_live_google_gate": "PASS",
   "package6d": {
-    "result": "BLOCKED",
+    "result": "PASS",
     "verification": "docs/package6d/verification.json",
-    "reason": "Awaiting explicit staging test-account identity/authorization",
-    "live_provider_checks_executed": false,
+    "reason": "Live staging protocol complete; see dedicated evidence for actual scope and limits",
+    "live_provider_checks_executed": true,
     "production_mutated": false,
-    "package6e_readiness": "NOT READY"
-  }
+    "package6e_readiness": "READY",
+    "package6e_started": false
+  },
+  "historical_remaining_conditions": [
+    {
+      "id": "live-google",
+      "condition": "Separately authorized encrypted test-account OAuth and own-account RFC/Sent/thread/history/draft/self-test validation"
+    }
+  ]
 }

@@ -22,7 +22,7 @@ Module6 proved the full authenticated production-build/actual-worker workflow wi
 
 ## Package6D live-validation preflight
 
-Hosted Package6C passes, but all Gmail live statuses above remain NOT VERIFIED LIVE. Dedicated OAuth pre-flight is READY: separate staging project/client, exact callback, minimum send/read/compose scopes, server-side credentials and explicit A/B identities are configured. Live Package6D is paused at owner Google account selection/consent; no draft/send/reply/scan has occurred. The retired exposed client credential is independently rejected by Google as invalid_client. See package6d/verification.json. Existing production OAuth was neither reused nor changed. Draft compose permission and a separate controlled reply identity are needed to test those capabilities honestly; self-tests themselves do not create Outreach records. Outlook status is unchanged.
+Historical preflight: hosted Package6C passed, while Gmail live statuses were then NOT VERIFIED LIVE. Dedicated OAuth pre-flight is READY: separate staging project/client, exact callback, minimum send/read/compose scopes, server-side credentials and explicit A/B identities are configured. Live Package6D is paused at owner Google account selection/consent; no draft/send/reply/scan has occurred. The retired exposed client credential is independently rejected by Google as invalid_client. See package6d/verification.json. Existing production OAuth was neither reused nor changed. Draft compose permission and a separate controlled reply identity are needed to test those capabilities honestly; self-tests themselves do not create Outreach records. Outlook status is unchanged.
 
 ## Package6D current live evidence (supersedes preflight-only status)
 
@@ -44,6 +44,8 @@ Railway staging only; company outreach remains unverified and paused. The opt-in
 | Controlled reply synchronization | VERIFIED LIVE; owner-authorized existing reply, correct thread/test packet, one immutable test_reply Event, deduplication and held-to-cancelled state |
 | History cursor / checkpoint | VERIFIED LIVE; bounded incremental sync and persisted checkpoint; replay two requests |
 | Worker restart continuation | VERIFIED LIVE; exact receipt/Event/cursor preserved across new worker process and incremental continuation |
-| Disconnect/reconnect | Disconnect VERIFIED LIVE; upstream revocation/local fail-closed/history preservation pass. Reconnect pending owner authorization |
+| Disconnect/reconnect | VERIFIED LIVE; upstream revocation/local fail-closed, exact history preservation, same A identity and one Integration after owner reconnect, incremental sync resumed |
 
 Default own-account self-tests, unknown-delivery holds and company delivery policy are unchanged. Observed RFC rewriting is normalized only with an exact accepted API message/thread receipt and full matching Sent evidence; subject similarity cannot authorize reconciliation. No live company delivery, bounce, follow-up send or inbox-placement assertion follows from this synthetic test.
+
+Package6D final result: **PASS**. The current live evidence table above supersedes the historical preflight/Module6-only claims. Owner reconnect completed and current Gmail identity/storage/connection were reverified. Exactly one draft remains unsent, one original self-test remains Sent and one owner reply Event remains immutable. No company communication was authorized or tested; company delivery/bounce/follow-up status must not be promoted to live-verified from this protocol. Final recurring outreach is PAUSED; Package6E has not begun.

@@ -1,8 +1,8 @@
 {
   "package": "FIELDWORK 6D LIVE VALIDATION",
-  "status": "IN PROGRESS",
-  "checkpoint": "13_owner_reconnect_authorization_pending",
-  "timestamp_utc": "2026-10-04T16:36:29.668122+00:00",
+  "status": "COMPLETE",
+  "checkpoint": "package6d_complete_stop_before_6e",
+  "timestamp_utc": "2026-10-04T16:43:25.180298+00:00",
   "resume_without_restarting": true,
   "old_exposed_credential_revoked": true,
   "credential_proof": {
@@ -10,14 +10,14 @@
     "retired_http": 401,
     "current_client_validated": true
   },
-  "google_browser_checkpoint": "Fresh reconnect flow at account chooser; choose designated Account A",
+  "google_browser_checkpoint": "Owner completed reconnect; live Google-derived A identity reverified",
   "google_authorization_completed": true,
   "drafts_created": 1,
   "test_messages_sent": 1,
   "controlled_replies_sent": 1,
   "company_messages_sent": 0,
   "recurring_paused": true,
-  "required_owner_action": "Complete the Google authorization currently shown in the browser, then tell me done.",
+  "required_owner_action": null,
   "authorized_test_accounts": "Designated A/B identities stored privately; no third identity authorized",
   "package6e_started": false,
   "test_user_verified_after_reload": true,
@@ -45,5 +45,7 @@
   "worker_restart_continuation_verified": true,
   "real_token_refresh_verified": true,
   "forced_expiry_performed": false,
-  "gmail_current_state": "disconnected; reconnect pending"
+  "gmail_current_state": "connected",
+  "disconnect_reconnect_verified": true,
+  "package6e_readiness": "READY"
 }
