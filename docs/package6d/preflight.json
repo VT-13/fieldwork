@@ -1,14 +1,14 @@
 {
   "package": "FIELDWORK 6D PRE-FLIGHT",
   "status": "BLOCKED",
-  "timestamp_utc": "2026-10-04T06:39:26.202999+00:00",
+  "timestamp_utc": "2026-10-04T06:42:13.242843+00:00",
   "google_project": {
     "name": "Fieldwork Staging",
     "id": "fieldwork-staging-510606",
     "created": true,
     "original_project_unchanged": true
   },
-  "oauth_branding": "Prepared, not submitted; Google API Services User Data Policy unchecked",
+  "oauth_branding": "Created by owner; External/Testing audience selected",
   "client_created": false,
   "redirect_uri_configured_in_railway": "https://fieldwork-staging.up.railway.app/api/integrations/gmail/callback",
   "redirect_uri_registered_in_google": false,
@@ -33,6 +33,7 @@
   "communication_attempts": 0,
   "emails_sent": 0,
   "production_preserved": true,
-  "required_owner_action": "Complete pending Google API Services User Data Policy acceptance/setup in Safari. Account A supplied; distinct controlled-reply address still required before full 6D.",
-  "full_package6d_started": false
+  "required_owner_action": "Confirm creation of the prepared staging OAuth client in chat, or click Create in Safari. Distinct controlled-reply address still required before full 6D.",
+  "full_package6d_started": false,
+  "client_form": "Prepared Fieldwork Railway Staging web client with exact callback; Create not clicked"
 }
