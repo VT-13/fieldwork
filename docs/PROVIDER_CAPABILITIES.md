@@ -34,16 +34,16 @@ Railway staging only; company outreach remains unverified and paused. The opt-in
 | Google-derived Account A identity | VERIFIED LIVE |
 | Authenticated Gmail API | VERIFIED LIVE; profile and exact synthetic messages |
 | Canonical encrypted token storage | VERIFIED LIVE |
-| Token refresh | PARTIALLY VERIFIED; real refresh credential available, forced expiry not performed, simulated expiry regressions retained |
+| Token refresh | VERIFIED LIVE; naturally expired credentials refreshed through canonical access and encrypted storage; no forced expiry |
 | Own-account unsent draft | VERIFIED LIVE; exactly one |
 | Authorized scoped A-to-B test send | VERIFIED LIVE; exactly one |
 | Provider message ID | VERIFIED LIVE |
 | RFC Message-ID | VERIFIED LIVE; Gmail rewrote supplied identifier; reserved and observed identities both retained |
 | Gmail thread ID / SENT label | VERIFIED LIVE |
 | Sent reconciliation / replay | VERIFIED LIVE against existing accepted receipt; zero duplicate transmissions |
-| Controlled reply synchronization | NOT VERIFIED; owner reply pending |
-| History cursor / checkpoint | Current boundary initialized live; incremental reply processing NOT VERIFIED yet |
-| Worker restart continuation | NOT VERIFIED LIVE for Gmail; pending controlled reply |
-| Disconnect/reconnect | NOT TESTED; required reply validation incomplete |
+| Controlled reply synchronization | VERIFIED LIVE; owner-authorized existing reply, correct thread/test packet, one immutable test_reply Event, deduplication and held-to-cancelled state |
+| History cursor / checkpoint | VERIFIED LIVE; bounded incremental sync and persisted checkpoint; replay two requests |
+| Worker restart continuation | VERIFIED LIVE; exact receipt/Event/cursor preserved across new worker process and incremental continuation |
+| Disconnect/reconnect | Disconnect VERIFIED LIVE; upstream revocation/local fail-closed/history preservation pass. Reconnect pending owner authorization |
 
 Default own-account self-tests, unknown-delivery holds and company delivery policy are unchanged. Observed RFC rewriting is normalized only with an exact accepted API message/thread receipt and full matching Sent evidence; subject similarity cannot authorize reconciliation. No live company delivery, bounce, follow-up send or inbox-placement assertion follows from this synthetic test.

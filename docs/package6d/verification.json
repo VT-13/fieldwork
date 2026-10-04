@@ -1,13 +1,13 @@
 {
   "package": "FIELDWORK 6D",
   "live_google_gate": "BLOCKED",
-  "timestamp_utc": "2026-10-04T07:52:24.681031+00:00",
+  "timestamp_utc": "2026-10-04T16:36:29.668122+00:00",
   "environment": "Railway fieldwork-staging/staging",
   "staging_url": "https://fieldwork-staging.up.railway.app",
   "callback_url": "https://fieldwork-staging.up.railway.app/api/integrations/gmail/callback",
   "prerequisite_hosted_tls": "PASS",
-  "blocker": "Account B controlled reply requires owner sign-in; no signed-in B Safari session available.",
-  "required_input": "Open Account B, reply to the existing '[Fieldwork staging test] Gmail live verification' email in the same thread with: 'Fieldwork staging controlled reply test.' Then tell me done.",
+  "blocker": "Mandatory live tests pass; final staging Gmail reconnect requires owner account selection/consent.",
+  "required_input": "Complete the Google authorization currently shown in the browser, then tell me done.",
   "preflight": {
     "services_online": true,
     "source_manifest_verified": true,
@@ -24,16 +24,16 @@
     "oauth_consent": "VERIFIED LIVE",
     "token_exchange": "VERIFIED LIVE",
     "identity": "VERIFIED LIVE; exact designated Account A",
-    "token_refresh": "PARTIALLY VERIFIED; real refresh credential available, no forced expiry",
+    "token_refresh": "VERIFIED LIVE; naturally expired token refreshed by canonical access path, encrypted storage and exact Google identity reverified, no forced expiry",
     "draft": "VERIFIED LIVE; exactly one unsent A-to-A draft",
     "own_account_send": "VERIFIED LIVE; exactly one scoped A-to-B synthetic self-test",
     "rfc_message_id": "VERIFIED LIVE; observed Gmail alias and original reserved ID preserved",
     "thread_id": "VERIFIED LIVE",
     "sent_reconciliation": "VERIFIED LIVE; initial and replay confirm same receipt",
-    "controlled_reply": "PENDING OWNER REPLY",
-    "history_checkpoint": "Current-history boundary persisted before test; live reply sync pending",
-    "sync_restart": "PENDING REPLY",
-    "disconnect_reconnect": "NOT TESTED; mandatory reply tests not complete",
+    "controlled_reply": "VERIFIED LIVE; owner-authorized It is working reply, correct A/B/thread/test record; exactly one immutable test_reply Event; followup cancelled; replay deduped",
+    "history_checkpoint": "VERIFIED LIVE; bounded incremental history, cursor retained; replay and post-restart sync each two requests, no recurring mailbox-wide scan",
+    "sync_restart": "VERIFIED LIVE; worker process identity changed; exact receipt/Event/cursor hashes unchanged; continuation/replay no duplicate Event/send",
+    "disconnect_reconnect": "Disconnect VERIFIED LIVE including upstream revocation, local fail-closed and preserved history; reconnect owner authorization pending",
     "token_storage": "VERIFIED LIVE; encrypted canonical Integration",
     "authenticated_gmail_api": "VERIFIED LIVE; profile and exact synthetic messages only"
   },
@@ -55,7 +55,9 @@
     "drafts_created": 1,
     "paid_provider_calls": 0,
     "production_recurring_pause_changed": false,
-    "controlled_replies_sent": 0
+    "controlled_replies_sent": 1,
+    "controlled_reply_performed_by": "owner",
+    "additional_agent_sends": 0
   },
   "production_preservation_unchanged": true,
   "code_changes": true,
@@ -64,7 +66,7 @@
   "live_checkpoint": "docs/package6d/live-checkpoint.json",
   "old_exposed_credential_revoked": true,
   "targeted_tests": {
-    "passed": 166,
+    "passed": 167,
     "postgresql": "17.11 disposable",
     "lint": "PASS"
   },
@@ -84,6 +86,21 @@
   "source_commits": [
     "fafd8b1",
     "f6f35e4",
-    "cd868ca"
-  ]
+    "cd868ca",
+    "53189d8"
+  ],
+  "mandatory_live_behaviors": "PASS",
+  "gmail_final_state": "disconnected; reconnect pending",
+  "restart_recovery": {
+    "exact_receipt_preserved": true,
+    "exact_event_preserved": true,
+    "cursor_preserved": true,
+    "new_worker_process_verified": true,
+    "post_restart_history_requests": [
+      2,
+      2
+    ],
+    "duplicate_events": 0,
+    "additional_transmissions": 0
+  }
 }

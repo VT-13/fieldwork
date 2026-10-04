@@ -1,8 +1,8 @@
 {
   "package": "FIELDWORK 6D LIVE VALIDATION",
   "status": "IN PROGRESS",
-  "checkpoint": "8_owner_controlled_reply_pending",
-  "timestamp_utc": "2026-10-04T07:52:24.679682+00:00",
+  "checkpoint": "13_owner_reconnect_authorization_pending",
+  "timestamp_utc": "2026-10-04T16:36:29.668122+00:00",
   "resume_without_restarting": true,
   "old_exposed_credential_revoked": true,
   "credential_proof": {
@@ -10,14 +10,14 @@
     "retired_http": 401,
     "current_client_validated": true
   },
-  "google_browser_checkpoint": "Account A authorized; Account B has no signed-in Safari session",
+  "google_browser_checkpoint": "Fresh reconnect flow at account chooser; choose designated Account A",
   "google_authorization_completed": true,
   "drafts_created": 1,
   "test_messages_sent": 1,
-  "controlled_replies_sent": 0,
+  "controlled_replies_sent": 1,
   "company_messages_sent": 0,
   "recurring_paused": true,
-  "required_owner_action": "Open Account B, reply to the existing '[Fieldwork staging test] Gmail live verification' email in the same thread with: 'Fieldwork staging controlled reply test.' Then tell me done.",
+  "required_owner_action": "Complete the Google authorization currently shown in the browser, then tell me done.",
   "authorized_test_accounts": "Designated A/B identities stored privately; no third identity authorized",
   "package6e_started": false,
   "test_user_verified_after_reload": true,
@@ -29,11 +29,21 @@
   "authenticated_gmail_profile_verified": true,
   "history_current_boundary_initialized": true,
   "targeted_tests": {
-    "passed": 166,
+    "passed": 167,
     "disposable_postgresql": "17.11",
     "lint": "PASS"
   },
   "provider_discrepancy": "Resolved for the scoped test: exact accepted Gmail API receipt establishes observed RFC alias; original reserved ID retained. Initial and replay reconciliation confirm the same message; never resent.",
   "sent_reconciliation_verified": true,
-  "privacy_review": "PASS: recent three-service logs, seven public JS assets and tracked source/artifacts scanned without credential values"
+  "privacy_review": "PASS: recent three-service logs, seven public JS assets and tracked source/artifacts scanned without credential values",
+  "controlled_reply_performed_by": "owner",
+  "controlled_reply_body": "It is working",
+  "reply_detected": true,
+  "reply_events": 1,
+  "duplicate_events": 0,
+  "followup_status": "cancelled",
+  "worker_restart_continuation_verified": true,
+  "real_token_refresh_verified": true,
+  "forced_expiry_performed": false,
+  "gmail_current_state": "disconnected; reconnect pending"
 }
