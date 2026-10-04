@@ -1,7 +1,7 @@
 {
   "package": "FIELDWORK 6D PRE-FLIGHT",
   "status": "BLOCKED",
-  "timestamp_utc": "2026-10-04T06:45:32.095116+00:00",
+  "timestamp_utc": "2026-10-04T06:54:15.763538+00:00",
   "google_project": {
     "name": "Fieldwork Staging",
     "id": "fieldwork-staging-510606",
@@ -25,7 +25,7 @@
   "railway_secrets_changed": false,
   "oauth_secret_present": true,
   "redeploy": "Not needed; no runtime config changed",
-  "google_authorization_url": "Not yet verified; credentials not injected",
+  "google_authorization_url": "Pending secure credential download and Railway configuration",
   "staging_http": 200,
   "worker": "available",
   "scheduler": "available",
@@ -33,8 +33,8 @@
   "communication_attempts": 0,
   "emails_sent": 0,
   "production_preserved": true,
-  "required_owner_action": "Replace the exposed client secret in this staging Google client and securely download the replacement JSON; never paste credentials into chat.",
+  "required_owner_action": "Create a replacement secret and download its JSON before closing the creation dialog, then remove the currently enabled secret. Do not paste secret into chat.",
   "full_package6d_started": false,
   "client_form": "Created Fieldwork Railway Staging web client",
-  "secret_exposure_check": "FAIL: newly generated staging client secret appeared in one tool result due to a redaction filter defect; replacement required before runtime injection"
+  "secret_exposure_check": "Exposed credential replaced by owner; UI shows one enabled replacement. Replacement JSON unavailable locally; no new secret displayed or injected."
 }
