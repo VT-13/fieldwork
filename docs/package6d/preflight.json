@@ -1,0 +1,38 @@
+{
+  "package": "FIELDWORK 6D PRE-FLIGHT",
+  "status": "BLOCKED",
+  "timestamp_utc": "2026-10-04T06:39:26.202999+00:00",
+  "google_project": {
+    "name": "Fieldwork Staging",
+    "id": "fieldwork-staging-510606",
+    "created": true,
+    "original_project_unchanged": true
+  },
+  "oauth_branding": "Prepared, not submitted; Google API Services User Data Policy unchecked",
+  "client_created": false,
+  "redirect_uri_configured_in_railway": "https://fieldwork-staging.up.railway.app/api/integrations/gmail/callback",
+  "redirect_uri_registered_in_google": false,
+  "authorized_javascript_origin": "Not required by server-side authorization-code/PKCE flow",
+  "account_a_test_user": "Authorized address received; not yet added to Google test users",
+  "account_b": "Separately authorized controlled-reply address not supplied",
+  "scopes": {
+    "current": [
+      "gmail.send",
+      "gmail.readonly"
+    ],
+    "existing_draft_capability": "gmail.compose required only when GMAIL_DRAFTS_ENABLED enabled; not enabled yet"
+  },
+  "railway_secrets_changed": false,
+  "oauth_secret_present": false,
+  "redeploy": "Not needed; no runtime config changed",
+  "google_authorization_url": "Blocked until staging client and verified test identity exist",
+  "staging_http": 200,
+  "worker": "available",
+  "scheduler": "available",
+  "recurring_paused": true,
+  "communication_attempts": 0,
+  "emails_sent": 0,
+  "production_preserved": true,
+  "required_owner_action": "Complete pending Google API Services User Data Policy acceptance/setup in Safari. Account A supplied; distinct controlled-reply address still required before full 6D.",
+  "full_package6d_started": false
+}
