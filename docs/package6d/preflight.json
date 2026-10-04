@@ -1,7 +1,7 @@
 {
   "package": "FIELDWORK 6D PRE-FLIGHT",
   "status": "BLOCKED",
-  "timestamp_utc": "2026-10-04T06:42:13.242843+00:00",
+  "timestamp_utc": "2026-10-04T06:45:32.095116+00:00",
   "google_project": {
     "name": "Fieldwork Staging",
     "id": "fieldwork-staging-510606",
@@ -9,9 +9,9 @@
     "original_project_unchanged": true
   },
   "oauth_branding": "Created by owner; External/Testing audience selected",
-  "client_created": false,
+  "client_created": true,
   "redirect_uri_configured_in_railway": "https://fieldwork-staging.up.railway.app/api/integrations/gmail/callback",
-  "redirect_uri_registered_in_google": false,
+  "redirect_uri_registered_in_google": true,
   "authorized_javascript_origin": "Not required by server-side authorization-code/PKCE flow",
   "account_a_test_user": "Authorized address received; not yet added to Google test users",
   "account_b": "Separately authorized controlled-reply address not supplied",
@@ -23,9 +23,9 @@
     "existing_draft_capability": "gmail.compose required only when GMAIL_DRAFTS_ENABLED enabled; not enabled yet"
   },
   "railway_secrets_changed": false,
-  "oauth_secret_present": false,
+  "oauth_secret_present": true,
   "redeploy": "Not needed; no runtime config changed",
-  "google_authorization_url": "Blocked until staging client and verified test identity exist",
+  "google_authorization_url": "Not yet verified; credentials not injected",
   "staging_http": 200,
   "worker": "available",
   "scheduler": "available",
@@ -33,7 +33,8 @@
   "communication_attempts": 0,
   "emails_sent": 0,
   "production_preserved": true,
-  "required_owner_action": "Confirm creation of the prepared staging OAuth client in chat, or click Create in Safari. Distinct controlled-reply address still required before full 6D.",
+  "required_owner_action": "Replace the exposed client secret in this staging Google client and securely download the replacement JSON; never paste credentials into chat.",
   "full_package6d_started": false,
-  "client_form": "Prepared Fieldwork Railway Staging web client with exact callback; Create not clicked"
+  "client_form": "Created Fieldwork Railway Staging web client",
+  "secret_exposure_check": "FAIL: newly generated staging client secret appeared in one tool result due to a redaction filter defect; replacement required before runtime injection"
 }
