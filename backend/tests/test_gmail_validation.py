@@ -165,3 +165,18 @@ def test_accepted_receipt_cannot_alias_conflicting_sent_evidence(db,scope,field)
     with pytest.raises(Blocked):asyncio.run(reconciliation.reconcile(db,scope['send_packet_id'],b))
     assert sum(c[1].endswith('/messages/send') for c in b.calls)==1
     assert not validation.send_state(db,scope).value.get('sent_verified')
+
+
+def test_owner_authorized_reply_text_matches_existing_thread_without_sending(db,scope):
+    b=Box(db);saved=asyncio.run(send(db,scope['send_packet_id'],b))
+    reply={'id':'owner-reply','threadId':saved['thread_id'],'labelIds':['INBOX'],'internalDate':str(int(now().timestamp()*1000)),'payload':{'headers':[{'name':'From','value':scope['account_b']},{'name':'To','value':scope['account_a']},{'name':'In-Reply-To','value':saved['message_id']}],'mimeType':'text/plain','body':{'data':base64.urlsafe_b64encode(b'It is working\r\n\r\nOn Sunday, student wrote:\r\n> Original test').decode()}}}
+    assert validation.ingest(db,reply) is None
+    row=db.get(State,validation.KEY);row.value={**row.value,'reply_body':'It is working'};db.commit()
+    assert validation.ingest(db,reply)['test_packet_id']==scope['send_packet_id']
+    validation.ingest(db,reply)
+    assert db.scalar(select(func.count()).select_from(Event))==1
+    assert db.get(State,validation.KEY).value['followup_status']=='cancelled'
+    assert sum(c[1].endswith('/messages/send') for c in b.calls)==1
+    reply['id']='different-reply';reply['payload']['body']['data']=base64.urlsafe_b64encode(b'It is working extra text').decode()
+    assert validation.ingest(db,reply) is None
+    assert db.scalar(select(func.count()).select_from(Event))==1

@@ -124,7 +124,10 @@ def ingest(db,msg):
     except (KeyError,ValueError,OverflowError):return None
     if not aware(datetime.fromisoformat(sent.value['at']))-timedelta(minutes=1)<=received<=now()+timedelta(minutes=5):return None
     body=text_body(msg.get('payload',{})).strip()
-    if not body.startswith('Fieldwork staging controlled reply test.'):return None
+    expected=v.get('reply_body','Fieldwork staging controlled reply test.')
+    if not isinstance(expected,str) or not expected or len(expected)>500 or '\n' in expected or '\r' in expected:return None
+    # Exact authorized opening line; Gmail may append the quoted original.
+    if body.replace('\r\n','\n').split('\n',1)[0].strip()!=expected:return None
     ledger.lock(db);source='gmail-validation:'+msg['id']
     event=db.scalar(select(Event).where(Event.source_id==source))
     if not event:
