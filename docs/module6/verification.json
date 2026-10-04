@@ -152,7 +152,8 @@
     "private_keys_or_values_exported": false,
     "source_mutated": false,
     "reason": "SQLite accepts State key longer than varchar(100); exact-preservation PG transfer refuses before writes",
-    "required": "A versioned, lossless identifier/alias migration must be designed and rehearsed; do not truncate, rename blindly, delete history, or rewrite frozen schema005"
+    "required": "A versioned, lossless identifier/alias migration must be designed and rehearsed; do not truncate, rename blindly, delete history, or rewrite frozen schema005",
+    "superseded_by": "docs/package6a/installed-migration-preflight.json"
   },
   "e2e": {
     "scope": "Real TLS HTTP -> production Next proxy -> authenticated API -> actual worker process -> disposable PG17; fake provider seams only",
@@ -242,14 +243,15 @@
   },
   "security": {
     "applicable_unresolved_p0": [],
-    "applicable_unresolved_p1": [
-      "FW-026"
-    ],
+    "applicable_unresolved_p1": [],
     "multi_user_scope": "Excluded personal-only; no public signup",
     "startup_schema_config_fail_closed": true,
     "request_operation_logs_allowlisted": true,
     "private_traceback_handler_test": true,
-    "privacy_rotation_security_suite_passed": true
+    "privacy_rotation_security_suite_passed": true,
+    "applicable_unresolved_p1_at_module6_run": [
+      "FW-026"
+    ]
   },
   "performance": {
     "backend": {
@@ -374,11 +376,6 @@
   },
   "remaining_conditions": [
     {
-      "id": "FW-026",
-      "severity": "P1",
-      "condition": "Versioned lossless migration/rehearsal for installed over-width State identifier; current transfer refuses before writes"
-    },
-    {
       "id": "runtime-container",
       "condition": "Execute declared Python3.13/Node22/Linux/PG17 images and separate worker/health/env/nonroot/persistence in Docker-enabled staging"
     },
@@ -403,5 +400,16 @@
     "application_diff_from_tested_commit": false,
     "manifest_sha256": "d77c50abad30db6e9d89ab81337ce22eb5e2c2b6eb4166b5b232e565a338180d",
     "unexplained_drift": []
+  },
+  "historical_module6_schema": "005",
+  "current_migration_head": "006",
+  "package6a": {
+    "result": "PASSED",
+    "resolved": [
+      "FW-026"
+    ],
+    "verification": "docs/package6a/verification.json",
+    "production_migrated": false,
+    "other_gates_unchanged": true
   }
 }

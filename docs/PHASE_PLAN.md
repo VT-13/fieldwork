@@ -41,3 +41,7 @@ Canonical delivery/ledger, one bounded Gmail scanner, durable reply cancellation
 ## Module6 verification outcome
 
 Production verification performed in canonical source only. Fresh clean pins, maintained PG17.11,250 backend tests,60 Chromium/WebKit/Firefox browser tests, production-build/private TLS/actual-worker/fake-provider E2E, shared quota/rollover, forced-crash uncertainty, reply race, bounded soak and compatible migration/restore passed. Observed release defects were fixed and regression-covered. Actual installed State key width is incompatible with frozen PG schema and remains P1 FW-026. Docker/intended hosted TLS/live authorized Google gates remain unverified. Release is **NOT READY**; installed source/schema/credentials/services, receipts and recurring pause are preserved. No automatic next phase or campaign activation is authorized.
+
+## Package6A verification outcome
+
+Only FW-026 is resolved: versioned006 exact State widening, representative001→006 on SQLite/PG17.11, full-record backup/restore and installed read-only compatibility/preservation. Historical Module6 evidence remains dated005; package6a/verification.json is the current migration evidence. Container/hosted/live Gmail gates remain unverified and release NOT READY. No production migration, worker/service/automation/OAuth/pause/mail changes; Package6B has not started.

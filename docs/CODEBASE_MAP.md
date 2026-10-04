@@ -95,3 +95,7 @@ backend/app/{auth,credentials,gmail_oauth,ingress,privacy,redaction,url_safety}.
 - `backend/scripts/transfer_legacy.py`: validation-first paused exact001 backup to empty PG target; apply needs stopped-sender confirmation, no values/logged secrets; real installed over-width key currently blocks it.
 - `scripts/module6_{check,e2e,preserve,frontend_perf}.py`, `docs/module6/`: clean dependency/PG17/native TLS production-build/worker/fake-provider/browser/soak/performance/audit/preservation evidence. Private test runtimes live only under `/private/tmp/fieldwork-module6`.
 - `docs/{RUNBOOK,RELEASE_CANDIDATE,RELEASE_CHECKLIST}.md`, root `DEPLOYMENT.md`: exact release conditions, operations, cutover retirement and backup-plus-compatible-source rollback. No installed/deployed service changes.
+
+## Package6A migration ownership
+
+`alembic/versions/006_state_identity.py` and frozen `app/migration_v6.py` widen State.key to255 while retaining exact identities/JSON/primary key. `scripts/transfer_legacy.py` shares that helper only for empty-target staging before001 row copy, then executes002–006. Its --preflight-only reads an explicit source without target connection. `scripts/package6a_check.py` uses isolated blank-credential copies/disposable databases; test_migration_v6.py and expanded test_release_migration.py cover FW-026. Production source schema guards require006; installed SQLite001 remains untouched.

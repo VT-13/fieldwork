@@ -1,0 +1,13 @@
+{
+  "command": [
+    "/private/tmp/fieldwork-module6/venv/bin/python",
+    "-m",
+    "pytest",
+    "-q",
+    "-ra",
+    "tests/test_migration_v6.py",
+    "tests/test_release_migration.py"
+  ],
+  "exit_code": 0,
+  "seconds": 3.24
+}

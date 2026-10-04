@@ -87,3 +87,7 @@ The worker invokes a deterministic scheduler on each tick, claims one due job an
 One Gmail scanner verifies identity and saves incremental history/page checkpoints, with bounded recent backfill after an invalid cursor. Strong thread/RFC correlation or a unique bounded sender/recipient match records immutable linked events. Replies, acknowledgments, bounces and opt-outs cancel pending communication durably. A reply committed before reservation wins; an already reserved transmission may finish and must not overwrite the response state.
 
 One follow-up preparation intent has a fixed initial-send+168 h eligibility time. It rechecks confirmed original identity, policy/contact/replies/suppression and generates a distinct Module 4 proposal as a draft, never silently approving it. Later delivery runs all current guards again. Missed runs create no accumulated quota or historical batch replay. See docs/module5/README.md for crash windows, polling bounds and honest provider limits.
+
+## Package6A State identity evolution
+
+Canonical head006 changes only State.key from100 to255 characters. Original key strings/JSON and existing exact self-test fallback lookups survive; no alias store or new subsystem. This matches Operation.idempotency_key capacity. Cross-engine staging widens the empty001 target using the frozen006 helper before copying, then runs002–006 so original-key historical receipts backfill correctly. Normal upgrades use006 after005. Narrowing downgrade is refused. See docs/package6a/README.md; installed schema001 and pause remain unchanged.

@@ -1,0 +1,49 @@
+F                                                                        [100%]
+=================================== FAILURES ===================================
+_ test_representative_sqlite001_transfer_backup_restore_and_immutable_history __
+
+pg = Engine(postgresql+psycopg://fieldwork_test@127.0.0.1:55436/postgres)
+tmp_path = PosixPath('/private/var/folders/9s/w0n67fhn557gd3bp17pkk9q80000gn/T/pytest-of-vihaantirumala/pytest-63/test_representative_sqlite001_0')
+
+    def test_representative_sqlite001_transfer_backup_restore_and_immutable_history(pg,tmp_path):
+        source,expected=old_state(tmp_path)
+        target=pg.url
+        with pg.connect() as c:schema=c.scalar(text('SELECT current_schema()'))
+        target=target.update_query_dict({'options':'-csearch_path='+schema})
+        url=target.render_as_string(hide_password=False)
+>       dry=transfer(source,url)
+            ^^^^^^^^^^^^^^^^^^^^
+
+tests/test_release_migration.py:60:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+source = PosixPath('/private/var/folders/9s/w0n67fhn557gd3bp17pkk9q80000gn/T/pytest-of-vihaantirumala/pytest-63/test_representative_sqlite001_0/old-backup.sqlite')
+target_url = 'postgresql+psycopg://fieldwork_test@127.0.0.1:55436/postgres?options=-csearch_path%3Dsecurity_53ceafbc1f344fafab44608ac9703f99'
+apply = False, stopped = False
+
+    def transfer(source, target_url, *, apply=False, stopped=False):
+        source=Path(source)
+        if not source.is_file() or source.is_symlink():raise ValueError('Explicit regular SQLite backup required')
+        source=source.resolve()
+        target=create_engine(target_url)
+        if target.dialect.name!='postgresql':raise ValueError('Target must be an empty PostgreSQL database')
+        original=hashlib.sha256(source.read_bytes()).hexdigest()
+        old=create_engine('sqlite://',creator=lambda:sqlite3.connect('file:'+str(source)+'?mode=ro',uri=True))
+        try:
+            with old.connect() as connection:
+                observed=inspect(connection)
+                if set(observed.get_table_names()) != set(metadata.tables)|{'alembic_version'}:raise ValueError('Unrecognized legacy tables; do not guess a mapping')
+                if connection.scalar(text('SELECT version_num FROM alembic_version'))!='001':raise ValueError('Only representative schema001 backups are supported')
+                if any({x['name'] for x in observed.get_columns(name)}!=set(table.c.keys()) for name,table in metadata.tables.items()):raise ValueError('Legacy columns differ; reconcile explicitly')
+            rows=snapshot(old)
+            # SQLite does not enforce varchar widths. Never truncate historical
+            # identifiers to force an incompatible PostgreSQL transfer to pass.
+            from sqlalchemy import String
+>           if any(isinstance(column.type,String) and column.type.length and any(isinstance(row.get(column.name),str) and len(row[column.name])>column.type.length for row in rows[table.name]) for table in metadata.sorted_tables for column in table.c):raise ValueError('Legacy value exceeds PostgreSQL column width; source requires explicit reconciliation')
+                                                                                                                                                                                                                                                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           ValueError: Legacy value exceeds PostgreSQL column width; source requires explicit reconciliation
+
+scripts/transfer_legacy.py:52: ValueError
+=========================== short test summary info ============================
+FAILED tests/test_release_migration.py::test_representative_sqlite001_transfer_backup_restore_and_immutable_history
+1 failed in 0.48s

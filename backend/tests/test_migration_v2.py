@@ -53,6 +53,7 @@ def test_migration_schema_matches_current_model(tmp_path):
                 for fk in constraint.elements:expected.tables['events'].foreign_keys.discard(fk)
         for table,columns in [('evidence',['source_kind','confidence','content_hash','verified_at']),('usage',['details']),('jobs',['available_at','owner_token','lease_until']),('events',['contact_id','outreach_id','campaign_id'])]:
             for column in columns:expected.tables[table]._columns.remove(expected.tables[table].c[column])
+        expected.tables['state'].c.key.type = sa.String(100)  # Frozen002 predates006 widening.
         expected.tables['jobs'].indexes.discard(next(i for i in expected.tables['jobs'].indexes if i.name=='ix_jobs_available_at'))
         assert compare_metadata(MigrationContext.configure(c),expected)==[]
     engine.dispose()

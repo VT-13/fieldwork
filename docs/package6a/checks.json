@@ -1,0 +1,43 @@
+{
+  "migration-suite": {
+    "command": [
+      "/private/tmp/fieldwork-module6/venv/bin/python",
+      "-m",
+      "pytest",
+      "-q",
+      "-ra",
+      "tests/test_migration_v2.py",
+      "tests/test_migration_v6.py",
+      "tests/test_release_migration.py",
+      "tests/test_postgres_security.py",
+      "tests/test_runtime.py::test_sqlite005_additive_migration_and_backup_restore",
+      "tests/test_release.py::test_migration_failure_transaction_and_duplicate_invocation"
+    ],
+    "exit_code": 0,
+    "seconds": 6.22
+  },
+  "backend-regressions": {
+    "command": [
+      "/private/tmp/fieldwork-module6/venv/bin/python",
+      "-m",
+      "pytest",
+      "-q",
+      "-ra"
+    ],
+    "exit_code": 0,
+    "seconds": 16.18
+  },
+  "ruff": {
+    "command": [
+      "/private/tmp/fieldwork-module6/venv/bin/python",
+      "-m",
+      "ruff",
+      "check",
+      "app",
+      "scripts",
+      "tests"
+    ],
+    "exit_code": 0,
+    "seconds": 0.11
+  }
+}

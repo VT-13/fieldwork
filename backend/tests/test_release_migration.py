@@ -13,6 +13,32 @@ from scripts.backup_database import backup, restore_postgres, postgres_env
 from scripts.transfer_legacy import transfer, snapshot
 from test_postgres_security import pg as pg
 
+PACKET_ID = '11111111-2222-3333-4444-555555555555'
+LEGACY_TEST_KEY = 'self-test:' + PACKET_ID + ':' + 'a' * 64
+LEGACY_TEST_VALUE = {'status': 'sent', 'at': '2026-09-25T16:00:00+00:00',
+                     'gmail_id': 'original-self-test', 'thread_id': 'original-self-thread'}
+
+
+def assert_self_test_provenance(connection):
+    from app.models import Operation
+    operation = connection.execute(select(Operation.__table__).where(
+        Operation.idempotency_key == LEGACY_TEST_KEY)).mappings().one()
+    assert operation['entity_id'] == PACKET_ID and operation['status'] == 'succeeded'
+    attempt = connection.execute(select(ActionAttempt.__table__).where(
+        ActionAttempt.operation_id == operation['id'])).mappings().one()
+    assert attempt['receipt']['source'] == 'state:' + LEGACY_TEST_KEY
+    assert attempt['receipt']['gmail_id'] == LEGACY_TEST_VALUE['gmail_id']
+    assert attempt['receipt']['at'] == LEGACY_TEST_VALUE['at']
+    assert not attempt['authorized'] and attempt['policy']['timestamp_source'] == 'original'
+
+
+def full_snapshot(engine):
+    from app.db import Base
+    from scripts.transfer_legacy import normalized
+    with engine.connect() as c:
+        return {t.name: sorted([normalized(dict(r)) for r in c.execute(select(t)).mappings()], key=repr)
+                for t in Base.metadata.sorted_tables}
+
 
 def old_state(tmp_path):
     source=tmp_path/'old.sqlite'
@@ -23,6 +49,14 @@ def old_state(tmp_path):
         c.execute(text("INSERT INTO alembic_version VALUES ('001')"))
         for key,value in [('outreach_policy',{'enabled':False,'allowed_cities':['Rocklin'],'paid_services_authorized':False}),('automation',{'enabled':False}),('manual_batch',{'enabled':False,'stop_requested':True})]:
             c.execute(metadata.tables['state'].insert().values(key=key,value=value))
+        c.execute(metadata.tables['state'].insert(), [
+            {'key': LEGACY_TEST_KEY, 'value': LEGACY_TEST_VALUE},
+            {'key': 'desk:' + PACKET_ID, 'value': {'draft_hash': 'a' * 64}},
+            # Same first 100 characters; distinct exact keys must never coalesce.
+            {'key': 'history:' + 'x' * 100 + 'A', 'value': {'source': 'first'}},
+            {'key': 'history:' + 'x' * 100 + 'a', 'value': {'source': 'second'}},
+            {'key': 'é' * 255, 'value': {'source': 'unicode-boundary'}},
+        ])
         c.execute(metadata.tables['profiles'].insert().values(id=1,data={'name':'Sanitized Student','verified':False}))
         c.execute(metadata.tables['companies'].insert().values(id='old-company',domain='example.com',name='Sanitized Robotics',website='https://example.com'))
         c.execute(metadata.tables['contacts'].insert().values(id='old-contact',company_id='old-company',email='lead@example.com'))
@@ -52,7 +86,8 @@ def test_representative_sqlite001_transfer_backup_restore_and_immutable_history(
     assert result['applied'] and snapshot(pg)==expected
     with pytest.raises(ValueError,match='not empty'):transfer(source,url,apply=True,stopped=True)
     with pg.begin() as c:
-        assert c.scalar(text('SELECT version_num FROM alembic_version'))=='005'
+        assert c.scalar(text('SELECT version_num FROM alembic_version'))=='006'
+        assert_self_test_provenance(c)
         receipts=list(c.execute(select(ActionAttempt.receipt)).scalars())
         assert any(r.get('provider_id')=='original-provider' for r in receipts)
         assert c.scalar(text("SELECT count(*) FROM operations WHERE status='unknown'"))==1
@@ -60,6 +95,7 @@ def test_representative_sqlite001_transfer_backup_restore_and_immutable_history(
     tools=os.environ.get('FIELDWORK_TEST_PG_TOOLS')
     if not tools:pytest.skip('PG17 backup tools unavailable; migration transfer passed, restore not verified')
     dump=tmp_path/'pg17.dump'
+    complete_expected = full_snapshot(pg)
     digest=backup(url,dump,tools)
     assert dump.stat().st_mode&0o777==0o600 and digest==hashlib.sha256(dump.read_bytes()).hexdigest()
     with pg.begin() as c:c.execute(text("UPDATE state SET value='{}' WHERE key='outreach_policy'"))
@@ -71,13 +107,15 @@ def test_representative_sqlite001_transfer_backup_restore_and_immutable_history(
         restore_postgres(restored,dump,tools,confirmed=True)
         restored_engine=create_engine(restored)
         assert snapshot(restored_engine)==expected
+        assert full_snapshot(restored_engine) == complete_expected
         with restored_engine.connect() as c:
+            assert_self_test_provenance(c)
             assert c.scalar(select(Integration.generation))==3
             assert c.scalar(select(Integration.encrypted_tokens))=='synthetic-encrypted-reference'
             assert c.scalar(text("SELECT count(*) FROM operations WHERE status='unknown'"))==1
             assert c.scalar(text("SELECT count(*) FROM jobs WHERE id='old-job'"))==1
         restored_engine.dispose()
-        report={'result':'passed','source_revision':'001','target_revision':'005','transport':'typed frozen-schema SQLite -> PG17 transaction','old_record_counts':result['counts'],'old_backup_private':True,'pg17_backup_private':True,'restore_old_records_equal':True,'integration_metadata_restored':True,'unknown_preserved':True,'repeat_refused':True,'source_unchanged':hashlib.sha256(source.read_bytes()).hexdigest()==result['source_sha256']}
+        report={'result':'passed','source_revision':'001','target_revision':'006','transport':'typed frozen-schema SQLite -> PG17 transaction','old_record_counts':result['counts'],'old_backup_private':True,'pg17_backup_private':True,'restore_old_records_equal':True,'integration_metadata_restored':True,'unknown_preserved':True,'repeat_refused':True,'source_unchanged':hashlib.sha256(source.read_bytes()).hexdigest()==result['source_sha256']}
         if os.environ.get('FIELDWORK_RELEASE_MIGRATION_REPORT'):
             Path(os.environ['FIELDWORK_RELEASE_MIGRATION_REPORT']).write_text(json.dumps(report,indent=2)+'\n')
     finally:
@@ -88,7 +126,7 @@ def test_representative_sqlite001_transfer_backup_restore_and_immutable_history(
 def test_transfer_refuses_oversized_legacy_identifier_without_truncation(pg,tmp_path):
     source,_=old_state(tmp_path)
     engine=create_engine('sqlite:///'+str(source))
-    with engine.begin() as c:c.execute(metadata.tables['state'].insert().values(key='historical-self-test:'+('x'*100),value={'status':'sent'}))
+    with engine.begin() as c:c.execute(metadata.tables['state'].insert().values(key='historical:'+('x'*256),value={'status':'sent'}))
     engine.dispose()
     with pg.connect() as c:schema=c.scalar(text('SELECT current_schema()'))
     url=pg.url.update_query_dict({'options':'-csearch_path='+schema}).render_as_string(hide_password=False)

@@ -105,10 +105,10 @@ def require_schema(db):
     try:
         if (
             not inspect(db.bind).has_table("alembic_version")
-            or db.scalar(text("SELECT version_num FROM alembic_version")) != "005"
+            or db.scalar(text("SELECT version_num FROM alembic_version")) != "006"
         ):
             raise RuntimeError()
     except Exception:
         raise RuntimeError(
-            "Production database/schema unavailable; verify stopped-sender migration to schema005"
+            "Production database/schema unavailable; verify stopped-sender migration to schema006"
         ) from None

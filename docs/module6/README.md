@@ -16,7 +16,7 @@ Fresh pip audit and production npm audit return zero known findings. Full npm au
 
 ## Open gates
 
-**FW-026 P1:** read-only actual installed schema/count/width inventory found one State key exceeding100. SQLite permits it, frozen PostgreSQL schema does not. The strict transfer refuses oversized values before writes. Passing a compatible sanitized fixture is not proof the actual installation can cut over. Needs a versioned lossless identifier/schema migration plus exact-history rehearsal; no truncation/guessing/frozen migration rewrite was performed.
+**FW-026 P1 (historical, resolved by Package6A):** read-only actual installed schema/count/width inventory found one State key exceeding100. SQLite permits it, frozen PostgreSQL schema does not. The strict transfer refuses oversized values before writes. Passing a compatible sanitized fixture is not proof the actual installation can cut over. Needs a versioned lossless identifier/schema migration plus exact-history rehearsal; no truncation/guessing/frozen migration rewrite was performed.
 
 Docker CLI/daemon is absent. Python3.13-slim/Node22-alpine/postgres17-alpine images and their actual runtime remain unbuilt/unrun. Native production-only proof does not clear this declared deployment gate; CI image/browser/PG17-tool checks are source changes only, not a remotely executed pass. Intended hosted private TLS/certificate/proxy/network/callback remains unverified; the isolated CA is not a hosted certificate.
 
@@ -32,3 +32,7 @@ Docker CLI/daemon is absent. Python3.13-slim/Node22-alpine/postgres17-alpine ima
 - `python scripts/module6_preserve.py`: read-only installed before/after comparison, never updates the baseline. All production mutation flags stay false.
 
 RUNBOOK.md, RELEASE_CHECKLIST.md, DEPLOYMENT.md and MIGRATION_PLAN.md define later exact retirement/backup/staging/rollback/activation ordering. Module6 gives no permission to activate any of it.
+
+## Package6A superseding migration evidence
+
+FW-026 is RESOLVED in canonical head006: exact111-character historical self-test identity/JSON/provenance survives transactional001→006 import and full-record SQLite/PG17.11 backup/restore. Installed read-only preflight passes with no source/DB/credential/service/pause changes. See ../package6a/verification.json and README.md. Original Module6 build/UI/E2E/test results above remain historical005 evidence; no such suite was rerun for this narrow package. All other open release gates remain; no Package6B or production activation.

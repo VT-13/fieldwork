@@ -1,0 +1,18 @@
+[
+  {
+    "length": 111,
+    "prefix": "self-test",
+    "segments": 3,
+    "packet_uuid_shape": true,
+    "digest_hex_length": 64,
+    "status": "sent",
+    "has_acceptance_receipt": true,
+    "has_original_timestamp": true,
+    "packet_exists": true,
+    "packet_current_hash_matches": true,
+    "direct_text_references_counts": {
+      "state": 1,
+      "jobs": 0
+    }
+  }
+]

@@ -1,0 +1,178 @@
+{
+  "package": "FIELDWORK 6A",
+  "audit_id": "FW-026",
+  "result": "RESOLVED",
+  "timestamp_utc": "2026-10-04T03:49:53.376437+00:00",
+  "baseline_commit": "d2307249e4524d4e1da6bd5eb1b47048aa4691d8",
+  "release_candidate_ref": "fieldwork-package6a-fw026",
+  "canonical_schema_revision": "006",
+  "installed_schema_revision": "001",
+  "root_cause": "Historical self-test key (prefix + packet UUID + draft SHA256) is111 characters; SQLite ignored frozen varchar100, PostgreSQL enforced it",
+  "design": "Versioned varchar255 widening; exact primary key/JSON retained without alias, normalization or hashing",
+  "staging_order": [
+    "create001",
+    "use frozen006 widening on empty State",
+    "copy all001 rows",
+    "upgrade002 through006",
+    "compare all001 rows",
+    "commit"
+  ],
+  "identifier_structure_evidence": "identifier-structure.json",
+  "historical_receipt_still_active_replay_guard": true,
+  "frozen001_through005_byte_identical": true,
+  "frozen_artifact_sha256": {
+    "backend/alembic/versions/002_operations.py": "6f6dd5397b2753e8bcf2b2b7a41faa0dc2491332fda447a09ba7420fae40410e",
+    "backend/alembic/versions/005_runtime.py": "ddeba29d76ac0bc038266d8057a01da873d8a786b24157c624cb5e2c6d2b38af",
+    "backend/alembic/versions/004_intelligence.py": "7dd9bcc6edbdd09c1625c5a445e836a760e942c7fdbb22c0925308d29b8cbc2d",
+    "backend/alembic/versions/003_security.py": "53125455cec33df2e1086e61434f904407de16e269502080ad54173248f4add9",
+    "backend/alembic/versions/001_initial.py": "8daa776ebc1893e6248ef36913f7755a6c4ae2ae9e128bad608677845a470103",
+    "backend/app/migration_v1.py": "0058b53a22964107f331514055fb43e9797cf97a1b2911640818e2872eec6487",
+    "backend/app/migration_v2.py": "24d52bb08dad6c612bbf9c81f2632c507534a4ad2cffcf799a6ea4694a057d9a",
+    "backend/app/migration_v4.py": "ea925550ac18c0cfba37b6cfcd5e664a27096162542cfe18e828669deed1a80a"
+  },
+  "representative_migration": {
+    "result": "passed",
+    "source_revision": "001",
+    "target_revision": "006",
+    "transport": "typed frozen-schema SQLite -> PG17 transaction",
+    "old_record_counts": {
+      "cache": 0,
+      "companies": 1,
+      "jobs": 1,
+      "profiles": 1,
+      "state": 8,
+      "suppressions": 1,
+      "contacts": 1,
+      "events": 1,
+      "evidence": 0,
+      "usage": 0,
+      "outreach": 2
+    },
+    "old_backup_private": true,
+    "pg17_backup_private": true,
+    "restore_old_records_equal": true,
+    "integration_metadata_restored": true,
+    "unknown_preserved": true,
+    "repeat_refused": true,
+    "source_unchanged": true
+  },
+  "postgresql": "17.11, UTF8, disposable schemas/new restore DB on127.0.0.1:55436",
+  "checks": {
+    "migration-suite": {
+      "command": [
+        "/private/tmp/fieldwork-module6/venv/bin/python",
+        "-m",
+        "pytest",
+        "-q",
+        "-ra",
+        "tests/test_migration_v2.py",
+        "tests/test_migration_v6.py",
+        "tests/test_release_migration.py",
+        "tests/test_postgres_security.py",
+        "tests/test_runtime.py::test_sqlite005_additive_migration_and_backup_restore",
+        "tests/test_release.py::test_migration_failure_transaction_and_duplicate_invocation"
+      ],
+      "exit_code": 0,
+      "seconds": 6.22
+    },
+    "backend-regressions": {
+      "command": [
+        "/private/tmp/fieldwork-module6/venv/bin/python",
+        "-m",
+        "pytest",
+        "-q",
+        "-ra"
+      ],
+      "exit_code": 0,
+      "seconds": 16.18
+    },
+    "ruff": {
+      "command": [
+        "/private/tmp/fieldwork-module6/venv/bin/python",
+        "-m",
+        "ruff",
+        "check",
+        "app",
+        "scripts",
+        "tests"
+      ],
+      "exit_code": 0,
+      "seconds": 0.11
+    }
+  },
+  "backend_passed": 260,
+  "migration_suite_passed": 22,
+  "skipped": 0,
+  "deprecation_warnings": 2,
+  "covered_requirements": [
+    "normal State identifiers",
+    "111-character original exact identity/value",
+    "same-prefix case-distinct keys and duplicate constraint",
+    "255-character Unicode boundary",
+    "repeat head upgrade and populated-target refusal",
+    "SQLite and PG17 full-record backup/restore",
+    "fresh SQLite and PG17 metadata parity",
+    "schema001 to006 preserving every old row",
+    "outreach/manual/automation pause",
+    "receipt timestamp and002 original-key provenance",
+    "synthetic encrypted integration metadata",
+    "installed source/credentials unchanged",
+    "mode=ro/query_only authorizer rejects writes",
+    "out-of-bound/unknown schema fail closed",
+    "post006 failure rollback and retry",
+    "historical sent replay and uncertain hold without provider connection",
+    "CLI preflight has no target connection"
+  ],
+  "installed_read_only_preflight": {
+    "source_revision": "001",
+    "target_revision": "006",
+    "counts": {
+      "cache": 0,
+      "companies": 46,
+      "jobs": 1,
+      "profiles": 1,
+      "state": 13,
+      "suppressions": 2,
+      "contacts": 46,
+      "events": 6,
+      "evidence": 83,
+      "usage": 0,
+      "outreach": 46
+    },
+    "source_sha256": "3563daef0c7219fe026473cb4561208e210f96609df8400999ef538ac01ed925",
+    "state_keys_requiring_widening": 1,
+    "state_key_limit": 255,
+    "safely_migratable": true,
+    "applied": false,
+    "result": "PASSED",
+    "installed_revision": "001",
+    "source_mutated": false,
+    "all_table_row_digests_unchanged": true,
+    "private_keys_or_values_exported": false,
+    "source_credentials_services_pause_unchanged": true,
+    "production_migrated": false
+  },
+  "preservation_evidence": "preservation.json",
+  "production_mutations": {
+    "database": false,
+    "source": false,
+    "credentials_or_oauth": false,
+    "services_or_launch_agents": false,
+    "worker_started": false,
+    "recurring_pause_changed": false,
+    "automation_changed": false,
+    "mail_sent": 0,
+    "paid_provider_calls": 0
+  },
+  "ui_browser_container_hosted_live_gmail_checks_run": false,
+  "package6b_started": false,
+  "release_decision": "NOT READY; other Module6 gates unchanged",
+  "remaining_fw026_blockers": [],
+  "source_integrity": {
+    "baseline_verified": true,
+    "current_manifest_verified": true,
+    "canonical_manifest_sha256": "c683d895f6e819c0c8c803cc2ba83f48f0011670b61ff93c8c2d3692f5769e09",
+    "manifest_covers_new_schema_and_transfer": true
+  },
+  "disposable_postgres_stopped": true
+}

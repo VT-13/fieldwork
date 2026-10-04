@@ -1,0 +1,88 @@
+{
+  "unchanged": true,
+  "database_inventory_before": {
+    "database_file_sha256": "3563daef0c7219fe026473cb4561208e210f96609df8400999ef538ac01ed925",
+    "all_table_row_digests": {
+      "alembic_version": "0ccb324611db78e8a6d2f2febb7b32379e9f3e727ec0063082ef7137524a1818",
+      "cache": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "companies": "6a586868ac4a0179c01b94f7e3fcd1edeac8f74516d032592d65ad9b6ac4482f",
+      "contacts": "91598784131c440cb8918db8237c6356271d2c00321243cd990ffd9e8a753c6f",
+      "events": "9279776040eff9d4174d633e544355b4e857605322f70523f8aff9f584ce4704",
+      "evidence": "f07195cb8dda6902a94c29b6f081e6ca71993c12670ffb62203600a00d280249",
+      "jobs": "87f7ae0adc8576c2b1d32d50e927f796f0beab7f9a85e82907e86b32c74d2eb0",
+      "outreach": "cd6529a16b4de96a76dd84246624c35298272adde27372dd3accd62faa0b10d4",
+      "profiles": "a6f37db5399f49270fe24a0870634a0af92d569fc8a7f6cd380920ea82a88d4e",
+      "state": "085142f03dce31b75f5529599aee63f9309fafee24ce4d501ca08fe2755cdb1b",
+      "suppressions": "c2f61cecd9f0e87f4e8df633b7110fc2718966a220d1839ee2333e9223bb4dbd",
+      "usage": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    }
+  },
+  "database_inventory_after": {
+    "database_file_sha256": "3563daef0c7219fe026473cb4561208e210f96609df8400999ef538ac01ed925",
+    "all_table_row_digests": {
+      "alembic_version": "0ccb324611db78e8a6d2f2febb7b32379e9f3e727ec0063082ef7137524a1818",
+      "cache": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "companies": "6a586868ac4a0179c01b94f7e3fcd1edeac8f74516d032592d65ad9b6ac4482f",
+      "contacts": "91598784131c440cb8918db8237c6356271d2c00321243cd990ffd9e8a753c6f",
+      "events": "9279776040eff9d4174d633e544355b4e857605322f70523f8aff9f584ce4704",
+      "evidence": "f07195cb8dda6902a94c29b6f081e6ca71993c12670ffb62203600a00d280249",
+      "jobs": "87f7ae0adc8576c2b1d32d50e927f796f0beab7f9a85e82907e86b32c74d2eb0",
+      "outreach": "cd6529a16b4de96a76dd84246624c35298272adde27372dd3accd62faa0b10d4",
+      "profiles": "a6f37db5399f49270fe24a0870634a0af92d569fc8a7f6cd380920ea82a88d4e",
+      "state": "085142f03dce31b75f5529599aee63f9309fafee24ce4d501ca08fe2755cdb1b",
+      "suppressions": "c2f61cecd9f0e87f4e8df633b7110fc2718966a220d1839ee2333e9223bb4dbd",
+      "usage": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    }
+  },
+  "outreach_sent": 0,
+  "production_mutations": 0,
+  "credentials": {
+    "backend/.env": "421f5c24727d53f37970d7b74003d4013a13140b8ec9692f3c70d245cd23143c"
+  },
+  "launch_agent_definitions": {
+    "/Users/vihaantirumala/Library/LaunchAgents/local.vihaan.fieldwork.api.plist": "0236a2dc018840be3e2bbcb0121f626a7d50055c4f614ae63b9c30d6f93506a4",
+    "/Users/vihaantirumala/Library/LaunchAgents/local.vihaan.fieldwork.web.plist": "4fd033ca34868e99393b560f9945889bf4ce136b2edf0e3414035d8e95af777f"
+  },
+  "source": {
+    "backend/app/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "backend/app/campaign.py": "998df92cf32e3b4851fb859d49c5404e6762083a8f94a0c23aa16d3bbdf0c477",
+    "backend/app/config.py": "1167756ea56fd4b6540354dfb613c9d1f553c98828a71e50f4d4240933ab7c71",
+    "backend/app/core.py": "65688211b459169796c0b195c67496ddacbf88ffe269a179ef3dcb2961e104e2",
+    "backend/app/db.py": "b1835d4dc02c29c5b0c059226bfb92ff58aad79ad1bdb65d1f61a01332b51998",
+    "backend/app/desk.py": "0c017036f2fc14b79ac47b1e4940e1b1ce18ae15f205d57ec4eb08c3874f9874",
+    "backend/app/draft_mail.py": "9a5f05944d21e3c276f240fcbd4c9993ba6322ab4dee77056921bba5ca19f2f1",
+    "backend/app/mail.py": "a7b39b7344472b26ddffdb7d9c4d68b96b263300348a20cd4f4e593921bb3702",
+    "backend/app/main.py": "79dba18e580e41b95081f781b9d5027e8d841305b6de9fca10ac17baa4774d21",
+    "backend/app/migration_v1.py": "0058b53a22964107f331514055fb43e9797cf97a1b2911640818e2872eec6487",
+    "backend/app/models.py": "3e394d4dcb6aa91d518e189c7c8ff51e838bec96add83e646336a9283c11e9b5",
+    "backend/app/pipeline.py": "b3c65cfacd525ef81b5719a5f9b2a3cc1b4777d4d3e0919105953c2bee9be648",
+    "backend/app/providers.py": "5f0e8ff24c7e487a305db47a5bb36c5b47bb996205008daa7f5c83afca55ae6e",
+    "backend/app/responses.py": "67fbf434b3e84450cc5edbe26c7170f120d4a6b90b8f6abc991ed0dfdefc652d",
+    "backend/app/scheduled_send.py": "1f08958fecd71d391a68ae7f3036d69e219578fcb9a28b0d66426ed85c6779e9",
+    "backend/app/schemas.py": "3f2832fcb0721f18164ecb74adc25582eb9c32a586612f3d2cddb36c7f407d16",
+    "backend/app/seed.py": "5cbe7b50dd5b13ed6bc0162694075436189539d131e7916b3531db160ca0a464",
+    "backend/app/self_test.py": "c9d265d6a0dcc9f462b75ded38c980a7d9c484886f7ce444b22f990dfc2dbaee",
+    "backend/app/worker.py": "5be327ea6dfbf4a4d1c18003dc0f00eebfd9737a391a179fd348cd0a57cffb5e",
+    "frontend/app/Campaign.tsx": "8a374363752c0d8bc4ebc66b1bd2d4fd7c68cf25cbe5d6d1c7bf258f1f3d88e9",
+    "frontend/app/ResponseInbox.tsx": "3c064e8b8c7da461ae0ae0ad264847b4e6956d4deeed9eb861ce20282ab4d772",
+    "frontend/app/ReviewDesk.tsx": "5dc63ab810d300a8b61dab1390d73b5dfe3606fa16f3f8dffd59bcdbfdd8cff7",
+    "frontend/app/api/[...path]/route.ts": "7098766627bfa8a863752e4026ceda0b32d0f0a7ba13d1760affab580faa9704",
+    "frontend/app/globals.css": "d7ad68d6e8c2cf7a71ae243794ea2959cc3cd92071f38b2087783c53d872d49e",
+    "frontend/app/layout.tsx": "3594522f70bd091abb68c91135dbe1100a95d29663de93cbd61d679ed5b9c99e",
+    "frontend/app/page.tsx": "cc1d75c315845f626c1b5bc744aa93634f473ad6c1664beb4a98f9e0877d0f6b"
+  },
+  "counts": {
+    "companies": 46,
+    "outreach": 46,
+    "events": 6
+  },
+  "policy_hash": "393eda74e865e30c897fb78974ef00c09cd066b72864152085d705b68566e901",
+  "recurring_enabled": false,
+  "schema_revision": "001",
+  "schema_hash": "b9a2d7c317d0790c7332f56c6880722ab354756bc24ac4dad8deb9cc8439928e",
+  "extended_counts": {
+    "contacts": 46,
+    "suppressions": 2,
+    "jobs": 1
+  }
+}

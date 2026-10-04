@@ -775,7 +775,7 @@ def test_sqlite005_additive_migration_and_backup_restore(tmp_path):
         c.commit()
         command.upgrade(cfg, "head")
         c.commit()
-        assert c.scalar(text("select version_num from alembic_version")) == "005"
+        assert c.scalar(text("select version_num from alembic_version")) == "006"
         assert compare_metadata(MigrationContext.configure(c), Base.metadata) == []
         assert c.execute(select(State.value)).scalar_one() == {"enabled": False}
     from scripts.backup_database import backup

@@ -70,7 +70,7 @@ def test_api_wrong_schema_startup_fails_without_starting_maintenance(db, monkeyp
         async with main.lifespan(main.app):
             raise AssertionError("Unsafe API started")
 
-    with pytest.raises(RuntimeError, match="schema005"):
+    with pytest.raises(RuntimeError, match="schema006"):
         asyncio.run(start())
 
 
@@ -191,7 +191,7 @@ def test_operational_counts_use_shared_attempt_ledger(db):
     from app.services.runtime import status
     from app.models import Event
     db.execute(text('CREATE TABLE alembic_version (version_num TEXT PRIMARY KEY)'))
-    db.execute(text("INSERT INTO alembic_version VALUES ('005')"))
+    db.execute(text("INSERT INTO alembic_version VALUES ('006')"))
     db.commit()
     first,_=ledger.claim(db,'test-quota','self_test','fake',lambda:{},entity_id='self')
     ledger.finish(db,first,'unknown')

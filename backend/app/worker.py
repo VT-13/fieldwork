@@ -356,10 +356,10 @@ async def main():
 
         if (
             not inspect(db.bind).has_table("alembic_version")
-            or db.scalar(text("SELECT version_num FROM alembic_version")) != "005"
+            or db.scalar(text("SELECT version_num FROM alembic_version")) != "006"
         ):
             raise SystemExit(
-                "Worker requires schema005; run migration on the intended staged database first"
+                "Worker requires schema006; run migration on the intended staged database first"
             )
     stop = asyncio.Event()
     loop = asyncio.get_running_loop()
@@ -413,7 +413,7 @@ if __name__ == "__main__":
             )
             raise SystemExit(
                 0
-                if value["schema_version"] == "005"
+                if value["schema_version"] == "006"
                 and value["worker"] in ("available", "processing")
                 else 1
             )

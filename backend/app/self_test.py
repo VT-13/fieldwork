@@ -13,7 +13,7 @@ async def send(db,id,box=None):
     fingerprint=packet['draft_hash'];key='self-test:'+id+':'+fingerprint
     state_key='self-test:'+hashlib.sha256(key.encode()).hexdigest()
     # Preserve historical exact-key tests; new state IDs fit PostgreSQL's
-    # existing varchar(100) bound without changing operation idempotency.
+    # legacy varchar(100) bound without changing operation idempotency.
     old=db.get(State,state_key) or db.get(State,key)
     if old:
         if old.value['status']=='sent':return old.value

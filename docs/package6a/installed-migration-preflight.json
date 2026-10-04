@@ -1,0 +1,29 @@
+{
+  "source_revision": "001",
+  "target_revision": "006",
+  "counts": {
+    "cache": 0,
+    "companies": 46,
+    "jobs": 1,
+    "profiles": 1,
+    "state": 13,
+    "suppressions": 2,
+    "contacts": 46,
+    "events": 6,
+    "evidence": 83,
+    "usage": 0,
+    "outreach": 46
+  },
+  "source_sha256": "3563daef0c7219fe026473cb4561208e210f96609df8400999ef538ac01ed925",
+  "state_keys_requiring_widening": 1,
+  "state_key_limit": 255,
+  "safely_migratable": true,
+  "applied": false,
+  "result": "PASSED",
+  "installed_revision": "001",
+  "source_mutated": false,
+  "all_table_row_digests_unchanged": true,
+  "private_keys_or_values_exported": false,
+  "source_credentials_services_pause_unchanged": true,
+  "production_migrated": false
+}

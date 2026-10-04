@@ -131,7 +131,7 @@ class Cache(Base):
 
 class State(Base):
     __tablename__ = "state"
-    key: Mapped[str] = mapped_column(String(100), primary_key=True)
+    key: Mapped[str] = mapped_column(String(255), primary_key=True)
     value: Mapped[dict] = mapped_column(JSON, default=dict)
 
 Index("outreach_due", Outreach.status, Outreach.due_at)
