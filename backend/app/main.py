@@ -236,6 +236,7 @@ def review_outreach(id:str,decision:Literal["reject","draft"],db:DB):
     if row.status not in {"draft","approved","rejected"} or row.attempts:
         raise Blocked("Only unsent messages without an attempt may return to review")
     transition(db,row,"rejected" if decision=="reject" else "draft",reason="operator_"+decision)
+    row.review={**row.review,'operator_review_hold':True,'autopilot_approval':None}
     db.commit()
     return asdict(row)
 
@@ -525,3 +526,20 @@ def reconcile_outreach(id:str,db:DB):
     row=get(db,Outreach,id)
     if row.status not in ('sent','unknown','sending'):raise Blocked('Only existing transmission attempts can be reconciled')
     return asdict(enqueue(db,'reconcile',{'id':id},'reconcile:'+id+':'+str(int(now().timestamp())//settings().mailbox_poll_seconds)))
+
+from .services.autopilot import AutopilotInput
+
+@app.get('/autopilot', dependencies=[Auth], response_model=ui.AutopilotView)
+def autopilot_status(db:DB):
+    from .services.autopilot import view
+    return view(db)
+
+@app.post('/autopilot/precheck', dependencies=[Auth], response_model=ui.AutopilotPrecheck)
+def autopilot_precheck(body:AutopilotInput, db:DB):
+    from .services.autopilot import precheck
+    return precheck(db,body)
+
+@app.put('/autopilot', dependencies=[Auth], response_model=ui.AutopilotView)
+def autopilot_configure(body:AutopilotInput, db:DB):
+    from .services.autopilot import configure
+    return configure(db,body)

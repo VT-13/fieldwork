@@ -1,0 +1,44 @@
+{
+  "contract-check": {
+    "command": [
+      "/private/tmp/fieldwork-module6/venv/bin/python",
+      "scripts/frontend_contracts.py",
+      "--check"
+    ],
+    "exit_code": 0,
+    "seconds": 0.2
+  },
+  "fixture-check": {
+    "command": [
+      "/private/tmp/fieldwork-module6/venv/bin/python",
+      "scripts/module3_fixture.py",
+      "--check"
+    ],
+    "exit_code": 0,
+    "seconds": 0.14
+  },
+  "backend-tests": {
+    "command": [
+      "/private/tmp/fieldwork-module6/venv/bin/python",
+      "-m",
+      "pytest",
+      "-q",
+      "-ra"
+    ],
+    "exit_code": 0,
+    "seconds": 23.43
+  },
+  "backend-lint": {
+    "command": [
+      "/private/tmp/fieldwork-module6/venv/bin/python",
+      "-m",
+      "ruff",
+      "check",
+      "app",
+      "scripts",
+      "tests"
+    ],
+    "exit_code": 0,
+    "seconds": 0.14
+  }
+}

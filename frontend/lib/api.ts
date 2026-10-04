@@ -2,6 +2,8 @@
 import { useCallback, useEffect, useSyncExternalStore } from "react";
 import schemas from "./contracts.schema.json";
 import type {
+  AutopilotView,
+  AutopilotPrecheck,
   RuntimeView,
   CandidateView,
   JobView,
@@ -22,6 +24,8 @@ import type {
 } from "./contracts";
 
 type Views = {
+  AutopilotView: AutopilotView;
+  AutopilotPrecheck: AutopilotPrecheck;
   RuntimeView: RuntimeView;
   CandidateView: CandidateView;
   JobView: JobView;

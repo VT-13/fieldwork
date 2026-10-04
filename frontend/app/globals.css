@@ -2271,3 +2271,50 @@ dialog::backdrop {
     flex-direction: column;
   }
 }
+
+.autopilot-panel {
+  margin-block: 24px;
+}
+.autopilot-panel p {
+  margin-block: 12px;
+}
+.autopilot-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+  gap: 12px;
+  margin-block: 20px;
+}
+.autopilot-stats dt {
+  color: var(--muted);
+  font-size: 12px;
+}
+.autopilot-stats dd {
+  margin: 4px 0;
+  font-weight: 600;
+}
+.autopilot-controls {
+  display: grid;
+  gap: 12px;
+  margin-block: 20px;
+  max-width: 600px;
+}
+.autopilot-controls label {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.autopilot-controls input[type="number"] {
+  width: 90px;
+  min-height: 40px;
+}
+.autopilot-controls input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+}
+@media (max-width: 600px) {
+  .autopilot-panel .section-heading {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}

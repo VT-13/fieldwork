@@ -7,7 +7,7 @@ from ..config import settings
 from ..core import Blocked,aware,profile_fingerprint,STOP_STAGES
 from . import ledger
 STOP=STOP_STAGES
-VERSION='personal-v2'
+VERSION='personal-v3'
 
 def send_usage(db,start,initial_only=False):
  # Legacy rows not yet represented in the ledger count too. Never double count.
@@ -31,6 +31,9 @@ def company(db,row,at,mode="scheduled"):
  if row and row.status=="cancelled":raise Blocked("Conversation stopped")
  if mode=="worker" and (settings().dry_run or settings().manual_mode):raise Blocked("DRY_RUN/manual mode: no email sent")
  state=db.get(State,'outreach_policy');p=state.value if state else {}
+ if row and row.review.get('autopilot_approval'):
+  from .autopilot import approval_current
+  approval_current(db,row,at)
  batch=db.get(State,'manual_batch');b=batch.value if batch else {}
  if row and row.id in b.get('outreach_ids',[]) and b.get('stop_requested'):raise Blocked('Manual batch stopped by user')
  manual=bool(row and row.id in b.get('outreach_ids',[]) and b.get('enabled') and at<datetime.fromisoformat(b['expires_at']) and row.sequence==0)
@@ -83,7 +86,9 @@ def company(db,row,at,mode="scheduled"):
   if not review.get('adds_new_value'):raise Blocked('Follow-up must add a concrete new contribution')
  else:
   new=send_usage(db,start,initial_only=True)
-  if new>=(25 if manual else min(10,p.get('new_companies_per_weekday',10))):raise Blocked('Daily new-company cap reached')
+  target=p.get('new_companies_per_weekday',10)
+  if type(target) is not int or not 1<=target<=25:raise Blocked('Invalid configured weekday introduction target')
+  if new>=(25 if manual else target):raise Blocked('Daily new-company cap reached')
  if aware(row.due_at)>at:raise Blocked('Not due')
  return c,ct,profile,original
 

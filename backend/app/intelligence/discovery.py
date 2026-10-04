@@ -108,7 +108,7 @@ def ingest_candidates(db, rows, context):
     }
 
 
-def accept(db, candidate):
+def accept(db, candidate, *, source="Candidate accepted by operator", commit=True):
     if candidate.status == "dismissed":
         raise Blocked("Dismissed candidate must be deliberately restored first")
     from ..services.ledger import lock
@@ -123,14 +123,15 @@ def accept(db, candidate):
             website=candidate.website,
             industry=candidate.industry,
             distance_miles=candidate.distance_miles,
-            source="Candidate accepted by operator",
+            source=source,
             stage="discovered",
         )
         db.add(company)
         db.flush()
     candidate.company_id = company.id
     candidate.status = "accepted"
-    db.commit()
+    if commit:
+        db.commit()
     return company
 
 

@@ -1,4 +1,22 @@
 {
+  "autopilot": {
+    "autopilot_enabled": false,
+    "new_companies_per_weekday": 10,
+    "auto_approve_initials": false,
+    "auto_approve_followups": false,
+    "policy_version": "",
+    "revision": "",
+    "recurring_paused": true,
+    "daily_attempts": 0,
+    "daily_limit": 25,
+    "new_introductions_today": 0,
+    "approved_queue": 0,
+    "needs_review": 0,
+    "replies": 0,
+    "delivery_holds": 0,
+    "provider_budget_status": "blocked",
+    "followups_supported": false
+  },
   "companies": [
     {
       "id": "qa-company-0",

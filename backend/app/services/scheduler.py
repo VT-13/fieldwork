@@ -2,7 +2,7 @@
 
 from datetime import timedelta, datetime
 from zoneinfo import ZoneInfo
-from sqlalchemy import select, or_
+from sqlalchemy import select, or_, func
 from sqlalchemy.orm import aliased
 from ..models import (
     State,
@@ -15,7 +15,7 @@ from ..models import (
     now,
 )
 from ..config import settings
-from ..core import aware, STOP_STAGES
+from ..core import aware, STOP_STAGES, Blocked
 from . import ledger, jobs
 
 
@@ -92,28 +92,32 @@ def tick(db, at=None):
     from ..intelligence.capabilities import capabilities
 
     caps = {r["id"]: r for r in capabilities(db)["providers"]}
-    if not cfg.manual_mode and not p.get("stop_requested"):
-        spec = automation.value.get("discovery")
-        if spec and caps.get(spec.get("provider", "maps"), {}).get("available"):
-            day = at.astimezone(ZoneInfo(cfg.timezone)).date().isoformat()
-            jobs.enqueue(
-                db, "discover", spec, "scheduled-discovery:" + day, commit=False
-            )
-        if caps["research"]["available"] and caps["generate"]["available"]:
-            company = db.scalar(
-                select(Company)
-                .where(Company.stage == "discovered", Company.demo == False)
-                .order_by(Company.score.desc())
-                .limit(1)
-            )
-            if company:
+    from . import autopilot
+    if autopilot.configuration(db)['autopilot_enabled']:
+        autopilot.plan(db, at, caps)
+    else:
+        if not cfg.manual_mode and not p.get("stop_requested"):
+            spec = automation.value.get("discovery")
+            if spec and caps.get(spec.get("provider", "maps"), {}).get("available"):
+                day = at.astimezone(ZoneInfo(cfg.timezone)).date().isoformat()
                 jobs.enqueue(
-                    db,
-                    "pipeline",
-                    {"id": company.id},
-                    "pipeline:" + company.id,
-                    commit=False,
+                    db, "discover", spec, "scheduled-discovery:" + day, commit=False
                 )
+            if caps["research"]["available"] and caps["generate"]["available"]:
+                company = db.scalar(
+                    select(Company)
+                    .where(Company.stage == "discovered", Company.demo == False)
+                    .order_by(Company.score.desc())
+                    .limit(1)
+                )
+                if company:
+                    jobs.enqueue(
+                        db,
+                        "pipeline",
+                        {"id": company.id},
+                        "pipeline:" + company.id,
+                        commit=False,
+                    )
     if p.get("enabled") and not p.get("stop_requested"):
         # One final follow-up intent per original; due time never slides with polling.
         follow = aliased(Outreach)
@@ -166,6 +170,13 @@ def tick(db, at=None):
             and local.weekday() < 5
             and 9 <= local.hour < 17
         ):
+            pending_send = db.scalar(select(Job.id).where(Job.kind == 'send', Job.status.in_(['queued', 'running'])).limit(1))
+            from .policy import send_usage, snapshot
+            start = local.replace(hour=0, minute=0, second=0, microsecond=0)
+            last = db.scalar(select(func.max(Outreach.sent_at)))
+            can_send = (not pending_send and not ledger.unresolved(db)
+                        and send_usage(db, start) < snapshot(db, 'scheduled')['daily_cap']
+                        and (not last or (at - aware(last)).total_seconds() >= max(60, cfg.send_interval_seconds, p.get('send_interval_seconds', 60))))
             for row in db.scalars(
                 select(Outreach)
                 .where(
@@ -177,8 +188,17 @@ def tick(db, at=None):
                     .exists(),
                 )
                 .order_by(Outreach.sequence.desc(), Outreach.due_at)
-                .limit(5)
+                .limit(25)
             ):
+                if not can_send:
+                    break
+                try:
+                    if row.review.get('autopilot_approval'):
+                        autopilot.approval_current(db, row, at)
+                    if not row.sequence and autopilot.remaining(db, at) <= 0:
+                        continue
+                except Blocked:
+                    continue
                 jobs.enqueue(
                     db,
                     "send",
@@ -187,4 +207,5 @@ def tick(db, at=None):
                     max(aware(row.due_at), at),
                     commit=False,
                 )
+                break
     db.commit()

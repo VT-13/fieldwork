@@ -2173,6 +2173,136 @@
       ],
       "title": "RuntimeView",
       "type": "object"
+    },
+    "AutopilotView": {
+      "properties": {
+        "autopilot_enabled": {
+          "default": false,
+          "title": "Autopilot Enabled",
+          "type": "boolean"
+        },
+        "new_companies_per_weekday": {
+          "default": 10,
+          "title": "New Companies Per Weekday",
+          "type": "integer"
+        },
+        "auto_approve_initials": {
+          "default": false,
+          "title": "Auto Approve Initials",
+          "type": "boolean"
+        },
+        "auto_approve_followups": {
+          "default": false,
+          "title": "Auto Approve Followups",
+          "type": "boolean"
+        },
+        "policy_version": {
+          "default": "",
+          "title": "Policy Version",
+          "type": "string"
+        },
+        "revision": {
+          "default": "",
+          "title": "Revision",
+          "type": "string"
+        },
+        "recurring_paused": {
+          "default": true,
+          "title": "Recurring Paused",
+          "type": "boolean"
+        },
+        "daily_attempts": {
+          "default": 0,
+          "title": "Daily Attempts",
+          "type": "integer"
+        },
+        "daily_limit": {
+          "default": 25,
+          "title": "Daily Limit",
+          "type": "integer"
+        },
+        "new_introductions_today": {
+          "default": 0,
+          "title": "New Introductions Today",
+          "type": "integer"
+        },
+        "approved_queue": {
+          "default": 0,
+          "title": "Approved Queue",
+          "type": "integer"
+        },
+        "needs_review": {
+          "default": 0,
+          "title": "Needs Review",
+          "type": "integer"
+        },
+        "replies": {
+          "default": 0,
+          "title": "Replies",
+          "type": "integer"
+        },
+        "delivery_holds": {
+          "default": 0,
+          "title": "Delivery Holds",
+          "type": "integer"
+        },
+        "provider_budget_status": {
+          "default": "blocked",
+          "title": "Provider Budget Status",
+          "type": "string"
+        },
+        "followups_supported": {
+          "default": false,
+          "title": "Followups Supported",
+          "type": "boolean"
+        }
+      },
+      "title": "AutopilotView",
+      "type": "object",
+      "required": [
+        "autopilot_enabled",
+        "new_companies_per_weekday",
+        "auto_approve_initials",
+        "auto_approve_followups",
+        "policy_version",
+        "revision",
+        "recurring_paused",
+        "daily_attempts",
+        "daily_limit",
+        "new_introductions_today",
+        "approved_queue",
+        "needs_review",
+        "replies",
+        "delivery_holds",
+        "provider_budget_status",
+        "followups_supported"
+      ]
+    },
+    "AutopilotPrecheck": {
+      "properties": {
+        "ready": {
+          "title": "Ready",
+          "type": "boolean"
+        },
+        "failures": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Failures",
+          "type": "array"
+        },
+        "recurring_paused": {
+          "title": "Recurring Paused",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "ready",
+        "failures",
+        "recurring_paused"
+      ],
+      "title": "AutopilotPrecheck",
+      "type": "object"
     }
   }
 }

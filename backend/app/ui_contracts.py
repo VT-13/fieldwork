@@ -323,6 +323,29 @@ class SelfTestView(BaseModel):
     status: str
     to: str
 
+class AutopilotView(BaseModel):
+    autopilot_enabled: bool = False
+    new_companies_per_weekday: int = 10
+    auto_approve_initials: bool = False
+    auto_approve_followups: bool = False
+    policy_version: str = ''
+    revision: str = ''
+    recurring_paused: bool = True
+    daily_attempts: int = 0
+    daily_limit: int = 25
+    new_introductions_today: int = 0
+    approved_queue: int = 0
+    needs_review: int = 0
+    replies: int = 0
+    delivery_holds: int = 0
+    provider_budget_status: str = 'blocked'
+    followups_supported: bool = False
+
+class AutopilotPrecheck(BaseModel):
+    ready: bool
+    failures: list[str]
+    recurring_paused: bool
+
 CONTRACTS = [ProfileInput, CompanyView, CompanyDetail, OutreachView, CampaignView,
              InboxView, MetricsView, SettingsView, ConnectionView, OutreachEdit, PacketView, EmlView, SelfTestView,
-             CandidateView,JobView,CapabilitiesView,GenerationView,RuntimeView]
+             CandidateView,JobView,CapabilitiesView,GenerationView,RuntimeView,AutopilotView,AutopilotPrecheck]

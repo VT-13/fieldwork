@@ -2,6 +2,7 @@
 
 import asyncio
 import logging
+from datetime import timedelta
 from contextlib import contextmanager
 from sqlalchemy import select, text
 from .db import Session, engine
@@ -9,7 +10,7 @@ from .models import Company, Contact, Outreach, State, now
 from .domain.states import transition
 from .services import ledger, policy
 from .config import settings
-from .core import Blocked, STOP_STAGES
+from .core import Blocked, STOP_STAGES, aware
 from .providers import verify
 from .services.intelligence import ConfiguredProspects
 
@@ -53,6 +54,9 @@ def leadership():
 async def _execute(db, job):
     policy.background(db, job.kind)
     p = job.payload
+    if p.get('autopilot'):
+        from .services.autopilot import require_intent
+        require_intent(db, p)
     if settings().manual_mode and job.kind in {
         "discover",
         "research",
@@ -128,11 +132,18 @@ async def _execute(db, job):
     if job.kind in {"research", "pipeline"}:
         research_result = await research(db, company)
     if job.kind in {"generate", "pipeline"}:
+        from .intelligence.discovery import best_contact
+        contact = best_contact(db, company)
+        if p.get('autopilot') and contact and settings().hunter_api_key and (contact.validation != 'valid' or not contact.validated_at or aware(contact.validated_at) < now() - timedelta(days=7)):
+            await verify(db, contact)
         row = await generate(db, company, p.get("sequence", 0), job_id=job.id)
         contact = db.get(Contact, row.contact_id)
         if settings().hunter_api_key and contact.validation != "valid":
             await verify(db, contact)
-        return {"draft_id": row.id, "status": row.status}
+        from .services.autopilot import approve_initial
+        approved = approve_initial(db, row) if p.get('autopilot') and row.sequence == 0 and row.status == 'draft' else False
+        return {"draft_id": row.id, "status": row.status, 'autopilot_approved': approved,
+                'requires_operator_review': row.status != 'approved'}
     return {
         "stage": company.stage,
         **(research_result if job.kind == "research" else {}),
@@ -161,6 +172,9 @@ async def execute(db, job):
             "followup_prepare",
         }:
             raise Blocked("Manual mode: paid calls and live sends are disabled")
+        if job.payload.get('autopilot'):
+            from .services.autopilot import require_intent
+            require_intent(db, job.payload)
         return policy.background(db, job.kind)
 
     attempt, replay = ledger.claim(

@@ -1,4 +1,16 @@
-# Personal release checklist — READY for separate cutover
+# Current candidate — Package6G
+
+Package6G verification and activation boundaries: docs/package6g/README.md and verification.json. Schema stays006. Its full backend and frontend/browser gates pass using fake providers; no production action or real outreach is performed. Historical completed gates below keep their original source/runtime scope.
+
+- [x] Explicit database Autopilot OFF default, confirmed authenticated activation,1–25 weekday introduction target and shared25 total-attempt cap.
+- [x] Strict current generation/contact/profile/evidence/quality gate, domain audit, edit/configuration invalidation, bounded pipeline and canonical policy/send/reply boundary.
+- [x] Complete backend/PG17 migration/worker/scheduler/delivery/reply/security and frontend/browser/accessibility regressions; package6g records exact commands/results.
+- [ ] Focused release re-verification of the new Package6G candidate on declared Linux/Node22 and current hosted staging before a future6F resume. Historical6B–6E evidence does not certify the new behavior at those surfaces.
+- [ ] Package6F remains PAUSED; owner resolves Railway resource limit and separately requests resume. No recurring activation is implied.
+
+## Historical Package6E checklist
+
+# Personal release checklist — Package6E READY for separate cutover
 
 Checked entries have executed evidence. Historical entries retain their original scope. Production activation below remains a separate authorization, not an unfinished verification gate.
 

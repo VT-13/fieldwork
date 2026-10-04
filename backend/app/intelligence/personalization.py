@@ -146,7 +146,7 @@ def render(plan, profile, company, contact, ef, sf, tasks):
     facts = "; ".join(sf[id].text.rstrip(".") for id in plan.student_fact_ids)
     # Profile name/grade/location are verified identity fields, never inferred from a resume dump.
     middle = f"I’m {profile.data['name']}, a {profile.data.get('grade', 'high school student')} in {profile.data.get('location', 'the local area')}. My relevant experience: {facts}."
-    ending = "Would you be open to a short conversation about whether a project like this could be useful? If this isn’t the right place to ask, feel free to let me know."
+    ending = "Would you be open to a short conversation about whether a project like this could be useful? If this isn’t a fit, just let me know and I won’t follow up."
     body = "\n\n".join(
         [
             greeting,

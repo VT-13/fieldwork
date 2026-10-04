@@ -1,4 +1,10 @@
-# Current Fieldwork personal-first candidate — READY
+# Current candidate — Package6G Autopilot
+
+Source is the Package6G commit on VT-13/fieldwork main (exact identity in Git and the package completion report). Schema006, personal-v3 policy. Package6G affected-suite evidence is docs/package6g/verification.json. Autopilot defaults OFF; staging recurring outreach and Package6F remain PAUSED. This is READY FOR FOCUSED RE-VERIFICATION, not a production cutover certification. Repeat the affected Linux/Node22/hosted/policy checks before replacing the historical verified release; no live Gmail retransmission is required solely for this unchanged transport.
+
+## Historical Package6E release
+
+# Package6E personal-first candidate — READY
 
 Application source: b02457c on canonical VT-13/fieldwork main, pushed and deployed only to existing Railway staging API/worker. Final evidence-only commit follows it; exact checkout/remote identity is in Git. Canonical/staging head006. Current verification: docs/package6e/verification.json. No P0/P1 remains; READY is for a separate production cutover package. Installed production/schema001 remains unchanged and communication paused. Production rollout, migration, OAuth and worker/recurring activation are not authorized here.
 

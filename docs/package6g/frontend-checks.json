@@ -1,0 +1,47 @@
+{
+  "install": {
+    "command": [
+      "npm",
+      "ci",
+      "--ignore-scripts"
+    ],
+    "exit_code": 0,
+    "seconds": 4.55
+  },
+  "lint": {
+    "command": [
+      "npm",
+      "run",
+      "lint"
+    ],
+    "exit_code": 0,
+    "seconds": 3.67
+  },
+  "typecheck": {
+    "command": [
+      "npm",
+      "run",
+      "typecheck"
+    ],
+    "exit_code": 0,
+    "seconds": 4.24
+  },
+  "format": {
+    "command": [
+      "npm",
+      "run",
+      "format:check"
+    ],
+    "exit_code": 0,
+    "seconds": 0.9
+  },
+  "build": {
+    "command": [
+      "npm",
+      "run",
+      "build"
+    ],
+    "exit_code": 0,
+    "seconds": 7.21
+  }
+}

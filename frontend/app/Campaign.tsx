@@ -8,6 +8,7 @@ import { request, date } from "../lib/api";
 import { Empty, ErrorState, Header, Loading, Status } from "../components/ui";
 import Prospects from "../components/Prospects";
 import ResponseInbox from "./ResponseInbox";
+import Autopilot from "./Autopilot";
 type Resource<T> = {
   data?: T;
   error?: string;
@@ -151,6 +152,7 @@ export default function Campaign({
           </>
         )
       )}
+      <Autopilot />
       <div className="campaign-stage-ledger" aria-label="Workspace pipeline">
         {[
           ["Prospects", companies.data?.length || 0],

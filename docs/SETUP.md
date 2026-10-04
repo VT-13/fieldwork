@@ -28,3 +28,7 @@ Read module4/README.md for supported provider capabilities, the no-provider impo
 ## Durable communication runtime
 
 Read module5/README.md and DEPLOYMENT.md before any later authorized installation. From a separately staged backend, `python -m app.worker` runs the scheduler and job executor; `python -m app.worker --health` reports database/schema/worker health without provider calls. `RESPONSE_POLL_ENABLED=true` enables bounded sync intents in that worker even while recurring sends are paused. The API has no reply polling loop. Use the documented worker environment bounds in `.env.example`; no cron/AI prompt is required. Follow schema005 backup/migration/paused validation ordering before worker startup. None of this activates the installed worker.
+
+## Autopilot (Package6G)
+
+Autopilot is database-backed and defaults OFF. AUTO_APPROVE=false remains a safe legacy setting; setting it true does not activate this mode. Configure profile/resume verification, matching Gmail, discovery, permitted provider credentials/budgets and bounded response polling only under separate operational authorization. Campaign's activation precheck explains missing prerequisites; confirm deliberately. Global recurring pause is independent and authoritative. Follow-ups require manual review. Development/fake-provider checks must use disposable data and never the installed personal database. See package6g/README.md. Current staging/production remain paused.

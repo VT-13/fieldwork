@@ -4,7 +4,7 @@ PRODUCTION CUTOVER PAUSED: Package 6E passed. Package 6F is intentionally paused
 
 ## Release and current environments
 
-Canonical repository: VT-13/fieldwork, branch main. Package6E PASS / personal-first single-operator release READY. The exact verified application release is **b68a84fb7d5426a30a54aab650a0715493c9533e** (`b68a84f`). Later pause/checkpoint documentation commits do not change or invalidate that application source; production must initially deploy the verified commit, not silently use a newer main HEAD.
+Canonical repository: VT-13/fieldwork, branch main. Package6E PASS / personal-first single-operator release READY. The exact verified application release is **b68a84fb7d5426a30a54aab650a0715493c9533e** (`b68a84f`). Later pause/checkpoint documentation commits do not change that historical application source. Package6G subsequently changes application behavior: its new main candidate must pass focused release re-verification before it can replace b68a84f for a future cutover. Do not silently deploy a newer HEAD or resume6F.
 
 Package6F encountered only Railway's concrete free-plan resource provisioning limit before cutover. It is now intentionally PAUSED, not an instruction to bypass the limit. No plan upgrade, alternate architecture, service consolidation or staging repurposing is authorized. The original architecture remains public frontend, private API/backend, private deterministic worker/integrated scheduler and private persistent PostgreSQL17.
 
@@ -37,7 +37,7 @@ Only when the operator explicitly resumes:
 
 1. Upgrade the existing Railway workspace to a plan capable of the required separate services and persistent storage; owner approves billing.
 2. Reopen the existing fieldwork-production project/environment and reuse the recorded partial Postgres service. Do not recreate them or alter staging.
-3. Verify canonical repository, exact b68a84f commit, remote containment and source manifest. Later documentation-only HEADs do not replace the verified deployment revision. Application changes require affected release re-verification.
+3. Verify canonical repository, candidate identity, remote containment and source manifest. Package6G is a new application candidate; complete its focused release re-verification first. b68a84f remains the historical6E release, not certification of Autopilot. Resume only the subsequently verified candidate on a separate explicit request.
 4. Verify whether original personal records/policy/receipts changed since the saved backup. Keep all communication paused; freeze writers as the runbook requires. Create and verify a fresh canonical backup if necessary; retain the previous backup.
 5. Resume at **remaining production service/storage provisioning**, then the canonical restored-backup rehearsal and lossless transfer. Follow the existing migration/runbook ordering: transfer requires an empty explicit PG target and applies001→006 transactionally. Do not first populate the target with a separate schema initialization that would cause empty-target refusal.
 6. Complete the remaining original Package6F gates. Do not restart the whole release process unless actual source changes require re-verification. No company sending is a health check; recurring activation stays separately authorized.

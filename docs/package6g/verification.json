@@ -1,0 +1,264 @@
+{
+  "package": "6G",
+  "result": "PASS",
+  "time_utc": "2026-10-04T18:31:02.362299+00:00",
+  "repository": "VT-13/fieldwork",
+  "branch": "main",
+  "historical_verified_release": "b68a84fb7d5426a30a54aab650a0715493c9533e",
+  "prior_main": "3c40152f0c8882e6c869413945ca53895c4c67ca",
+  "candidate_identity": "Package6G commit recorded by Git; completion report supplies exact HEAD",
+  "schema_before": "006",
+  "schema_after": "006",
+  "schema_change": false,
+  "autopilot": {
+    "implemented": true,
+    "default": "OFF",
+    "confirmed_authenticated_activation_required": true,
+    "initial_auto_approval_requires_strict_current_gate": true,
+    "configured_new_introductions_min": 1,
+    "configured_new_introductions_max": 25,
+    "shared_attempt_cap": 25,
+    "global_pause_authoritative": true,
+    "followup_auto_approval_supported": false,
+    "followup_auto_approval_default": false,
+    "followup_max": 1,
+    "followup_minimum_hours": 168,
+    "pipeline_active_limit": 3,
+    "inventory_limit": "min(50, 2 * remaining allowance)",
+    "terminal_failures_auto_retry": false
+  },
+  "backend": {
+    "passed": 359,
+    "failed": 0,
+    "skipped": 0,
+    "new_autopilot_cases": 68,
+    "ruff": "PASS",
+    "contracts": "PASS",
+    "fixture": "PASS",
+    "checks": {
+      "contract-check": {
+        "command": [
+          "/private/tmp/fieldwork-module6/venv/bin/python",
+          "scripts/frontend_contracts.py",
+          "--check"
+        ],
+        "exit_code": 0,
+        "seconds": 0.2
+      },
+      "fixture-check": {
+        "command": [
+          "/private/tmp/fieldwork-module6/venv/bin/python",
+          "scripts/module3_fixture.py",
+          "--check"
+        ],
+        "exit_code": 0,
+        "seconds": 0.14
+      },
+      "backend-tests": {
+        "command": [
+          "/private/tmp/fieldwork-module6/venv/bin/python",
+          "-m",
+          "pytest",
+          "-q",
+          "-ra"
+        ],
+        "exit_code": 0,
+        "seconds": 23.43
+      },
+      "backend-lint": {
+        "command": [
+          "/private/tmp/fieldwork-module6/venv/bin/python",
+          "-m",
+          "ruff",
+          "check",
+          "app",
+          "scripts",
+          "tests"
+        ],
+        "exit_code": 0,
+        "seconds": 0.14
+      }
+    }
+  },
+  "frontend": {
+    "checks": {
+      "install": {
+        "command": [
+          "npm",
+          "ci",
+          "--ignore-scripts"
+        ],
+        "exit_code": 0,
+        "seconds": 4.55
+      },
+      "lint": {
+        "command": [
+          "npm",
+          "run",
+          "lint"
+        ],
+        "exit_code": 0,
+        "seconds": 3.67
+      },
+      "typecheck": {
+        "command": [
+          "npm",
+          "run",
+          "typecheck"
+        ],
+        "exit_code": 0,
+        "seconds": 4.24
+      },
+      "format": {
+        "command": [
+          "npm",
+          "run",
+          "format:check"
+        ],
+        "exit_code": 0,
+        "seconds": 0.9
+      },
+      "build": {
+        "command": [
+          "npm",
+          "run",
+          "build"
+        ],
+        "exit_code": 0,
+        "seconds": 7.21
+      }
+    },
+    "native_node": "v24.18.0",
+    "production_node": "22 (fresh6G Linux/hosted reverification pending)",
+    "browsers": "browsers/browser-results.json",
+    "screenshots_inspected": [
+      "browsers/campaign-laptop.png",
+      "browsers/campaign-mobile.png"
+    ],
+    "accessibility": "axe WCAG A/AA + keyboard/focus + responsive fixtures",
+    "browser_counts": {
+      "passed": 72,
+      "failed": 0,
+      "skipped": 0,
+      "flaky": 0,
+      "duration_ms": 100540.899
+    }
+  },
+  "postgresql": "17.11 disposable test cluster",
+  "migration": {
+    "fresh": "PASS",
+    "006_to_head": "PASS (head remains006, repeat no-op)",
+    "autopilot_off_preservation": "PASS",
+    "001_to_006": "PASS",
+    "full_record_backup_restore": "PASS",
+    "evidence": "migration-rehearsal.json",
+    "personal_db_migration": false
+  },
+  "fake_provider_e2e": [
+    "discovery",
+    "candidate acceptance",
+    "research",
+    "contact verification",
+    "generation",
+    "independent review",
+    "automatic initial approval",
+    "canonical scheduled fake send",
+    "reply cancellation"
+  ],
+  "canonical_safety_regressions": [
+    "worker ownership/restart",
+    "duplicate tick/send replay",
+    "uncertain hold/reconciliation",
+    "fresh reply race",
+    "bounce stop",
+    "opt-out suppression",
+    "followup one/168h/threading/new value",
+    "shared25 cap/concurrency",
+    "business hours/spacing",
+    "queue and provider budget backpressure",
+    "post-approval source/profile/discovery changes",
+    "inactive-policy work fencing",
+    "authenticated confirmed same-origin activation"
+  ],
+  "staging_read_only": {
+    "schema": "006",
+    "worker_healthy": true,
+    "scheduler_healthy": true,
+    "recurring_outreach": "PAUSED",
+    "autopilot_enabled": false,
+    "runtime_dry_run": true,
+    "runtime_manual_mode": true,
+    "response_polling": false,
+    "company_transmissions": 0,
+    "historical_6d_self_test_operations": 1,
+    "historical_6d_reply_events": 1,
+    "gmail_connection_status": "connected",
+    "mailbox_network_calls": 0,
+    "production_accessed": false
+  },
+  "security": {
+    "production_mode": true,
+    "debug_off": true,
+    "no_test_login_bypass": true,
+    "tls_validation": true,
+    "authenticated_private_routes": true,
+    "secure_httponly_samesite_sessions": true,
+    "origin_csrf_enforced": true,
+    "private_api_worker_postgres": true,
+    "public_database_proxy": false,
+    "frontend_secrets": false,
+    "tracked_secret_scan": "PASS",
+    "paid_providers_disabled": true,
+    "services": {
+      "0d322d41-5227-4616-bb1b-aee144e002ab": {
+        "public": false,
+        "root": "/backend"
+      },
+      "0d775fc2-f340-48d2-8266-269f2904b218": {
+        "public": false,
+        "root": "/backend"
+      },
+      "abd9c9b1-ea69-416c-b9a7-71e6341c8d43": {
+        "public": true,
+        "root": "/frontend"
+      },
+      "ed16087e-faba-4839-8d5b-7ab07a85f3ac": {
+        "public": false,
+        "root": null
+      }
+    }
+  },
+  "production_preservation": {
+    "installed_source_db_policy_credentials_service_definitions_unchanged": true,
+    "personal_db_migrated": false,
+    "production_project_modified": false,
+    "production_worker_started": false,
+    "real_oauth_changed": false,
+    "real_company_outreach_sent": 0,
+    "recurring_pause_changed": false
+  },
+  "gmail_transport_changed": false,
+  "additional_live_gmail_transmission": false,
+  "historical_live_gmail_evidence": "../package6d/verification.json",
+  "staging_recurring_outreach": "PAUSED",
+  "production_cutover": "PAUSED",
+  "production_resume_readiness": "READY FOR FOCUSED RE-VERIFICATION",
+  "blockers": {
+    "P0": [],
+    "P1": [],
+    "P2": [
+      "FW-028 bounded read N+1",
+      "five existing dev-tool-only advisory entries (historical audit)"
+    ],
+    "P3": [
+      "two upstream TestClient deprecations"
+    ]
+  },
+  "real_company_outreach_during_6g": 0,
+  "source_integrity": "final committed manifest and extracted source-only bundle verification required",
+  "focused_release_reverification_required": [
+    "new6G Linux/Python3.13/Node22 runtime",
+    "new6G hosted staging policy/UI while paused",
+    "current release identity/security/config/health before6F resume"
+  ]
+}

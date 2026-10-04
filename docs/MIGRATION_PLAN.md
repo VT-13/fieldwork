@@ -77,3 +77,7 @@ Cross-engine order is mandatory: within one empty-target PG transaction, create0
 Disposable SQLite001→006, fresh SQLite/PG17.11, exact key/case/Unicode preservation, duplicate/replay/unknown guards, failure rollback and full-record PG/SQLite backup/restore pass. Installed mode=ro/query_only preflight recognizes its one over-width key as safely migratable; all row digests, source, credentials, services and pause compare unchanged. See package6a/README.md and verification.json. Only structural metadata/counts/digests were exported; no production migration or real-data test fixture.
 
 The source-only CLI `PYTHONPATH=. python scripts/transfer_legacy.py --source-backup <explicit SQLite001 path> --preflight-only` never connects to a target; it cannot apply. Actual future transfer retains separate empty-target and stopped-sender requirements, verified consistent backups and all remaining release gates. A passed preflight alone is not cutover authorization.
+
+## Package6G policy compatibility
+
+Head remains006. Autopilot uses existing State JSON, with absent or malformed enabling fields interpreted as OFF. There is no007 migration and no State rewrite/normalization. Fresh and repeat006 creation preserves exact existing policy; the representative001→006 transactional transfer and full-record backup/restore are rerun. The installed schema001 database is inspected read-only only; it is not migrated or enabled. Deliberate authenticated operator configuration creates policy values after deployment, never during migration.

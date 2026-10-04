@@ -123,14 +123,16 @@ export function Dialog({
   title,
   children,
   close,
+  returnFocus,
 }: {
   title: string;
   children: ReactNode;
   close: () => void;
+  returnFocus?: { current: HTMLElement | null };
 }) {
   const ref = useRef<HTMLDialogElement>(null);
   useEffect(() => {
-    const previous = document.activeElement;
+    const previous = returnFocus?.current || document.activeElement;
     const dialog = ref.current;
     dialog?.showModal();
     const overflow = document.body.style.overflow;
@@ -140,7 +142,7 @@ export function Dialog({
       document.body.style.overflow = overflow;
       if (previous instanceof HTMLElement) previous.focus();
     };
-  }, []);
+  }, [returnFocus]);
   return (
     <dialog
       ref={ref}

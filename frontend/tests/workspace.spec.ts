@@ -2,6 +2,7 @@ import { test, expect, type Page } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
 import seed from "./fixture.json";
 import type {
+  AutopilotView,
   RuntimeView,
   CandidateView,
   JobView,
@@ -23,6 +24,7 @@ import { mkdirSync } from "node:fs";
 const artifact =
   process.env.FIELDWORK_BROWSER_ARTIFACT_DIR || "../docs/module3";
 type Fixture = {
+  autopilot: AutopilotView;
   runtime: RuntimeView;
   companies: CompanyView[];
   details: Record<string, CompanyDetail>;
@@ -68,7 +70,27 @@ async function mock(page: Page, data: Fixture = structuredClone(base)) {
     }
     if (method === "GET") reads.push(path);
     let payload: unknown;
-    if (path === "runtime") payload = data.runtime;
+    if (path === "autopilot/precheck") {
+      payload = {
+        ready: data.connection.connected,
+        failures: data.connection.connected
+          ? []
+          : ["Connect Gmail with the encrypted account integration."],
+        recurring_paused: data.autopilot.recurring_paused,
+      };
+    } else if (path === "autopilot" && method === "PUT") {
+      const body = req.postDataJSON();
+      if (body.autopilot_enabled && !body.confirmed) {
+        await route.fulfill({
+          status: 409,
+          json: { detail: "Explicit confirmation required" },
+        });
+        return;
+      }
+      Object.assign(data.autopilot, body);
+      data.autopilot.revision = "fixture-policy-revision";
+      payload = data.autopilot;
+    } else if (path === "runtime") payload = data.runtime;
     else if (path.startsWith("outreach/") && path.endsWith("/reconcile"))
       payload = { ...data.jobs[0], kind: "reconcile", status: "queued" };
     else if (path === "responses/sync")
@@ -101,6 +123,7 @@ async function mock(page: Page, data: Fixture = structuredClone(base)) {
     else if (path === "integrations/gmail") payload = data.connection;
     else if (path === "outreach-policy" && method === "PUT") {
       data.campaign.ongoing_policy.enabled = false;
+      data.autopilot.recurring_paused = true;
       payload = { paused: true };
     } else if (path === "campaign/stop") {
       data.campaign.stop_requested = true;
@@ -711,3 +734,161 @@ for (const width of [1280, 390])
     });
     expect(attempts).toEqual([]);
   });
+
+test("Autopilot defaults OFF, validates bounds and shows actionable precheck", async ({
+  page,
+}) => {
+  const qa = await mock(page);
+  await page.goto("/?view=campaign");
+  const panel = page.getByRole("region", { name: "Autopilot outreach" });
+  await expect(
+    panel.getByRole("status", { name: "Autopilot status" }),
+  ).toHaveText("AUTOPILOT OFF");
+  await expect(panel).toContainText("Manual review mode");
+  const target = panel.getByLabel("Daily new introductions", { exact: true });
+  for (const value of ["0", "26", "1.5"]) {
+    await target.fill(value);
+    await expect(
+      panel.getByRole("button", { name: "Activate Autopilot", exact: true }),
+    ).toBeDisabled();
+  }
+  await target.fill("25");
+  await panel
+    .getByRole("button", { name: "Activate Autopilot", exact: true })
+    .click();
+  await expect(panel.getByRole("alert")).toContainText("Connect Gmail");
+  await expect(page.getByRole("dialog")).toHaveCount(0);
+  expect(qa.data.autopilot.autopilot_enabled).toBe(false);
+  expect(qa.attempts).toEqual([]);
+});
+
+test("Autopilot confirmation, cancellation, pause and disable use server state", async ({
+  page,
+}) => {
+  const data = structuredClone(base);
+  data.connection = {
+    ...data.connection,
+    connected: true,
+    status: "connected",
+    email: "student@example.com",
+  };
+  const qa = await mock(page, data);
+  await page.goto("/?view=campaign");
+  const panel = page.getByRole("region", { name: "Autopilot outreach" });
+  await expect(
+    panel.getByRole("status", { name: "Autopilot status" }),
+  ).toHaveText("AUTOPILOT OFF");
+  await panel.getByLabel("Daily new introductions", { exact: true }).fill("1");
+  await panel
+    .getByLabel("Automatic initial-message approval", { exact: true })
+    .check();
+  await panel
+    .getByRole("button", { name: "Activate Autopilot", exact: true })
+    .click();
+  const dialog = page.getByRole("dialog", {
+    name: "Confirm Autopilot activation",
+  });
+  await expect(dialog).toBeVisible();
+  await expect(
+    panel.getByRole("status", { name: "Autopilot status" }),
+  ).toHaveText("AUTOPILOT OFF");
+  await page.keyboard.press("Escape");
+  await expect(dialog).toHaveCount(0);
+  await expect(
+    panel.getByRole("button", { name: "Activate Autopilot", exact: true }),
+  ).toBeFocused();
+  await page.keyboard.press("Enter");
+  await expect(dialog).toBeVisible();
+  await dialog
+    .getByRole("button", { name: "Confirm Activate Autopilot" })
+    .click();
+  await expect(
+    panel.getByRole("status", { name: "Autopilot status" }),
+  ).toHaveText("AUTOPILOT ON");
+  await expect(panel).toContainText("Recurring outreach: PAUSED");
+  expect(qa.data.autopilot.new_companies_per_weekday).toBe(1);
+  expect(qa.data.autopilot.auto_approve_followups).toBe(false);
+  // A separate fixture policy enables recurring; Autopilot did not enable it.
+  qa.data.autopilot.recurring_paused = false;
+  await page.reload();
+  await panel
+    .getByRole("button", { name: "Emergency Pause recurring outreach" })
+    .click();
+  await expect(panel).toContainText("Recurring outreach: PAUSED");
+  await expect(
+    panel.getByRole("status", { name: "Autopilot status" }),
+  ).toHaveText("AUTOPILOT ON");
+  await panel.getByRole("button", { name: "Disable Autopilot" }).click();
+  await expect(
+    panel.getByRole("status", { name: "Autopilot status" }),
+  ).toHaveText("AUTOPILOT OFF");
+  await expect(panel).toContainText("Manual review mode");
+  expect(qa.attempts).toEqual([]);
+});
+
+test("Autopilot activation failure never shows an enabled state", async ({
+  page,
+}) => {
+  const data = structuredClone(base);
+  data.connection.connected = true;
+  await mock(page, data);
+  await page.route("**/api/autopilot", async (route) => {
+    if (route.request().method() === "PUT")
+      await route.fulfill({
+        status: 409,
+        json: { detail: "Profile changed; recheck activation" },
+      });
+    else await route.fulfill({ json: data.autopilot });
+  });
+  await page.goto("/?view=campaign");
+  const panel = page.getByRole("region", { name: "Autopilot outreach" });
+  await panel
+    .getByRole("button", { name: "Activate Autopilot", exact: true })
+    .click();
+  const dialog = page.getByRole("dialog");
+  await dialog
+    .getByRole("button", { name: "Confirm Activate Autopilot" })
+    .click();
+  await expect(dialog).toContainText("Profile changed");
+  await expect(
+    panel.getByRole("status", { name: "Autopilot status" }),
+  ).toHaveText("AUTOPILOT OFF");
+});
+
+test("Autopilot controls and confirmation are accessible across viewports", async ({
+  page,
+}) => {
+  const data = structuredClone(base);
+  data.connection.connected = true;
+  await mock(page, data);
+  await page.goto("/?view=campaign");
+  for (const width of [1280, 768, 390]) {
+    await page.setViewportSize({ width, height: 900 });
+    await expect(
+      page.getByRole("heading", { name: "Autopilot outreach" }),
+    ).toBeVisible();
+    const results = await new AxeBuilder({ page })
+      .withTags(["wcag2a", "wcag2aa"])
+      .analyze();
+    expect(results.violations).toEqual([]);
+    expect(
+      await page.evaluate(
+        () => document.documentElement.scrollWidth <= innerWidth,
+      ),
+    ).toBe(true);
+  }
+  await page
+    .getByRole("button", { name: "Activate Autopilot", exact: true })
+    .click();
+  await expect(page.getByRole("dialog")).toBeVisible();
+  expect(
+    (await new AxeBuilder({ page }).withTags(["wcag2a", "wcag2aa"]).analyze())
+      .violations,
+  ).toEqual([]);
+  await page.keyboard.press("Tab");
+  expect(
+    await page.evaluate(
+      () => document.activeElement?.closest("dialog") !== null,
+    ),
+  ).toBe(true);
+});
