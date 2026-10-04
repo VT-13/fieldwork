@@ -1,13 +1,13 @@
 {
   "package": "FIELDWORK 6D",
-  "live_google_gate": "NOT VERIFIED LIVE",
-  "timestamp_utc": "2026-10-04T06:25:39.588867+00:00",
+  "live_google_gate": "BLOCKED",
+  "timestamp_utc": "2026-10-04T07:15:58.398327+00:00",
   "environment": "Railway fieldwork-staging/staging",
   "staging_url": "https://fieldwork-staging.up.railway.app",
   "callback_url": "https://fieldwork-staging.up.railway.app/api/integrations/gmail/callback",
   "prerequisite_hosted_tls": "PASS",
-  "blocker": "Live Gmail validation has not begun; dedicated OAuth pre-flight is READY.",
-  "required_input": null,
+  "blocker": "Owner Google account selection/consent pending at current Safari screen.",
+  "required_input": "Complete the Google authorization currently shown in the browser, then tell me done.",
   "preflight": {
     "services_online": true,
     "source_manifest_verified": true,
@@ -57,5 +57,7 @@
   "production_preservation_unchanged": true,
   "code_changes": false,
   "package6e_readiness": "NOT READY",
-  "oauth_preflight_artifact": "docs/package6d/preflight.json"
+  "oauth_preflight_artifact": "docs/package6d/preflight.json",
+  "live_checkpoint": "docs/package6d/live-checkpoint.json",
+  "old_exposed_credential_revoked": true
 }
