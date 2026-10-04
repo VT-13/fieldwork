@@ -1,7 +1,7 @@
 {
   "package": "FIELDWORK 6D LIVE VALIDATION",
   "status": "IN PROGRESS",
-  "checkpoint": "4_live_draft_after_targeted_staging_deploy",
+  "checkpoint": "7_reconcile_existing_accepted_message_after_rfc_alias_fix",
   "timestamp_utc": "2026-10-04T07:23:41.518156+00:00",
   "resume_without_restarting": true,
   "old_exposed_credential_revoked": true,
@@ -10,10 +10,10 @@
     "retired_http": 401,
     "current_client_validated": true
   },
-  "google_browser_checkpoint": "Fresh account chooser after test-user persistence verification",
+  "google_browser_checkpoint": "Account A authorized; Account B has no signed-in Safari session",
   "google_authorization_completed": true,
-  "drafts_created": 0,
-  "test_messages_sent": 0,
+  "drafts_created": 1,
+  "test_messages_sent": 1,
   "controlled_replies_sent": 0,
   "company_messages_sent": 0,
   "recurring_paused": true,
@@ -32,5 +32,6 @@
     "passed": 159,
     "disposable_postgresql": "17.11",
     "lint": "PASS"
-  }
+  },
+  "provider_discrepancy": "Gmail replaced the reserved RFC Message-ID; accepted immutable API message/thread IDs, exact envelope/body and SENT label verified. No resend. Receipt-bound alias fix awaiting deployment."
 }

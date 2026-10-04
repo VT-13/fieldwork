@@ -60,16 +60,29 @@ def send_state(db,v):
 
 async def reconcile(db,id,box):
     from .responses import verify_identity
-    from .services.reconciliation import matches_envelope,BASE
+    from .services.reconciliation import matches_envelope,headers,BASE
     v=context(db,id)
     if not v or id!=v['send_packet_id']:raise Blocked('Reserved message identity required')
     state=send_state(db,v);op=ledger.operation(db,'self-test:'+id+':'+v['send_hash'])
     attempt=ledger.latest(db,op) if op else None
     if not state or not op or not attempt:raise Blocked('Reserved validation attempt required')
-    saved=state.value;mid='<fieldwork-test-'+op.id+'@gmail.com>'
+    saved=state.value;reserved_mid='<fieldwork-test-'+op.id+'@gmail.com>';mid=saved.get('message_id',reserved_mid)
     account,_=await verify_identity(db,box)
     if account!=v['account_a']:raise Blocked('Validation account mismatch')
     packet=db.get(State,'desk:'+id).value
+    if saved.get('gmail_id'):
+        # Gmail may rewrite RFC Message-ID. Only its accepted immutable API ID
+        # can establish that alias; an uncertain send without a receipt cannot.
+        msg=await box.call('GET',BASE+'messages/'+saved['gmail_id'],params={'format':'full'})
+        import re
+        actual=headers(msg).get('message-id','')
+        if (msg.get('id')!=saved['gmail_id'] or not saved.get('thread_id')
+            or msg.get('threadId')!=saved['thread_id'] or len(actual)>255
+            or not re.fullmatch(r'<[^<>\s@]+@[^<>\s@]+>',actual)
+            or (saved.get('sent_verified') and actual!=mid)
+            or not matches_envelope(msg,account,v['account_b'],actual,packet['subject'],packet['body'],datetime.fromisoformat(saved['at']))):
+            raise Blocked('Accepted validation receipt conflicts with Sent evidence')
+        mid=actual
     found=await box.call('GET',BASE+'messages',params={'q':'in:sent rfc822msgid:'+mid.strip('<>'),'maxResults':5})
     matches=[]
     for item in found.get('messages',[])[:5]:
@@ -79,7 +92,7 @@ async def reconcile(db,id,box):
     msg=matches[0]
     if (saved.get('gmail_id') and saved['gmail_id']!=msg['id']) or (saved.get('thread_id') and saved['thread_id']!=msg.get('threadId')):raise Blocked('Validation receipt conflicts with Sent evidence')
     ledger.lock(db);state=send_state(db,v);op=ledger.operation(db,op.idempotency_key);attempt=ledger.latest(db,op)
-    proof={**attempt.receipt,'gmail_id':msg['id'],'thread_id':msg.get('threadId',''),'message_id':mid,'sent_verified':True,'confirmation_pending':False}
+    proof={**attempt.receipt,'gmail_id':msg['id'],'thread_id':msg.get('threadId',''),'message_id':mid,'reserved_message_id':reserved_mid,'sent_verified':True,'confirmation_pending':False}
     if op.status in ('running','unknown'):
         from .domain.states import transition
         transition(db,op,'succeeded',domain='operation',reason='sent_reconciled')

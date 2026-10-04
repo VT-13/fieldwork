@@ -130,3 +130,38 @@ def test_incremental_sync_reads_only_test_body_and_replays_checkpoint(db,scope):
     assert db.scalar(select(func.count()).select_from(Event))==1
     assert sum(c[1].endswith('/messages/reply-id') and c[2]['params']['format']=='full' for c in reader.calls)==1
     assert not db.get(State,'response:unrelated')
+
+
+def test_gmail_rewritten_rfc_id_requires_exact_accepted_receipt(db,scope):
+    class Rewritten(Box):
+        async def call(self,method,url,**kw):
+            result=await super().call(method,url,**kw)
+            if url.endswith('/messages/sent-id'):
+                for h in result['payload']['headers']:
+                    if h['name'].lower()=='message-id':h['value']='<google-generated@mail.gmail.com>'
+            return result
+    b=Rewritten(db);original=asyncio.run(send(db,scope['send_packet_id'],b))
+    first=asyncio.run(reconciliation.reconcile(db,scope['send_packet_id'],b))
+    assert first['status']=='confirmed' and asyncio.run(reconciliation.reconcile(db,scope['send_packet_id'],b))==first
+    state=validation.send_state(db,scope).value
+    assert state['message_id']=='<google-generated@mail.gmail.com>' and state['reserved_message_id']==original['message_id']
+    assert sum(c[1].endswith('/messages/send') for c in b.calls)==1
+    assert all('google-generated@mail.gmail.com' in c[2]['params']['q'] for c in b.calls if c[1].endswith('/messages'))
+
+@pytest.mark.parametrize('field',['id','threadId','recipient','body','label','rfc'])
+def test_accepted_receipt_cannot_alias_conflicting_sent_evidence(db,scope,field):
+    class Conflict(Box):
+        async def call(self,method,url,**kw):
+            result=await super().call(method,url,**kw)
+            if url.endswith('/messages/sent-id'):
+                if field in ('id','threadId'):result[field]='other'
+                elif field=='label':result['labelIds']=[]
+                elif field=='body':result['payload']['body']['data']=base64.urlsafe_b64encode(b'Other message').decode()
+                else:
+                    for h in result['payload']['headers']:
+                        if h['name'].lower()==('to' if field=='recipient' else 'message-id'):h['value']='other@example.com'
+            return result
+    b=Conflict(db);asyncio.run(send(db,scope['send_packet_id'],b))
+    with pytest.raises(Blocked):asyncio.run(reconciliation.reconcile(db,scope['send_packet_id'],b))
+    assert sum(c[1].endswith('/messages/send') for c in b.calls)==1
+    assert not validation.send_state(db,scope).value.get('sent_verified')
