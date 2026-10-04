@@ -1,0 +1,10 @@
+{
+  "application_commit": "acfb4a94cb5d721b51dbbabf4c831c6c0e4e7461",
+  "tracked_source_manifest": "PASS",
+  "source_only_committed_bundle": "PASS",
+  "extracted_bundle_integrity": "PASS",
+  "manifest_files": 201,
+  "bundle_sha256": "b96ed95329f24c5ef52f295cde584de746f4fe39381bd3e1182e11f5c56af92a",
+  "sensitive_runtime_paths_included": false,
+  "deployed_by_bundle_command": false
+}
