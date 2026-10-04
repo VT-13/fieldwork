@@ -25,7 +25,7 @@ Checked entries have executed evidence. Unchecked gates block cutover or need se
 - [x] **Documentation:** exact current architecture/processes/TLS host handling/secrets/migration/rollback/retirement/provider limits (RUNBOOK.md, DEPLOYMENT.md, PROVIDER_CAPABILITIES.md).
 - [x] **Preservation:** before/after read-only comparison; no deployment/live DB/OAuth/service/automation/mail changes (`preservation.json`).
 - [x] **Containers (Package6B):** actual Linux ARM64 Docker Python3.13.16/Node22.23.3/PG17.11 clean builds; locked runtime/no test packages, non-root app users, injected-secrets/layer scan, private networking, separate worker/scheduler, fake-provider E2E, duplicate fences, graceful shutdown/restarts and exact DB persistence/backup/restore pass (`package6b/verification.json`). Intended hosted deployment remains separate.
-- [ ] **Hosted TLS/private staging:** intended trusted certificate, ingress/network/header/cookie/callback behavior still need verification. Ephemeral private test CA passed; Package6C access discovery is BLOCKED without a staging project/server, stable hostname or hosting access. No hosted checks ran; see package6c/verification.json.
+- [x] **Hosted TLS/private staging (Package6C):** actual Railway trusted TLS/hostname/HTTP redirect, safe forwarded/Host behavior, session/login/expiry/revocation, CSRF/origin/CORS, public headers, private infrastructure, Chromium/WebKit/Firefox, safe profile mutation, log/asset secret review and worker restart/leadership pass on schema006/PG17.11. No live Google exchange; see package6c/verification.json.
 - [ ] **Production activation:** later explicit rollout authorization; retire old external sender first, verified backup/migration/worker health and own-account canary while paused. Later recurring activation is separate. Nothing activated here.
 
 Package6A supersedes only the migration-width gate: canonical head006 and startup checks are verified with the isolated backend suite. Module6 browser/HTTP E2E proofs above remain historical005 evidence; no UI/container/hosted/live-provider suites were rerun or claimed for006. Installed schema001, source, credential/service definitions and pause compare unchanged. Other unchecked gates remained open at Package6A; Package6B now closes only the container gate, as recorded below.
@@ -35,3 +35,7 @@ Package6B supersedes the container gap:16 targeted Linux regressions and actual 
 ## Railway staging setup update
 
 Isolated staging provisioning is READY; see [setup evidence](railway-staging/README.md) and [smoke results](railway-staging/verification.json). Stable origin is https://fieldwork-staging.up.railway.app; private API/worker/PG17.11 run schema006 with communication paused and no real provider keys. The historical Package6C access blocker is superseded. Its full hosted verification gate remains unchecked; production activation and live Google remain separate. Do not enable outreach or use production data/secrets in staging.
+
+## Package6C superseding evidence
+
+The previous access blocker is resolved and actual hosted gate PASS. Package6D is ready to begin only on separate user request; real providers remain disconnected. Historical Module6 native/container evidence remains unchanged; no production cutover, personal DB/OAuth/sender/service/pause change occurred.

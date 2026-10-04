@@ -1,97 +1,365 @@
 {
   "package": "FIELDWORK 6C",
   "gate": "hosted-tls",
-  "hosted_tls_gate": "BLOCKED",
-  "timestamp_utc": "2026-10-04T04:52:20.499513+00:00",
-  "application_baseline_commit": "6b63e3feae3dd4988e4ac3d0111a397576f3f1ae",
-  "schema_revision": "006",
-  "prerequisites": {
-    "FW-026": "RESOLVED; docs/package6a/verification.json",
-    "runtime-container": "PASS; docs/package6b/verification.json"
+  "hosted_tls_gate": "PASS",
+  "timestamp_utc": "2026-10-04T06:04:50.291092+00:00",
+  "application_baseline_commit": "82fc605",
+  "verified_fix_commit": "0cc379c1892958742e086e7625df146368d8e495",
+  "environment": {
+    "project": "fieldwork-staging",
+    "environment": "staging",
+    "project_id": "803f24c5-8e9e-4a88-9c84-7909136f4524",
+    "environment_id": "cb9a856c-2e1f-4e69-a552-05ce5a389638",
+    "schema": "006",
+    "postgres": "17.11",
+    "production_mode": true
   },
-  "environment": null,
-  "hostname": null,
-  "certificate_issuer": null,
-  "oauth_callback_url": null,
-  "blocker": {
-    "category": "missing_hosted_staging_access",
-    "description": "No intended staging project/server or stable HTTPS hostname supplied/configured. No hosting CLI/credential configuration or SSH server alias found; Railway dashboard presents sign-in. Hosting destination and access are required before deployment and hosted verification.",
-    "required_user_input": "Identify an existing authorized staging hosting project/server and stable hostname, and provide access through the hosting account or private local credential setup; do not paste secrets into chat."
+  "hostname": "fieldwork-staging.up.railway.app",
+  "tls": {
+    "trusted_chain": true,
+    "hostname_valid": true,
+    "protocol": "TLSv1.3",
+    "issuer": [
+      [
+        [
+          "countryName",
+          "US"
+        ]
+      ],
+      [
+        [
+          "organizationName",
+          "Let's Encrypt"
+        ]
+      ],
+      [
+        [
+          "commonName",
+          "YE2"
+        ]
+      ]
+    ],
+    "not_before": "Sep 27 03:01:43 2026 GMT",
+    "not_after": "Dec 26 03:01:42 2026 GMT",
+    "san": [
+      [
+        "DNS",
+        "*.up.railway.app"
+      ],
+      [
+        "DNS",
+        "up.railway.app"
+      ]
+    ]
   },
-  "access_inventory": {
-    "git_remote_configured": false,
-    "hosting_manifests_found": 0,
-    "hosting_cli_available": false,
-    "railway_render_vercel_fly_aws_gcloud_config_present": false,
-    "ssh_server_aliases_configured": 0,
-    "hosting_environment_variables_present": false,
-    "railway_safari_dashboard": "sign-in required",
-    "hosting_connector_for_intended_stack_available": false,
-    "ssh_includes_followed": true,
-    "ssh_config_files_checked": 2
-  },
-  "source_review": {
-    "scope": "Static review only; not hosted verification",
-    "files_sha256": {
-      "backend/app/config.py": "49dc1c44c7741e0468fdaef2140a729c30d53970ec99d3f5f49c2549e7078e59",
-      "backend/app/auth.py": "9f91238e6f8463b06ebce79849b43058efdbd4bb37007686f949c0da39b215b9",
-      "backend/app/ingress.py": "aee41f7b73127c51f2b9f737fc132ddee30b88c39b9a5542fe3deb02192e2e35",
-      "backend/app/main.py": "be11688475a3bd7f375742db54be934732857ccabbdb566f76f2962b709139b3",
-      "backend/app/gmail_oauth.py": "afed816abe8efe84c767a7c429cab4eb8b042e902fb0f519934f21d9353e9f73",
-      "frontend/proxy.ts": "d06355820da302857fc9d29635cc004cd0574f43288405b7ac4dd47f2c9e3c5a",
-      "frontend/app/api/[...path]/route.ts": "04f31d704dd0044edbfaea86ea7fc04e5a7a0701c3eceb3eb46d1aca34a4f352",
-      "frontend/next.config.ts": "9b58b30c2bd9f601938246d474138ac26bf39fbb194627ab667a05f05dae599c"
+  "http_checks": {
+    "https_login": 200,
+    "http_redirect": 301,
+    "unauth_profile": 401,
+    "unauth_runtime": 401,
+    "unauth_jobs": 401,
+    "unauth_integrations/gmail": 401,
+    "unauth_privacy/export": 401,
+    "unauth_auth/session": 401,
+    "forged_16": 401,
+    "forged_3": 401,
+    "forged_64": 401,
+    "spoof_redirect_status": 307,
+    "spoof_redirect_fixed": true,
+    "unexpected_host": 404,
+    "unauthorized_origin_read": 403,
+    "cors_preflight": 204,
+    "login": 200,
+    "cookie": {
+      "secure": true,
+      "httponly": true,
+      "same_site": "Lax",
+      "path": "/",
+      "domain": "host-only",
+      "max_age_seconds": 43200
     },
-    "findings": "Exact configured Host/Origin, database-backed revocable sessions, production Secure/HttpOnly/Lax host-only cookies and fixed callback origin exist. Hosting ingress/header/network/log behavior cannot be inferred from source."
+    "authenticated_session": 200,
+    "refresh_private": 200,
+    "mutation_origin_https://attacker.example": 403,
+    "mutation_origin_null": 403,
+    "mutation_origin_": 403,
+    "legitimate_mutation": 200,
+    "spoof_cannot_authorize_origin": 403,
+    "csrf_missing_origin": 403,
+    "csrf_form_body": 415,
+    "callback_without_valid_state": 400,
+    "callback_url": "https://fieldwork-staging.up.railway.app/api/integrations/gmail/callback",
+    "absent_surface_docs": 404,
+    "absent_surface_redoc": 404,
+    "absent_surface_openapi.json": 400,
+    "absent_surface_debug": 404,
+    "absent_surface_test-login": 404,
+    "absent_surface_qa": 404,
+    "absent_surface_fixtures": 404,
+    "absent_surface_fake-provider": 404,
+    "absent_surface_signup": 404,
+    "health_minimal": true,
+    "runtime_before": {
+      "database": "reachable",
+      "schema_version": "006",
+      "worker": "available",
+      "worker_at": "2026-10-04T05:54:12.095603+00:00",
+      "scheduler": "available",
+      "scheduler_at": "2026-10-04T05:54:12.052668+00:00",
+      "gmail": "disconnected",
+      "unresolved": 0,
+      "sync_stale": true,
+      "recurring_paused": true,
+      "daily_attempts": 0,
+      "daily_limit": 25,
+      "daily_bounces": 0,
+      "bounce_stop": false,
+      "communication_jobs": []
+    },
+    "logout": 200,
+    "revoked_copied_cookie": 401,
+    "expiry_login": 200,
+    "expired_session": 401,
+    "no_real_provider_requests": true
   },
-  "hosted_checks": {
-    "tls_chain_hostname_issuer": "NOT RUN: hosted target unavailable",
-    "http_to_https": "NOT RUN: hosted target unavailable",
-    "mixed_content": "NOT RUN: hosted target unavailable",
-    "proxy_forwarded_headers": "NOT RUN: hosted target unavailable",
-    "trusted_hosts_spoofing": "NOT RUN: hosted target unavailable",
-    "session_cookie_attributes": "NOT RUN: hosted target unavailable",
-    "login_reload_logout": "NOT RUN: hosted target unavailable",
-    "forged_revoked_expired_sessions": "NOT RUN: hosted target unavailable",
-    "csrf_origin_cors_safe_mutation": "NOT RUN: hosted target unavailable",
-    "security_headers": "NOT RUN: hosted target unavailable",
-    "network_exposure": "NOT RUN: hosted target unavailable",
-    "frontend_api_https": "NOT RUN: hosted target unavailable",
-    "chromium": "NOT RUN: hosted target unavailable",
-    "webkit": "NOT RUN: hosted target unavailable",
-    "firefox": "NOT RUN: hosted target unavailable",
-    "worker_scheduler_restart_leadership": "NOT RUN: hosted target unavailable",
-    "hosted_log_secret_review": "NOT RUN: hosted target unavailable",
-    "stable_oauth_callback": "NOT RUN: hosted target unavailable",
-    "hosted_safe_defaults": "NOT RUN: hosted target unavailable"
+  "proxy_direct_runtime": {
+    "direct_frontend_bad_host": 400,
+    "canonical_redirect": true,
+    "forwarded_headers_not_authority": true
   },
-  "package6b_repeated": false,
-  "new_runtime_builds": 0,
-  "test_suites_rerun": false,
-  "self_signed_or_tunnel_used": false,
-  "certificate_validation_disabled": false,
-  "deployment_performed": false,
+  "headers_network_privacy": {
+    "network_exposure": {
+      "0d322d41-5227-4616-bb1b-aee144e002ab": {
+        "public": {
+          "serviceDomains": {},
+          "customDomains": {},
+          "tcpProxies": {}
+        },
+        "root": "/backend",
+        "private_endpoint": null
+      },
+      "0d775fc2-f340-48d2-8266-269f2904b218": {
+        "public": {
+          "serviceDomains": {},
+          "customDomains": {},
+          "tcpProxies": {}
+        },
+        "root": "/backend",
+        "private_endpoint": null
+      },
+      "abd9c9b1-ea69-416c-b9a7-71e6341c8d43": {
+        "public": {
+          "serviceDomains": {
+            "fieldwork-staging.up.railway.app": {
+              "port": 3000
+            }
+          },
+          "customDomains": {},
+          "tcpProxies": {}
+        },
+        "root": "/frontend",
+        "private_endpoint": null
+      },
+      "ed16087e-faba-4839-8d5b-7ab07a85f3ac": {
+        "public": {
+          "serviceDomains": {},
+          "customDomains": {},
+          "tcpProxies": {}
+        },
+        "root": null,
+        "private_endpoint": "postgres"
+      }
+    },
+    "frontend_private_variables": false,
+    "secret_matches": 0,
+    "sensitive_log_markers": 0,
+    "logs_scanned_lines": {
+      "fieldwork--build": 112,
+      "fieldwork--deployment": 6,
+      "api--build": 50,
+      "api--deployment": 499,
+      "worker--build": 349,
+      "worker--deployment": 1
+    },
+    "headers": {
+      "/login": {
+        "permissions-policy": "camera=(), microphone=(), geolocation=()",
+        "referrer-policy": "no-referrer",
+        "strict-transport-security": "max-age=31536000",
+        "x-content-type-options": "nosniff",
+        "x-frame-options": "DENY"
+      },
+      "/api/health": {
+        "permissions-policy": "camera=(), microphone=(), geolocation=()",
+        "referrer-policy": "no-referrer",
+        "strict-transport-security": "max-age=31536000",
+        "x-content-type-options": "nosniff",
+        "x-frame-options": "DENY"
+      }
+    },
+    "js_assets_scanned": 7,
+    "source_maps_in_browser_assets": false,
+    "csp": "Not implemented; existing frame denial verified"
+  },
+  "browsers": {
+    "chromium": {
+      "passed": true,
+      "login": true,
+      "refresh": true,
+      "logout": true,
+      "tls_validation_enabled": true,
+      "views": [
+        "dashboard",
+        "campaign",
+        "prospects",
+        "review",
+        "settings",
+        "prospect_detail",
+        "profile_form"
+      ],
+      "desktop_mobile_overflow": false,
+      "page_errors": [],
+      "console_errors": [],
+      "failed_api_responses": [],
+      "mixed_content": 0,
+      "external_requests": 0,
+      "expected_navigation_cancellations": 0,
+      "form_save": true,
+      "dialog_keyboard": true
+    },
+    "webkit": {
+      "passed": true,
+      "login": true,
+      "refresh": true,
+      "logout": true,
+      "tls_validation_enabled": true,
+      "views": [
+        "dashboard",
+        "campaign",
+        "prospects",
+        "review",
+        "settings",
+        "prospect_detail",
+        "profile_form"
+      ],
+      "desktop_mobile_overflow": false,
+      "page_errors": [],
+      "console_errors": [],
+      "failed_api_responses": [],
+      "mixed_content": 0,
+      "external_requests": 0,
+      "expected_navigation_cancellations": 3,
+      "form_save": true,
+      "dialog_keyboard": true
+    },
+    "firefox": {
+      "passed": true,
+      "login": true,
+      "refresh": true,
+      "logout": true,
+      "tls_validation_enabled": true,
+      "views": [
+        "dashboard",
+        "campaign",
+        "prospects",
+        "review",
+        "settings",
+        "prospect_detail",
+        "profile_form"
+      ],
+      "desktop_mobile_overflow": false,
+      "page_errors": [],
+      "console_errors": [],
+      "failed_api_responses": [],
+      "mixed_content": 0,
+      "external_requests": 0,
+      "expected_navigation_cancellations": 3,
+      "form_save": true,
+      "dialog_keyboard": true
+    }
+  },
+  "worker": {
+    "duplicate_pg_leadership_fence": true,
+    "restart_command": "railway restart -s worker -e staging --yes --json",
+    "restart_passed": true,
+    "durable_synthetic_counts_preserved": true,
+    "final": {
+      "runtime": {
+        "database": "reachable",
+        "schema_version": "006",
+        "worker": "available",
+        "worker_at": "2026-10-04T06:01:37.389851+00:00",
+        "scheduler": "available",
+        "scheduler_at": "2026-10-04T06:01:37.353822+00:00",
+        "gmail": "disconnected",
+        "unresolved": 0,
+        "sync_stale": true,
+        "recurring_paused": true,
+        "daily_attempts": 0,
+        "daily_limit": 25,
+        "daily_bounces": 0,
+        "bounce_stop": false,
+        "communication_jobs": []
+      },
+      "company_count": 1,
+      "outreach_count": 1,
+      "outreach_attempts": 0,
+      "network_units": 0,
+      "usage_rows": 0,
+      "job_count": 0,
+      "policy_paused": true,
+      "policy_paid_allowed": false,
+      "oauth_callback": "https://fieldwork-staging.up.railway.app/api/integrations/gmail/callback",
+      "real_keys": false
+    }
+  },
+  "deployment": {
+    "id": "f4ecc872-6d3d-47c3-a877-2d4ffcbc5262",
+    "status": "SUCCESS",
+    "source": {
+      "branch": "main",
+      "repo": "VT-13/fieldwork",
+      "rootDirectory": "/frontend"
+    }
+  },
+  "oauth_callback_url": "https://fieldwork-staging.up.railway.app/api/integrations/gmail/callback",
+  "oauth_callback_readiness": "Exact configured HTTPS URL; spoofed-header callback with invalid state rejected before exchange. Real Google exchange NOT RUN.",
   "production_mutations": {
-    "source": false,
-    "database": false,
     "live_db_migrated": false,
-    "real_company_outreach_sent": 0,
-    "recurring_pause_changed": false,
+    "installed_worker_changed": false,
+    "old_sender_changed": false,
     "real_oauth_changed": false,
-    "services_or_launch_agents_changed": false,
-    "automation_changed": false,
-    "worker_started": false,
-    "paid_provider_calls": 0,
-    "services_purchased": false
+    "real_company_outreach_sent": false,
+    "recurring_production_pause_changed": false
   },
-  "preservation_evidence": "preservation.json",
-  "package6d_started": false,
-  "package6d_readiness": "NOT READY",
-  "overall_release": "NOT READY",
-  "preservation_unchanged": true,
-  "source_integrity": {
-    "baseline_verified": true,
-    "current_manifest_verified": true,
-    "runtime_application_files_changed": false
-  }
+  "installed_preservation": {
+    "read_only_comparison_unchanged": true,
+    "source_schema_counts_policy_credentials_services": true
+  },
+  "company_emails_sent": 0,
+  "paid_provider_calls": 0,
+  "real_providers_connected": false,
+  "recurring_outreach": "PAUSED",
+  "targeted_fix": {
+    "file": "frontend/next.config.ts",
+    "change": "Apply existing API one-year HSTS and restrictive Permissions-Policy at public Next ingress. No includeSubDomains/preload, no arbitrary CSP.",
+    "lint": "PASS",
+    "typecheck": "PASS after removing duplicate ignored generated .next/types files to private temporary storage",
+    "production_build": "PASS; real Railway Docker build/redeploy"
+  },
+  "harness_findings": [
+    "Next automatic OPTIONS returns204 without CORS allow headers; this is correctly blocked by browser CORS, not a defect.",
+    "Next proxy rejects dotted openapi.json path with400; no debug/schema exposure.",
+    "WebKit immediate reload while initial Next prefetches were in flight generated cancellation messages. Waiting for initial network idle removed them; final settled flows have zero page/console errors. No app change for this harness issue.",
+    "Node fetch does not reliably honor explicit Host for a direct runtime probe; raw node:http verifies real Host400 and unchanged HTTPS redirects."
+  ],
+  "limitations": [
+    "CSP is not implemented; existing X-Frame-Options DENY verified.",
+    "Active copied session tokens remain bearer credentials; revoked and expired copied sessions are rejected. No IP-bound session claim.",
+    "Browser request aborts caused by navigating away are recorded separately from unexpected failures.",
+    "Staging only. No live Google exchange, inbox/draft/send test or production cutover.",
+    "Bounded hosted worker restart/leadership validation, not long-term uptime certification."
+  ],
+  "package6d_readiness": "READY",
+  "remaining_hosted_gate_issues": []
 }

@@ -344,7 +344,7 @@
     "docker_images_built": false,
     "docker_runtime_verified": false,
     "node22_linux_container_tested": false,
-    "hosted_trusted_tls_verified": false,
+    "hosted_trusted_tls_verified": true,
     "local_explicit_test_ca_tls_passed": true,
     "ci_remote_executed": false
   },
@@ -375,10 +375,6 @@
     "recurring_enabled": false
   },
   "remaining_conditions": [
-    {
-      "id": "hosted-tls",
-      "condition": "Verify intended private hosted trusted certificate, ingress/network/host/header/cookie/callback behavior"
-    },
     {
       "id": "live-google",
       "condition": "Separately authorized encrypted test-account OAuth and own-account RFC/Sent/thread/history/draft/self-test validation"
@@ -416,13 +412,14 @@
     "production_mutated": false,
     "other_gates_unchanged": true
   },
-  "current_hosted_tls_gate": "BLOCKED",
+  "current_hosted_tls_gate": "PASS",
   "package6c": {
-    "result": "BLOCKED",
+    "result": "PASS",
     "verification": "docs/package6c/verification.json",
-    "reason": "Intended staging project/server, stable HTTPS hostname and hosting access unavailable",
-    "hosted_checks_executed": false,
+    "environment": "Railway fieldwork-staging/staging",
+    "hostname": "fieldwork-staging.up.railway.app",
+    "hosted_checks_executed": true,
     "production_mutated": false,
-    "package6d_readiness": "NOT READY"
+    "package6d_readiness": "READY"
   }
 }

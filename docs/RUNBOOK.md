@@ -67,3 +67,7 @@ Read package6c/README.md and verification.json before resuming hosted verificati
 ## Railway staging setup update
 
 Isolated staging provisioning is READY; see [setup evidence](railway-staging/README.md) and [smoke results](railway-staging/verification.json). Stable origin is https://fieldwork-staging.up.railway.app; private API/worker/PG17.11 run schema006 with communication paused and no real provider keys. The historical Package6C access blocker is superseded. Its full hosted verification gate remains unchecked; production activation and live Google remain separate. Do not enable outreach or use production data/secrets in staging.
+
+## Package6C hosted handoff
+
+Railway hosted TLS gate PASS; see package6c/README.md and verification.json for actual commands and limits. Keep `fieldwork-staging/staging` isolated with no live credentials, DRY_RUN/manual on, policy paused/stopped and paid permission false. Worker restart recovered heartbeats with zero transmissions and durable synthetic records. Public ingress now includes one-year HSTS and restricted Permissions-Policy. Detailed runtime remains authenticated; `/api/health` is minimal. Exact future callback: https://fieldwork-staging.up.railway.app/api/integrations/gmail/callback. Do not start Google authorization or production activation from this handoff.
